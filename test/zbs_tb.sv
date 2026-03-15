@@ -11,9 +11,9 @@ logic [31:0] out;
 logic [31:0] expected;
 
 zbs uut (
-    .reg1(reg1),
-    .reg2(reg2),
-    .inst(inst),
+    .reg1(reg1), 
+    .reg2(reg2), 
+    .inst(inst), 
     .out(out)
 );
 
@@ -27,7 +27,7 @@ initial begin
 
     expected = reg1 & ~(32'h1 << reg2[4:0]);
 
-    assert(out == expected)
+    assert (out == expected)
         else $fatal("bclr failed: expected %b got %b", expected, out);
 
 
@@ -39,7 +39,7 @@ initial begin
 
     expected = reg1 | (32'h1 << reg2[4:0]);
 
-    assert(out == expected)
+    assert (out == expected)
         else $fatal("bset failed: expected %b got %b", expected, out);
 
 
@@ -51,7 +51,7 @@ initial begin
 
     expected = reg1 ^ (32'h1 << reg2[4:0]);
 
-    assert(out == expected)
+    assert (out == expected)
         else $fatal("binv failed: expected %b got %b", expected, out);
 
 
@@ -63,7 +63,7 @@ initial begin
 
     expected = {31'b0, reg1[reg2[4:0]]};
 
-    assert(out == expected)
+    assert (out == expected)
         else $fatal("bext failed: expected %b got %b", expected, out);
 
     // -------- Edge Cases ---------
@@ -76,7 +76,7 @@ initial begin
 
     expected = reg1 & ~(32'h1 << reg2[4:0]);
 
-    assert(out == expected)
+    assert (out == expected)
         else $fatal("corner case bit0 failed");
 
 
@@ -88,13 +88,12 @@ initial begin
 
     expected = reg1 & ~(32'h1 << reg2[4:0]);
 
-    assert(out == expected)
+    assert (out == expected)
         else $fatal("corner case bit31 failed");
 
 
     // ----------- Randomized Testing (Experimental) -----------
  
-
     repeat (1000) begin
 
         reg1 = $urandom;
@@ -117,7 +116,7 @@ initial begin
 
         endcase
 
-        assert(out == expected)
+        assert (out == expected)
             else $fatal("random test failed: inst=%0d reg1=%h reg2=%d expected=%h got=%h",
                         inst, reg1, reg2, expected, out);
 
