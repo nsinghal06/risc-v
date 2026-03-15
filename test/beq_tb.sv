@@ -128,7 +128,7 @@ module beq_tb;
 
     wait_till_next_cfsm_state(DECODE);
 
-    assert (uut.core.fetch.pc_cur == 32'h00000000) //PC should be at 0 when CPU resets 
+    assert (uut.core.fetch.pc_cur == 32'h00000000) //PC should be at 0 when CPU resets
       else $fatal(1, "`uut.core.fetch.pc_cur` is `%0h`", uut.core.fetch.pc_cur);
 
     wait_till_next_cfsm_state(EXECUTER);
