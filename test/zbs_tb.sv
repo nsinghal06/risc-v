@@ -61,7 +61,7 @@ initial begin
     inst = 3'b011;
     #10;
 
-    expected = (reg1 >> reg2[4:0]) & 32'h1;
+    expected = {31'b0, reg1[reg2[4:0]]};
 
     assert(out == expected)
         else $fatal("bext failed: expected %b got %b", expected, out);
@@ -111,7 +111,7 @@ initial begin
 
             3'b010: expected = reg1 ^ (32'h1 << reg2[4:0]);
 
-            3'b011: expected = (reg1 >> reg2[4:0]) & 32'h1;
+            3'b011: expected = {31'b0, reg1[reg2[4:0]]};
 
             default: expected = 32'd0;
 
