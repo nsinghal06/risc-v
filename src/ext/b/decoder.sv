@@ -1,6 +1,7 @@
 `include "src/ext/b/types.svh"
-
+/* verilator lint_off DECLFILENAME */
 module ext__b__decoder
+/* verilator lint_on DECLFILENAME */
   ( input [2:0] funct3
   , input [6:0] funct7
   , input [6:0] opcode
