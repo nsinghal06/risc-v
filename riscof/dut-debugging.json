@@ -1,0 +1,616 @@
+{
+  "extensionVersion": "1.5.1",
+  "fileName": "/workspaces/utoss-risc-v/riscof/riscof_work/rv32i_m/I/src/add-01.S/dut/dut.vcd",
+  "markerTime": 48115,
+  "altMarkerTime": 38750,
+  "selectedSignal": {
+    "name": "dut.top.memory__write_enable",
+    "msb": 3,
+    "lsb": 0
+  },
+  "zoomRatio": 0.0128,
+  "scrollLeft": 33115,
+  "displayedSignals": [
+    {
+      "dataType": "netlist-variable",
+      "netlistId": 20,
+      "name": "dut.clk",
+      "numberFormat": "binary",
+      "colorIndex": 0,
+      "rowHeight": 1,
+      "verticalScale": 1,
+      "nameType": "fullPath",
+      "customName": "clk",
+      "renderType": "binary",
+      "valueLinkCommand": ""
+    },
+    {
+      "dataType": "netlist-variable",
+      "netlistId": 21,
+      "name": "dut.reset",
+      "numberFormat": "binary",
+      "colorIndex": 0,
+      "rowHeight": 1,
+      "verticalScale": 1,
+      "nameType": "fullPath",
+      "customName": "reset",
+      "renderType": "binary",
+      "valueLinkCommand": ""
+    },
+    {
+      "dataType": "signal-separator",
+      "label": "---",
+      "rowHeight": 1
+    },
+    {
+      "dataType": "signal-group",
+      "groupName": "imem iface",
+      "collapseState": 2,
+      "children": [
+        {
+          "dataType": "netlist-variable",
+          "netlistId": 36,
+          "name": "dut.top.imem__address",
+          "numberFormat": "hexadecimal",
+          "colorIndex": 0,
+          "rowHeight": 1,
+          "verticalScale": 1,
+          "nameType": "fullPath",
+          "customName": "imem__address",
+          "renderType": "multiBit",
+          "valueLinkCommand": ""
+        },
+        {
+          "dataType": "netlist-variable",
+          "netlistId": 37,
+          "name": "dut.top.imem__data",
+          "numberFormat": "hexadecimal",
+          "colorIndex": 0,
+          "rowHeight": 1,
+          "verticalScale": 1,
+          "nameType": "fullPath",
+          "customName": "imem__data",
+          "renderType": "multiBit",
+          "valueLinkCommand": ""
+        }
+      ]
+    },
+    {
+      "dataType": "signal-group",
+      "groupName": "dmem iface",
+      "collapseState": 2,
+      "children": [
+        {
+          "dataType": "netlist-variable",
+          "netlistId": 32,
+          "name": "dut.top.memory__address",
+          "numberFormat": "hexadecimal",
+          "colorIndex": 0,
+          "rowHeight": 1,
+          "verticalScale": 1,
+          "nameType": "fullPath",
+          "customName": "memory__address",
+          "renderType": "multiBit",
+          "valueLinkCommand": ""
+        },
+        {
+          "dataType": "netlist-variable",
+          "netlistId": 35,
+          "name": "dut.top.memory__read_data",
+          "numberFormat": "hexadecimal",
+          "colorIndex": 0,
+          "rowHeight": 1,
+          "verticalScale": 1,
+          "nameType": "fullPath",
+          "customName": "memory__read_data",
+          "renderType": "multiBit",
+          "valueLinkCommand": ""
+        },
+        {
+          "dataType": "netlist-variable",
+          "netlistId": 33,
+          "name": "dut.top.memory__write_data",
+          "numberFormat": "hexadecimal",
+          "colorIndex": 0,
+          "rowHeight": 1,
+          "verticalScale": 1,
+          "nameType": "fullPath",
+          "customName": "memory__write_data",
+          "renderType": "multiBit",
+          "valueLinkCommand": ""
+        },
+        {
+          "dataType": "netlist-variable",
+          "netlistId": 34,
+          "name": "dut.top.memory__write_enable",
+          "numberFormat": "hexadecimal",
+          "colorIndex": 0,
+          "rowHeight": 1,
+          "verticalScale": 1,
+          "nameType": "fullPath",
+          "customName": "memory__write_enable",
+          "renderType": "multiBit",
+          "valueLinkCommand": ""
+        }
+      ]
+    },
+    {
+      "dataType": "signal-group",
+      "groupName": "IF",
+      "collapseState": 2,
+      "children": [
+        {
+          "dataType": "netlist-variable",
+          "netlistId": 210,
+          "name": "dut.top.core.u_fetch_stage.pc_next",
+          "numberFormat": "hexadecimal",
+          "colorIndex": 0,
+          "rowHeight": 1,
+          "verticalScale": 1,
+          "nameType": "fullPath",
+          "customName": "pc_next",
+          "renderType": "multiBit",
+          "valueLinkCommand": ""
+        },
+        {
+          "dataType": "netlist-variable",
+          "netlistId": 209,
+          "name": "dut.top.core.u_fetch_stage.pc_previous",
+          "numberFormat": "hexadecimal",
+          "colorIndex": 0,
+          "rowHeight": 1,
+          "verticalScale": 1,
+          "nameType": "fullPath",
+          "customName": "pc_previous",
+          "renderType": "multiBit",
+          "valueLinkCommand": ""
+        }
+      ]
+    },
+    {
+      "dataType": "signal-group",
+      "groupName": "DE",
+      "collapseState": 2,
+      "children": [
+        {
+          "dataType": "netlist-variable",
+          "netlistId": 91,
+          "name": "dut.top.core.decode.instruction",
+          "numberFormat": "hexadecimal",
+          "colorIndex": 0,
+          "rowHeight": 1,
+          "verticalScale": 1,
+          "nameType": "fullPath",
+          "customName": "instruction",
+          "renderType": "multiBit",
+          "valueLinkCommand": ""
+        },
+        {
+          "dataType": "netlist-variable",
+          "netlistId": 136,
+          "name": "dut.top.core.decode.instruction_decode.ALUControl",
+          "numberFormat": "hexadecimal",
+          "colorIndex": 0,
+          "rowHeight": 1,
+          "verticalScale": 1,
+          "nameType": "fullPath",
+          "customName": "ALUControl",
+          "renderType": "multiBit",
+          "valueLinkCommand": ""
+        },
+        {
+          "dataType": "netlist-variable",
+          "netlistId": 87,
+          "name": "dut.top.core.decode.rd1",
+          "numberFormat": "hexadecimal",
+          "colorIndex": 0,
+          "rowHeight": 1,
+          "verticalScale": 1,
+          "nameType": "fullPath",
+          "customName": "rd1",
+          "renderType": "multiBit",
+          "valueLinkCommand": ""
+        },
+        {
+          "dataType": "netlist-variable",
+          "netlistId": 88,
+          "name": "dut.top.core.decode.rd2",
+          "numberFormat": "hexadecimal",
+          "colorIndex": 0,
+          "rowHeight": 1,
+          "verticalScale": 1,
+          "nameType": "fullPath",
+          "customName": "rd2",
+          "renderType": "multiBit",
+          "valueLinkCommand": ""
+        },
+        {
+          "dataType": "netlist-variable",
+          "netlistId": 89,
+          "name": "dut.top.core.decode.rs1",
+          "numberFormat": "hexadecimal",
+          "colorIndex": 0,
+          "rowHeight": 1,
+          "verticalScale": 1,
+          "nameType": "fullPath",
+          "customName": "rs1",
+          "renderType": "multiBit",
+          "valueLinkCommand": ""
+        },
+        {
+          "dataType": "netlist-variable",
+          "netlistId": 90,
+          "name": "dut.top.core.decode.rs2",
+          "numberFormat": "hexadecimal",
+          "colorIndex": 0,
+          "rowHeight": 1,
+          "verticalScale": 1,
+          "nameType": "fullPath",
+          "customName": "rs2",
+          "renderType": "multiBit",
+          "valueLinkCommand": ""
+        },
+        {
+          "dataType": "netlist-variable",
+          "netlistId": 140,
+          "name": "dut.top.core.decode.instruction_decode.rd",
+          "numberFormat": "hexadecimal",
+          "colorIndex": 0,
+          "rowHeight": 1,
+          "verticalScale": 1,
+          "nameType": "fullPath",
+          "customName": "rd",
+          "renderType": "multiBit",
+          "valueLinkCommand": ""
+        },
+        {
+          "dataType": "netlist-variable",
+          "netlistId": 137,
+          "name": "dut.top.core.decode.instruction_decode.imm_ext",
+          "numberFormat": "hexadecimal",
+          "colorIndex": 0,
+          "rowHeight": 1,
+          "verticalScale": 1,
+          "nameType": "fullPath",
+          "customName": "imm_ext",
+          "renderType": "multiBit",
+          "valueLinkCommand": ""
+        }
+      ]
+    },
+    {
+      "dataType": "netlist-variable",
+      "netlistId": 73,
+      "name": "dut.top.core.decode.RegWriteW",
+      "numberFormat": "binary",
+      "colorIndex": 0,
+      "rowHeight": 1,
+      "verticalScale": 1,
+      "nameType": "fullPath",
+      "customName": "RegWriteW",
+      "renderType": "binary",
+      "valueLinkCommand": ""
+    },
+    {
+      "dataType": "signal-group",
+      "groupName": "EX",
+      "collapseState": 2,
+      "children": [
+        {
+          "dataType": "netlist-variable",
+          "netlistId": 172,
+          "name": "dut.top.core.execute.alu_input_a",
+          "numberFormat": "hexadecimal",
+          "colorIndex": 0,
+          "rowHeight": 1,
+          "verticalScale": 1,
+          "nameType": "fullPath",
+          "customName": "alu_input_a",
+          "renderType": "multiBit",
+          "valueLinkCommand": ""
+        },
+        {
+          "dataType": "netlist-variable",
+          "netlistId": 173,
+          "name": "dut.top.core.execute.alu_input_b",
+          "numberFormat": "hexadecimal",
+          "colorIndex": 0,
+          "rowHeight": 1,
+          "verticalScale": 1,
+          "nameType": "fullPath",
+          "customName": "alu_input_b",
+          "renderType": "multiBit",
+          "valueLinkCommand": ""
+        },
+        {
+          "dataType": "netlist-variable",
+          "netlistId": 169,
+          "name": "dut.top.core.execute.alu_result",
+          "numberFormat": "hexadecimal",
+          "colorIndex": 0,
+          "rowHeight": 1,
+          "verticalScale": 1,
+          "nameType": "fullPath",
+          "customName": "alu_result",
+          "renderType": "multiBit",
+          "valueLinkCommand": ""
+        }
+      ]
+    },
+    {
+      "dataType": "signal-group",
+      "groupName": "MEM",
+      "collapseState": 2,
+      "children": [
+        {
+          "dataType": "netlist-variable",
+          "netlistId": 190,
+          "name": "dut.top.core.memory_stage.ALUResultM",
+          "numberFormat": "hexadecimal",
+          "colorIndex": 0,
+          "rowHeight": 1,
+          "verticalScale": 1,
+          "nameType": "fullPath",
+          "customName": "ALUResultM",
+          "renderType": "multiBit",
+          "valueLinkCommand": ""
+        },
+        {
+          "dataType": "netlist-variable",
+          "netlistId": 185,
+          "name": "dut.top.core.memory_stage.dataFromMemory",
+          "numberFormat": "hexadecimal",
+          "colorIndex": 0,
+          "rowHeight": 1,
+          "verticalScale": 1,
+          "nameType": "fullPath",
+          "customName": "dataFromMemory",
+          "renderType": "multiBit",
+          "valueLinkCommand": ""
+        }
+      ]
+    },
+    {
+      "dataType": "signal-group",
+      "groupName": "WB",
+      "collapseState": 2,
+      "children": [
+        {
+          "dataType": "netlist-variable",
+          "netlistId": 235,
+          "name": "dut.top.core.wb.rd",
+          "numberFormat": "hexadecimal",
+          "colorIndex": 0,
+          "rowHeight": 1,
+          "verticalScale": 1,
+          "nameType": "fullPath",
+          "customName": "rd",
+          "renderType": "multiBit",
+          "valueLinkCommand": ""
+        },
+        {
+          "dataType": "netlist-variable",
+          "netlistId": 234,
+          "name": "dut.top.core.wb.result",
+          "numberFormat": "hexadecimal",
+          "colorIndex": 0,
+          "rowHeight": 1,
+          "verticalScale": 1,
+          "nameType": "fullPath",
+          "customName": "result",
+          "renderType": "multiBit",
+          "valueLinkCommand": ""
+        }
+      ]
+    },
+    {
+      "dataType": "signal-group",
+      "groupName": "hazard",
+      "collapseState": 2,
+      "children": [
+        {
+          "dataType": "netlist-variable",
+          "netlistId": 223,
+          "name": "dut.top.core.u_hazard_unit.ForwardAE",
+          "numberFormat": "hexadecimal",
+          "colorIndex": 0,
+          "rowHeight": 1,
+          "verticalScale": 1,
+          "nameType": "fullPath",
+          "customName": "ForwardAE",
+          "renderType": "multiBit",
+          "valueLinkCommand": ""
+        },
+        {
+          "dataType": "netlist-variable",
+          "netlistId": 224,
+          "name": "dut.top.core.u_hazard_unit.ForwardBE",
+          "numberFormat": "hexadecimal",
+          "colorIndex": 0,
+          "rowHeight": 1,
+          "verticalScale": 1,
+          "nameType": "fullPath",
+          "customName": "ForwardBE",
+          "renderType": "multiBit",
+          "valueLinkCommand": ""
+        },
+        {
+          "dataType": "netlist-variable",
+          "netlistId": 225,
+          "name": "dut.top.core.u_hazard_unit.lwStall",
+          "numberFormat": "binary",
+          "colorIndex": 0,
+          "rowHeight": 1,
+          "verticalScale": 1,
+          "nameType": "fullPath",
+          "customName": "lwStall",
+          "renderType": "binary",
+          "valueLinkCommand": ""
+        },
+        {
+          "dataType": "netlist-variable",
+          "netlistId": 226,
+          "name": "dut.top.core.u_hazard_unit.StallF",
+          "numberFormat": "binary",
+          "colorIndex": 0,
+          "rowHeight": 1,
+          "verticalScale": 1,
+          "nameType": "fullPath",
+          "customName": "StallF",
+          "renderType": "binary",
+          "valueLinkCommand": ""
+        },
+        {
+          "dataType": "netlist-variable",
+          "netlistId": 227,
+          "name": "dut.top.core.u_hazard_unit.StallD",
+          "numberFormat": "binary",
+          "colorIndex": 0,
+          "rowHeight": 1,
+          "verticalScale": 1,
+          "nameType": "fullPath",
+          "customName": "StallD",
+          "renderType": "binary",
+          "valueLinkCommand": ""
+        },
+        {
+          "dataType": "netlist-variable",
+          "netlistId": 228,
+          "name": "dut.top.core.u_hazard_unit.FlushD",
+          "numberFormat": "binary",
+          "colorIndex": 0,
+          "rowHeight": 1,
+          "verticalScale": 1,
+          "nameType": "fullPath",
+          "customName": "FlushD",
+          "renderType": "binary",
+          "valueLinkCommand": ""
+        },
+        {
+          "dataType": "netlist-variable",
+          "netlistId": 229,
+          "name": "dut.top.core.u_hazard_unit.FlushE",
+          "numberFormat": "binary",
+          "colorIndex": 0,
+          "rowHeight": 1,
+          "verticalScale": 1,
+          "nameType": "fullPath",
+          "customName": "FlushE",
+          "renderType": "binary",
+          "valueLinkCommand": ""
+        },
+        {
+          "dataType": "signal-group",
+          "groupName": "hazard inputs",
+          "collapseState": 1,
+          "children": [
+            {
+              "dataType": "netlist-variable",
+              "netlistId": 219,
+              "name": "dut.top.core.u_hazard_unit.Rs1D",
+              "numberFormat": "binary",
+              "colorIndex": 0,
+              "rowHeight": 1,
+              "verticalScale": 1,
+              "nameType": "fullPath",
+              "customName": "Rs1D",
+              "renderType": "multiBit",
+              "valueLinkCommand": ""
+            },
+            {
+              "dataType": "netlist-variable",
+              "netlistId": 212,
+              "name": "dut.top.core.u_hazard_unit.Rs1E",
+              "numberFormat": "binary",
+              "colorIndex": 0,
+              "rowHeight": 1,
+              "verticalScale": 1,
+              "nameType": "fullPath",
+              "customName": "Rs1E",
+              "renderType": "multiBit",
+              "valueLinkCommand": ""
+            },
+            {
+              "dataType": "netlist-variable",
+              "netlistId": 220,
+              "name": "dut.top.core.u_hazard_unit.Rs2D",
+              "numberFormat": "hexadecimal",
+              "colorIndex": 0,
+              "rowHeight": 1,
+              "verticalScale": 1,
+              "nameType": "fullPath",
+              "customName": "Rs2D",
+              "renderType": "multiBit",
+              "valueLinkCommand": ""
+            },
+            {
+              "dataType": "netlist-variable",
+              "netlistId": 213,
+              "name": "dut.top.core.u_hazard_unit.Rs2E",
+              "numberFormat": "hexadecimal",
+              "colorIndex": 0,
+              "rowHeight": 1,
+              "verticalScale": 1,
+              "nameType": "fullPath",
+              "customName": "Rs2E",
+              "renderType": "multiBit",
+              "valueLinkCommand": ""
+            },
+            {
+              "dataType": "netlist-variable",
+              "netlistId": 221,
+              "name": "dut.top.core.u_hazard_unit.RdE",
+              "numberFormat": "hexadecimal",
+              "colorIndex": 0,
+              "rowHeight": 1,
+              "verticalScale": 1,
+              "nameType": "fullPath",
+              "customName": "RdE",
+              "renderType": "multiBit",
+              "valueLinkCommand": ""
+            },
+            {
+              "dataType": "netlist-variable",
+              "netlistId": 214,
+              "name": "dut.top.core.u_hazard_unit.RdM",
+              "numberFormat": "hexadecimal",
+              "colorIndex": 0,
+              "rowHeight": 1,
+              "verticalScale": 1,
+              "nameType": "fullPath",
+              "customName": "RdM",
+              "renderType": "multiBit",
+              "valueLinkCommand": ""
+            },
+            {
+              "dataType": "netlist-variable",
+              "netlistId": 215,
+              "name": "dut.top.core.u_hazard_unit.RdW",
+              "numberFormat": "hexadecimal",
+              "colorIndex": 0,
+              "rowHeight": 1,
+              "verticalScale": 1,
+              "nameType": "fullPath",
+              "customName": "RdW",
+              "renderType": "multiBit",
+              "valueLinkCommand": ""
+            },
+            {
+              "dataType": "netlist-variable",
+              "netlistId": 216,
+              "name": "dut.top.core.u_hazard_unit.RegWriteM",
+              "numberFormat": "binary",
+              "colorIndex": 0,
+              "rowHeight": 1,
+              "verticalScale": 1,
+              "nameType": "fullPath",
+              "customName": "RegWriteM",
+              "renderType": "binary",
+              "valueLinkCommand": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
