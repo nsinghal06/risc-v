@@ -4,16 +4,16 @@ import pkg_hazard_unit::*;
 
 module hazard_unit
   ( input wire clk
-  , input wire Rs1E
-  , input wire Rs2E
-  , input wire RdM
-  , input wire RdW
+  , input wire [4:0] Rs1E
+  , input wire [4:0] Rs2E
+  , input wire [4:0] RdM
+  , input wire [4:0] RdW
   , input wire RegWriteM
   , input wire RegWriteW
   , input wire [1:0] ResultSrcE
-  , input wire Rs1D
-  , input wire Rs2D
-  , input wire RdE
+  , input wire [4:0] Rs1D
+  , input wire [4:0] Rs2D
+  , input wire [4:0] RdE
   , input wire PCSrcE
   , output forward_a_t ForwardAE
   , output forward_b_t ForwardBE

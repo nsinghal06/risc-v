@@ -32,7 +32,7 @@ module fetch_stage
   always @ (posedge clk)
     if (!StallF) pc_previous <= reset ? 0 : pc_next;
 
-  assign imem__address = pc_next;
+  assign imem__address = pc_previous;
   assign IF_to_ID.instruction = imem__data;
   assign IF_to_ID.pc_cur = pc_previous;
   assign IF_to_ID.pc_plus_4 = pc_previous + 32'h4;
