@@ -46,10 +46,9 @@ module ControlFSM
       DECODE: begin
 
         if (opcode == JType) next_state = UNCONDJUMP;
-
         else if (opcode == RType) next_state = EXECUTER;
 
-        else if (opcode == IType_logic) next_state = EXECUTEI;
+        else if (opcode == 7'b0010011) next_state = EXECUTEI;
 
         else if (opcode == IType_load || opcode == SType) next_state = MEMADR;
 

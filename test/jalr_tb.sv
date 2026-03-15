@@ -79,12 +79,11 @@ module jalr_tb;
     // ALUWB: write link (4) into rd (x1)
     wait_till_next_cfsm_state(ALUWB);
 
+    `assert_equal(uut.core.fetch.pc_cur, 32'd104) //PC was originally checking one state too late
     // Back to FETCH: PC should be (100+5)&~1 = 104, x1 should be 4
     wait_till_next_cfsm_state(FETCH);
     wait_till_next_cfsm_state(FETCH_WAIT);
     `assert_equal(uut.core.RegFile.RFMem[1], 32'd4)
-    `assert_equal(uut.core.fetch.pc_cur, 32'd104)
-
     // End of first subtest -> now run a second variant with negative odd imm
     // to further exercise LSB clearing and sign extension.
     @(posedge clk); #1;
@@ -131,11 +130,11 @@ module jalr_tb;
 
     // Writeback then check PC/link
     wait_till_next_cfsm_state(ALUWB);
+
+    `assert_equal(uut.core.fetch.pc_cur, 32'd192) //PC was originally checking one state too late
     wait_till_next_cfsm_state(FETCH);
     wait_till_next_cfsm_state(FETCH_WAIT);
     `assert_equal(uut.core.RegFile.RFMem[1], 32'd4)
-    `assert_equal(uut.core.fetch.pc_cur, 32'd192)
-
     $finish;
   end
 
