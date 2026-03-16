@@ -76,7 +76,6 @@ module utoss_riscv_pipelined
     ( .IF_to_ID    ( if_to_id_reg               )
     , .clk         ( clk                        )
     , .reset       ( reset                      )
-    , .funct3      ( funct3                     )
     , .data        ( wb_result                  )
     , .rd_wb       ( wb_rd                      )
     , .RegWriteW   ( mem_to_wb_reg.RegWriteW    )
@@ -119,7 +118,6 @@ module utoss_riscv_pipelined
 
   Mem_Stage memory_stage
   ( .EX_to_MEM        ( ex_to_mem_reg )
-  , .funct3           ( funct3        )
   , .dataFromMemory   (memory_data__read_data)
   , .dataToMemory     (memory_data__write_data)
   , .memWriteEnable (memory_data__write_enable) // TODO: Is this required?

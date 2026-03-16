@@ -10,7 +10,6 @@ module Decode
   , input wire [4:0] rd_wb // rd from writeback
   , input wire RegWriteW // regWrite from writeback stage
   , input data_t data
-  , output reg [2:0] funct3
   , output id_to_ex_t ID_to_EX
   );
 
@@ -24,6 +23,8 @@ module Decode
 
   opcode_t opcode;
   imm_t    imm_ext;
+
+  wire [2:0] funct3;
   reg [6:0] funct7;
 
   wire [4:0] rd;
@@ -84,6 +85,7 @@ module Decode
     assign ID_to_EX.MemWrite            = cfsm__mem_write;
     assign ID_to_EX.RegWrite            = cfsm__reg_write;
     assign ID_to_EX.ALUControl          = __tmp_ALUControl;
+    assign ID_to_EX.funct3              = funct3;
     assign ID_to_EX.rd1                 = rd1;
     assign ID_to_EX.rd2                 = rd2;
     assign ID_to_EX.rd                  = rd;

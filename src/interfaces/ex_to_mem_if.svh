@@ -15,6 +15,7 @@ typedef struct packed {
   // logic [3:0] MemWriteByteAddress;
   data_t                  alu_result;
   data_t                  WriteDataE;
+  logic [2:0]             funct3;
   logic [4:0]             rd;
   // data_t rd2;
   addr_t                  pc_cur;
