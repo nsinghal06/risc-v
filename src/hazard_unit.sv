@@ -31,23 +31,21 @@ module hazard_unit
 //Forward
 // TODO: check if we need to do this combinationally
 // probably need to do it combinationally to avoid unnecessary stalls
-  always @ (posedge clk) begin
+  always_comb
     if (((Rs1E == RdM) & RegWriteM) & (Rs1E != 0))
-      ForwardAE <= FORWARD_A__MEMORY_ALU_RESULT;
+      ForwardAE = FORWARD_A__MEMORY_ALU_RESULT;
     else if (((Rs1E == RdW) & RegWriteM) & (Rs1E != 0))
-      ForwardAE <= FORWARD_A__WRITE_BACK_RESULT;
+      ForwardAE = FORWARD_A__WRITE_BACK_RESULT;
     else
-      ForwardAE <= FORWARD_A__EXECUTE_RD1;
-  end
+      ForwardAE = FORWARD_A__EXECUTE_RD1;
 
-  always @ (posedge clk) begin
+  always_comb
     if (Rs2E != 0 && Rs2E == RdM && RegWriteW)
-      ForwardBE <= FORWARD_B__MEMORY_ALU_RESULT;
+      ForwardBE = FORWARD_B__MEMORY_ALU_RESULT;
     else if (Rs2E != 0 && Rs2E == RdW && RegWriteM)
-      ForwardBE <= FORWARD_B__WRITE_BACK_RESULT;
+      ForwardBE = FORWARD_B__WRITE_BACK_RESULT;
     else
-      ForwardBE <= FORWARD_B__EXECUTE_RD2;
-  end
+      ForwardBE = FORWARD_B__EXECUTE_RD2;
 
 //Stall when a load hazard occurs
   always @ (posedge clk) begin
