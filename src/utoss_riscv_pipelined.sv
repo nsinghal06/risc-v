@@ -154,14 +154,15 @@ module utoss_riscv_pipelined
   hazard_unit u_hazard_unit
     ( .clk ( clk )
 
-    , .Rs1E      ( id_to_ex_reg.rs1        )
-    , .Rs2E      ( id_to_ex_reg.rs2        )
-    , .RdM       ( ex_to_mem_reg.rd        )
-    , .RdW       ( mem_to_wb_reg.rd        )
-    , .RdE       ( id_to_ex_reg.rd         )
-    , .RegWriteM ( ex_to_mem_reg.RegWrite  )
-    , .RegWriteW ( mem_to_wb_reg.RegWriteW )
-    , .PCSrcE    ( ex_to_if_out.pc_src     )
+    , .Rs1E       ( id_to_ex_reg.rs1        )
+    , .Rs2E       ( id_to_ex_reg.rs2        )
+    , .RdM        ( ex_to_mem_reg.rd        )
+    , .RdW        ( mem_to_wb_reg.rd        )
+    , .RdE        ( id_to_ex_reg.rd         )
+    , .RegWriteM  ( ex_to_mem_reg.RegWrite  )
+    , .RegWriteW  ( mem_to_wb_reg.RegWriteW )
+    , .ResultSrcE ( id_to_ex_reg.ResultSrc  )
+    , .PCSrcE     ( ex_to_if_out.pc_src     )
 
     , .ForwardAE ( hz_forward_a )
     , .ForwardBE ( hz_forward_b )

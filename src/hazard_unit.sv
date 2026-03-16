@@ -1,3 +1,4 @@
+`include "src/headers/types.svh"
 `include "src/packages/pkg_hazard_unit.svh"
 
 import pkg_hazard_unit::*;
@@ -10,7 +11,7 @@ module hazard_unit
   , input wire [4:0] RdW
   , input wire RegWriteM
   , input wire RegWriteW
-  , input wire [1:0] ResultSrcE
+  , input write_back_result_src_t ResultSrcE
   , input wire [4:0] Rs1D
   , input wire [4:0] Rs2D
   , input wire [4:0] RdE
