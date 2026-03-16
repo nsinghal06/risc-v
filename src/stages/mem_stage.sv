@@ -8,6 +8,7 @@ module Mem_Stage
   , input data_t dataFromMemory
   , output data_t dataToMemory
   , output logic [3:0] memWriteEnable
+  , output addr_t mem_address
   , output mem_to_wb_t MEM_to_WB
   );
 
@@ -36,6 +37,7 @@ module Mem_Stage
     );
 
   assign memWriteEnable = (MemWrite == 'b0) ? 4'b0 : tempMemWriteByteAddress;
+  assign mem_address = EX_to_MEM.alu_result;
 
   // Combinational assignment to MEM_to_WB interface
   assign MEM_to_WB.RegWriteW = EX_to_MEM.RegWrite;

@@ -123,6 +123,7 @@ module utoss_riscv_pipelined
   , .dataFromMemory   (memory_data__read_data)
   , .dataToMemory     (memory_data__write_data)
   , .memWriteEnable (memory_data__write_enable) // TODO: Is this required?
+  , .mem_address      ( memory_data__address )
   , .MEM_to_WB        (mem_to_wb_out)
   );
 
