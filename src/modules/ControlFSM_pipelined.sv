@@ -12,6 +12,7 @@ module control_fsm_pipelined
   , output var logic               mem_write
   , output var logic               jump
   , output var logic               branch
+  , output execute_alu_src_a_t     alu_src_a
   , output execute_alu_src_b_t     alu_src_b
   );
 
@@ -35,6 +36,16 @@ module control_fsm_pipelined
   always_comb jump = opcode inside {JType, IType_jalr};
 
   always_comb branch = opcode == BType;
+
+  always_comb
+    case (opcode)
+      RType, IType_logic, IType_load, SType, UType_lui /* TODO: triple check lui */:
+        alu_src_a = EXECUTE_ALU_SRC_A__RD1;
+      UType_auipc, JType, BType:
+        alu_src_a = EXECUTE_ALU_SRC_A__PC;
+      default:
+        alu_src_a = execute_alu_src_a_t'('x);
+    endcase
 
   always_comb
     case (opcode)

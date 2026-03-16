@@ -32,8 +32,15 @@ module fetch_stage
   always @ (posedge clk)
     if (!StallF) pc_previous <= reset ? 0 : pc_next;
 
+  // TODO: elaborate on why we need this; in short, this is an artifact of clocked one-cycle reads,
+  // the pc_previous is technically one instruction ahead of the current valie of `imem_data`;
+  addr_t pc_prev_prev;
+  always @ (posedge clk)
+    if (!StallF) pc_prev_prev <= reset ? 0 : pc_previous;
+
   assign imem__address = pc_previous;
   assign IF_to_ID.instruction = imem__data;
+  assign IF_to_ID.pc_prev = pc_prev_prev;
   assign IF_to_ID.pc_cur = pc_previous;
   assign IF_to_ID.pc_plus_4 = pc_previous + 32'h4;
 endmodule

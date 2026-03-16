@@ -25,6 +25,7 @@ module Execute
 
   data_t alu_input_a;
   data_t alu_input_b;
+  data_t safe_rd1; // hazard-safe version of rd1
   data_t safe_rd2; // hazard-safe version of rd2
   data_t WriteDataE;
 
@@ -37,10 +38,10 @@ module Execute
 
   always_comb
     case (hz_forward_a)
-      FORWARD_A__EXECUTE_RD1:       alu_input_a = ID_to_EX.rd1;
-      FORWARD_A__WRITE_BACK_RESULT: alu_input_a = wb_result;
-      FORWARD_A__MEMORY_ALU_RESULT: alu_input_a = mem_alu_result;
-      default:                      alu_input_a = 'x;
+      FORWARD_A__EXECUTE_RD1:       safe_rd1 = ID_to_EX.rd1;
+      FORWARD_A__WRITE_BACK_RESULT: safe_rd1 = wb_result;
+      FORWARD_A__MEMORY_ALU_RESULT: safe_rd1 = mem_alu_result;
+      default:                      safe_rd1 = 'x;
     endcase
 
   always_comb
@@ -49,6 +50,13 @@ module Execute
       FORWARD_B__WRITE_BACK_RESULT: safe_rd2 = wb_result;
       FORWARD_B__MEMORY_ALU_RESULT: safe_rd2 = mem_alu_result;
       default:                      safe_rd2 = 'x;
+    endcase
+
+  always_comb
+    case (ID_to_EX.alu_src_a)
+      EXECUTE_ALU_SRC_A__RD1: alu_input_a = safe_rd1;
+      EXECUTE_ALU_SRC_A__PC:  alu_input_a = ID_to_EX.pc_prev; // TODO: elaborate on why
+      default:                alu_input_a = 'x;
     endcase
 
   always_comb

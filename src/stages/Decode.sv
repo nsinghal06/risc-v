@@ -18,6 +18,7 @@ module Decode
   wire                    cfsm__mem_write;
   wire                    cfsm__jump;
   wire                    cfsm__branch;
+  execute_alu_src_a_t     cfsm__alu_src_a;
   execute_alu_src_b_t     cfsm__ALUSrcB;
   wire [3:0]              __tmp_ALUControl;
 
@@ -51,6 +52,7 @@ module Decode
     , .mem_write  ( cfsm__mem_write  )
     , .jump       ( cfsm__jump       )
     , .branch     ( cfsm__branch     )
+    , .alu_src_a  ( cfsm__alu_src_a  )
     , .alu_src_b  ( cfsm__ALUSrcB    )
     );
 
@@ -78,6 +80,7 @@ module Decode
     , .writeData       ( rd2              )
     );
 
+    assign ID_to_EX.alu_src_a           = cfsm__alu_src_a;
     assign ID_to_EX.ALUSrcB             = cfsm__ALUSrcB;
     assign ID_to_EX.ResultSrc           = cfsm__result_src;
     assign ID_to_EX.Branch              = cfsm__branch;
@@ -92,6 +95,7 @@ module Decode
     assign ID_to_EX.rs1                 = rs1;
     assign ID_to_EX.rs2                 = rs2;
     assign ID_to_EX.imm_ext             = imm_ext;
+    assign ID_to_EX.pc_prev             = IF_to_ID.pc_prev;
     assign ID_to_EX.pc_cur              = IF_to_ID.pc_cur;
     assign ID_to_EX.pc_plus_4           = IF_to_ID.pc_plus_4;
 
