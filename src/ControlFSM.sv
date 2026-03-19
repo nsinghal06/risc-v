@@ -121,7 +121,6 @@ module ControlFSM
 
   //output logic
 
-  /* verilator lint_off LATCH */
   always @(*) begin
     Branch = 1'b0;
     pc_src = PC_SRC__INCREMENT;
@@ -293,7 +292,6 @@ module ControlFSM
     endcase
 
   end
-  /* verilator lint_on LATCH */
 
   //State transition logic (sequential)
   always @ (posedge clk) begin

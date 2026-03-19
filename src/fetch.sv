@@ -27,8 +27,6 @@ module fetch
 
   addr_t pc_next;
 
-  /* verilator lint_off LATCH */
-  /* verilator lint_off COMBDLY */
   always @ (*) begin
     if (cfsm__pc_update) begin
       case (cfsm__pc_src)
@@ -41,8 +39,6 @@ module fetch
       pc_next = pc_cur;
     end
   end
-  /* verilator lint_on LATCH */
-  /* verilator lint_on COMBDLY */
 
   always @ (posedge clk) begin
     if (reset) pc_cur <= 32'h00000000;
