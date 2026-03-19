@@ -55,7 +55,7 @@ module dut;
 
   task watch_timeout();
     $display("%m: waiting for timeout...");
-    
+
     /* verilator lint_off UNUSEDSIGNAL */
     repeat (100000) @(posedge clk);
     /* verilator lint_on UNUSEDSIGNAL */
