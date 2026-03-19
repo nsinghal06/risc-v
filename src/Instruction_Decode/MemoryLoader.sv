@@ -31,8 +31,8 @@ module MemoryLoader
     /* verilator lint_on WIDTHTRUNC */
 
     always @(*) // cannot use always_comb yet: https://github.com/steveicarus/iverilog/issues/734
-        case (funct3)
-            3'b000: begin
+        case (funct3[1:0])
+            BYTE: begin
                 __tmp_MemData = { dataB[7:0], dataB[7:0], dataB[7:0], dataB[7:0] };
                 case (byteindex)
                     2'd0: begin
@@ -57,14 +57,14 @@ module MemoryLoader
                     end
                 endcase
             end
-            3'b001: begin
+            HALF: begin
                 __tmp_MemData = { dataB[15:0], dataB[15:0] };
-                case (byteindex[1])
-                    1'b0: begin
+                case (byteindex)
+                    2'd0: begin
                         mem_load_result = {{16{signed_mode & memory_data[15]}}, memory_data[15:0]};
                         MemWriteByteAddress = 4'b0011;
                     end
-                    1'b1: begin
+                    2'd2: begin
                         mem_load_result = {{16{signed_mode & memory_data[31]}}, memory_data[31:16]};
                         MemWriteByteAddress = 4'b1100;
                     end
@@ -74,38 +74,18 @@ module MemoryLoader
                     end
                 endcase
             end
-            3'b101: begin // LHU (unsigned halfword)
-                __tmp_MemData = { dataB[15:0], dataB[15:0] };
-                case (byteindex[1])
-                    1'b0: begin
-                        mem_load_result = {16'b0, memory_data[15:0]};  // ZERO extend
-                        MemWriteByteAddress = 4'b0011;
-                    end
-                    1'b1: begin
-                        mem_load_result = {16'b0, memory_data[31:16]};
-                        MemWriteByteAddress = 4'b1100;
+            WORD: begin
+                __tmp_MemData = { dataB[31:0] };
+                case (byteindex)
+                    2'd0: begin
+                        mem_load_result = memory_data;
+                        MemWriteByteAddress = 4'b1111;
                     end
                     default: begin
                         mem_load_result = 32'hxxxxxxxx;
                         MemWriteByteAddress = 4'bxxxx;
                     end
                 endcase
-            end
-            3'b010: begin // LW
-                __tmp_MemData = dataB;
-                mem_load_result = memory_data;
-                MemWriteByteAddress = 4'b1111;
-            end
-            3'b100: begin // LBU (unsigned byte)
-                __tmp_MemData = { dataB[7:0], dataB[7:0], dataB[7:0], dataB[7:0] };
-                case (byteindex)
-                    2'd0: mem_load_result = {24'b0, memory_data[7:0]};
-                    2'd1: mem_load_result = {24'b0, memory_data[15:8]};
-                    2'd2: mem_load_result = {24'b0, memory_data[23:16]};
-                    2'd3: mem_load_result = {24'b0, memory_data[31:24]};
-                    default: mem_load_result = 32'hxxxxxxxx;
-                endcase
-                MemWriteByteAddress = 4'b0000;  // Don't care for load
             end
             default: begin
                 __tmp_MemData = 32'hxxxxxxxx;
