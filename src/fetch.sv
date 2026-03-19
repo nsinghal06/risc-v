@@ -43,6 +43,8 @@ module fetch
       endcase
     end
   end
+  /* verilator lint_on LATCH */
+  /* verilator lint_on COMBDLY */
 
   always @ (posedge clk) begin
     if (reset) begin

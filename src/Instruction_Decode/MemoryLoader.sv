@@ -5,7 +5,7 @@ module MemoryLoader
 
 /* verilator lint_off UNUSEDSIGNAL */
 , input  addr_t memory_address
-/* verilator lint_off UNUSEDSIGNAL */
+/* verilator lint_on UNUSEDSIGNAL */
 
 , input  logic [2:0]  funct3
 , input  logic [31:0] dataB
@@ -17,14 +17,18 @@ module MemoryLoader
     logic [1:0] byteindex;
     assign byteindex = memory_address[1:0];
 
-//    typedef enum logic [1:0]
-//    { BYTE = 2'b00
-//   , HALF = 2'b01
-//    , WORD = 2'b10
-//    } transfersize_t;
+    /* verilator lint_off WIDTHTRUNC */     //this entire block was commented out - reverted
+    typedef enum logic [1:0]
+    { BYTE = 2'b00
+    , HALF = 2'b01
+    , WORD = 2'b10
+    } transfersize_t;
+    /* verilator lint_on WIDTHTRUNC */
 
     logic signed_mode;
-    assign signed_mode = (funct3[2] == 1'b0);
+    /* verilator lint_off WIDTHTRUNC */
+    assign signed_mode = ~funct3[2]; // reverted from "(funct3[2] == 1'b0);"
+    /* verilator lint_on WIDTHTRUNC */
 
     always @(*) // cannot use always_comb yet: https://github.com/steveicarus/iverilog/issues/734
         case (funct3)

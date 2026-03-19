@@ -68,7 +68,7 @@ module jal_tb;
 
     // ALUWB: write link back to rd (x1)
     wait_till_next_cfsm_state(ALUWB);
-    
+
     `assert_equal(uut.core.fetch.pc_cur, 32'd16) //PC was originally checking one state too late
     // Back to FETCH: PC should be 16; x1 should be 4
     wait_till_next_cfsm_state(FETCH);

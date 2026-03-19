@@ -9,7 +9,7 @@
 
 /* verilator lint_off IMPORTSTAR */
 import pkg_control_fsm::*;
-/* lint_on IMPORTSTAR */
+/* verilator lint_on IMPORTSTAR */
 
 module ControlFSM
   ( input opcode_t opcode
@@ -47,8 +47,8 @@ module ControlFSM
 
         if (opcode == JType) next_state = UNCONDJUMP;
         else if (opcode == RType) next_state = EXECUTER;
-
-        else if (opcode == 7'b0010011) next_state = EXECUTEI;
+        
+        else if (opcode == IType_logic) next_state = EXECUTEI; // "7'b0010011" was reverted back to "IType_logic"
 
         else if (opcode == IType_load || opcode == SType) next_state = MEMADR;
 
@@ -315,7 +315,7 @@ module ControlFSM
     endcase
 
   end
-  /* verilator lint_off LATCH */
+  /* verilator lint_on LATCH */
 
   //State transition logic (sequential)
   always @ (posedge clk) begin
