@@ -5,7 +5,9 @@ module ext__b__decoder
   ( input [2:0] funct3
   , input [6:0] funct7
   , input [6:0] opcode
+  /* verilator lint_off UNUSEDSIGNAL */
   , input [4:0] rd
+  /* verilator lint_on UNUSEDSIGNAL */
   , output ext__b__types::b_alu_control_t b_alu_control
   );
 

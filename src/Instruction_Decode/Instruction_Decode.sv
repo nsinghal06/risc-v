@@ -138,11 +138,10 @@ module Instruction_Decode
     , .alu_op(alu_op)
     , .alu_control(ALUControl)
     );
-
 `ifdef UTOSS_RISCV_ENABLE_B_EXT
-
+/* verilator lint_off UNUSEDSIGNAL */
   ext__b__types::b_alu_control_t b_alu_control;
-
+/* verilator lint_on UNUSEDSIGNAL */
   ext__b__decoder u_ext__b__decoder
     ( .funct3        ( funct3        )
     , .funct7        ( funct7        )
