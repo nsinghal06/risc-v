@@ -1,4 +1,4 @@
-`timescale 1ns/1ps
+`include "src/timescale.svh"
 
 `include "src/utils.svh"
 `include "src/types.svh"

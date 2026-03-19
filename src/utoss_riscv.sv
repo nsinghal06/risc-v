@@ -1,6 +1,6 @@
+`include "src/timescale.svh"
 `include "src/types.svh"
 `include "src/packages/pkg_control_fsm.svh"
-`timescale 1ns/1ps
 
 
 module utoss_riscv

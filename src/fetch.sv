@@ -5,8 +5,8 @@
 //
 
 `include "src/utils.svh"
+`include "src/timescale.svh"
 `include "src/types.svh"
-`timescale 1ns/1ps
 
 
 module fetch

@@ -1,10 +1,10 @@
 //created by Joonseo Park, for University of Toronto Open Source Society
 //A Moore Type Finite State Machine for the RV32I Microprocessor Control Unit
 
+`include "src/timescale.svh"
 `include "src/types.svh"
 `include "src/params.svh"
 `include "src/packages/pkg_control_fsm.svh"
-`timescale 1ns/1ps
 
 
 /* verilator lint_off IMPORTSTAR */

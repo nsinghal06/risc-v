@@ -1,5 +1,5 @@
 `include "src/types.svh"
-`timescale 1ns/1ps
+`include "src/timescale.svh"
 
 
 module ALUdecoder ( input [2:0] funct3

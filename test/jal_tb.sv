@@ -1,4 +1,4 @@
-`timescale 1ns/1ps
+`include "src/timescale.svh"
 
 `include "src/types.svh"      // <-- bring in enum literals like PC_SRC__JUMP
 `include "test/utils.svh"

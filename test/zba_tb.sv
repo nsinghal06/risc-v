@@ -1,4 +1,5 @@
-`timescale 1ns/1ns
+`include "src/timescale.svh"
+
 `include "test/utils.svh"
 
 module zba_tb;

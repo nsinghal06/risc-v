@@ -1,8 +1,7 @@
+`include "src/timescale.svh"
 `include "src/types.svh"
 `include "src/params.svh"
 `include "src/packages/pkg_control_fsm.svh"
-`timescale 1ns/1ps
-
 
 import pkg_control_fsm::state_t;
 

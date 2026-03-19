@@ -1,4 +1,4 @@
-`timescale 1ns/1ps
+`include "src/timescale.svh"
 
 module ALU
   ( input [31:0] a
