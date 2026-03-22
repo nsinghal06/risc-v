@@ -1,5 +1,6 @@
 `include "src/headers/types.svh"
 `include "src/packages/pkg_hazard_unit.svh"
+`include "src/packages/pkg_execute_stage.svh"
 `include "src/interfaces/id_to_ex_if.svh"
 `include "src/interfaces/ex_to_mem_if.svh"
 `include "src/interfaces/ex_to_if_if.svh"
@@ -22,6 +23,8 @@ module Execute
   , output ex_to_if_t EX_to_IF
   , output ex_to_mem_t EX_to_MEM
   );
+
+  import pkg_execute_stage::*;
 
   data_t alu_input_a;
   data_t alu_input_b;
@@ -54,16 +57,16 @@ module Execute
 
   always_comb
     case (ID_to_EX.alu_src_a)
-      EXECUTE_ALU_SRC_A__RD1: alu_input_a = safe_rd1;
-      EXECUTE_ALU_SRC_A__PC:  alu_input_a = ID_to_EX.pc_prev; // TODO: elaborate on why
-      default:                alu_input_a = 'x;
+      ALU_SRC_A__RD1: alu_input_a = safe_rd1;
+      ALU_SRC_A__PC:  alu_input_a = ID_to_EX.pc_prev; // TODO: elaborate on why
+      default:        alu_input_a = 'x;
     endcase
 
   always_comb
     case (ID_to_EX.ALUSrcB)
-      EXECUTE_ALU_SRC_B__RD2:     alu_input_b = safe_rd2;
-      EXECUTE_ALU_SRC_B__IMM_EXT: alu_input_b = ID_to_EX.imm_ext;
-      default:                    alu_input_b = 'x;
+      ALU_SRC_B__RD2:     alu_input_b = safe_rd2;
+      ALU_SRC_B__IMM_EXT: alu_input_b = ID_to_EX.imm_ext;
+      default:            alu_input_b = 'x;
     endcase
 
   ALU alu

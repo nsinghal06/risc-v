@@ -48,11 +48,6 @@ typedef enum logic [1:0]
   , ALU_SRC_A__UNSET  = 2'bxx
   } alu_src_a_t;
 
-typedef enum logic [0:0]
-  { EXECUTE_ALU_SRC_A__RD1 = 1'b0
-  , EXECUTE_ALU_SRC_A__PC  = 1'b1
-  } execute_alu_src_a_t;
-
 // represents the possible input sources for the second operand of the ALU as selected by the
 // Control FSM; See Figure 7.46 of digital design and computer architecture book
 // TODO: remove after pipelining integration is complete
@@ -63,11 +58,6 @@ typedef enum logic [1:0]
 
   , ALU_SRC_B__UNSET = 2'b11
   } alu_src_b_t;
-
-typedef enum logic [0:0]
-  { EXECUTE_ALU_SRC_B__RD2     = 1'b0
-  , EXECUTE_ALU_SRC_B__IMM_EXT = 1'b1
-  } execute_alu_src_b_t;
 
 // represents the possible input sources of the address for memory access as selected by the Control
 // FSM; See Figure 7.22 of the digital disgn and computer architecture book

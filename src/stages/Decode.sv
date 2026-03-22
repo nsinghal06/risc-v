@@ -2,6 +2,7 @@
 `include "src/headers/types.svh"
 `include "src/interfaces/if_to_id_if.svh"
 `include "src/interfaces/id_to_ex_if.svh"
+`include "src/packages/pkg_execute_stage.svh"
 
 module Decode
   ( input if_to_id_t IF_to_ID
@@ -16,13 +17,14 @@ module Decode
   , output reg [4:0] rs2
   );
 
-  wire                    cfsm__reg_write;
-  write_back_result_src_t cfsm__result_src;
-  wire                    cfsm__mem_write;
-  wire                    cfsm__jump;
-  wire                    cfsm__branch;
-  execute_alu_src_a_t     cfsm__alu_src_a;
-  execute_alu_src_b_t     cfsm__ALUSrcB;
+  wire                           cfsm__reg_write;
+  write_back_result_src_t        cfsm__result_src;
+  wire                           cfsm__mem_write;
+  wire                           cfsm__jump;
+  wire                           cfsm__branch;
+  pkg_execute_stage::alu_src_a_t cfsm__alu_src_a;
+  pkg_execute_stage::alu_src_b_t cfsm__ALUSrcB;
+
   wire [3:0]              __tmp_ALUControl;
 
   opcode_t opcode;

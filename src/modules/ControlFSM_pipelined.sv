@@ -1,3 +1,4 @@
+`include "src/packages/pkg_execute_stage.svh"
 
 // TODO: review all the signal assignments
 module control_fsm_pipelined
@@ -12,8 +13,9 @@ module control_fsm_pipelined
   , output var logic               mem_write
   , output var logic               jump
   , output var logic               branch
-  , output execute_alu_src_a_t     alu_src_a
-  , output execute_alu_src_b_t     alu_src_b
+
+  , output pkg_execute_stage::alu_src_a_t alu_src_a
+  , output pkg_execute_stage::alu_src_b_t alu_src_b
   );
 
   always_comb
@@ -40,20 +42,20 @@ module control_fsm_pipelined
   always_comb
     case (opcode)
       RType, IType_logic, IType_load, SType, UType_lui /* TODO: triple check lui */:
-        alu_src_a = EXECUTE_ALU_SRC_A__RD1;
+        alu_src_a = pkg_execute_stage::ALU_SRC_A__RD1;
       UType_auipc, JType, BType:
-        alu_src_a = EXECUTE_ALU_SRC_A__PC;
+        alu_src_a = pkg_execute_stage::ALU_SRC_A__PC;
       default:
-        alu_src_a = execute_alu_src_a_t'('x);
+        alu_src_a = pkg_execute_stage::alu_src_a_t'('x);
     endcase
 
   always_comb
     case (opcode)
       RType, BType:
-        alu_src_b = EXECUTE_ALU_SRC_B__RD2;
+        alu_src_b = pkg_execute_stage::ALU_SRC_B__RD2;
       UType_auipc, UType_lui, IType_logic, IType_jalr, IType_load, SType:
-        alu_src_b = EXECUTE_ALU_SRC_B__IMM_EXT;
+        alu_src_b = pkg_execute_stage::ALU_SRC_B__IMM_EXT;
       default:
-        alu_src_b = execute_alu_src_b_t'('x);
+        alu_src_b = pkg_execute_stage::alu_src_b_t'('x);
     endcase
 endmodule
