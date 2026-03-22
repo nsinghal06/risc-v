@@ -87,13 +87,13 @@ module Decode
   // already move on to the next instruction
   data_t rd1_safe;
   always_comb
-    if (rd_wb == rs1 && RegWriteW) rd1_safe = data;
-    else                           rd1_safe = rd1;
+    if (rd_wb == rs1 && RegWriteW && rd_wb != 0) rd1_safe = data;
+    else                                         rd1_safe = rd1;
 
   data_t rd2_safe;
   always_comb
-    if (rd_wb == rs2 && RegWriteW) rd2_safe = data;
-    else                           rd2_safe = rd2;
+    if (rd_wb == rs2 && RegWriteW && rd_wb != 0) rd2_safe = data;
+    else                                         rd2_safe = rd2;
 
     assign ID_to_EX.alu_src_a           = cfsm__alu_src_a;
     assign ID_to_EX.ALUSrcB             = cfsm__ALUSrcB;
