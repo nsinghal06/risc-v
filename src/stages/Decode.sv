@@ -80,6 +80,21 @@ module Decode
     , .writeData       ( rd2              )
     );
 
+  // WB->ID bypass; this is needed in situations where decode is reading the register that
+  // write-back stage is about to write to; since register writes happen on clock enge without this
+  // decode will pass stale register data to execute stage which the hazard unit will not be able to
+  // accomodate since during the following clock cycle the write-back's destination register will
+  // already move on to the next instruction
+  data_t rd1_safe;
+  always_comb
+    if (rd_wb == rs1 && RegWriteW) rd1_safe = data;
+    else                           rd1_safe = rd1;
+
+  data_t rd2_safe;
+  always_comb
+    if (rd_wb == rs2 && RegWriteW) rd2_safe = data;
+    else                           rd2_safe = rd2;
+
     assign ID_to_EX.alu_src_a           = cfsm__alu_src_a;
     assign ID_to_EX.ALUSrcB             = cfsm__ALUSrcB;
     assign ID_to_EX.ResultSrc           = cfsm__result_src;
@@ -89,8 +104,8 @@ module Decode
     assign ID_to_EX.RegWrite            = cfsm__reg_write;
     assign ID_to_EX.ALUControl          = __tmp_ALUControl;
     assign ID_to_EX.funct3              = funct3;
-    assign ID_to_EX.rd1                 = rd1;
-    assign ID_to_EX.rd2                 = rd2;
+    assign ID_to_EX.rd1                 = rd1_safe;
+    assign ID_to_EX.rd2                 = rd2_safe;
     assign ID_to_EX.rd                  = rd;
     assign ID_to_EX.rs1                 = rs1;
     assign ID_to_EX.rs2                 = rs2;
