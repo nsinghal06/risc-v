@@ -1,15 +1,15 @@
 {
   "extensionVersion": "1.5.1",
   "fileName": "/workspaces/utoss-risc-v/riscof/riscof_work/rv32i_m/I/src/add-01.S/dut/dut.vcd",
-  "markerTime": 18594,
+  "markerTime": 1502695,
   "altMarkerTime": 39844,
   "selectedSignal": {
-    "name": "dut.top.core.decode.instruction",
-    "msb": 31,
+    "name": "dut.top.core.decode.instruction_decode.rd",
+    "msb": 4,
     "lsb": 0
   },
   "zoomRatio": 0.0128,
-  "scrollLeft": 731563,
+  "scrollLeft": 1467930,
   "displayedSignals": [
     {
       "dataType": "netlist-variable",
@@ -141,7 +141,7 @@
       "children": [
         {
           "dataType": "netlist-variable",
-          "netlistId": 213,
+          "netlistId": 217,
           "name": "dut.top.core.u_fetch_stage.pc_next",
           "numberFormat": "hexadecimal",
           "colorIndex": 0,
@@ -154,7 +154,7 @@
         },
         {
           "dataType": "netlist-variable",
-          "netlistId": 212,
+          "netlistId": 216,
           "name": "dut.top.core.u_fetch_stage.pc_previous",
           "numberFormat": "hexadecimal",
           "colorIndex": 0,
@@ -174,7 +174,7 @@
       "children": [
         {
           "dataType": "netlist-variable",
-          "netlistId": 92,
+          "netlistId": 94,
           "name": "dut.top.core.decode.instruction",
           "numberFormat": "hexadecimal",
           "colorIndex": 0,
@@ -187,7 +187,7 @@
         },
         {
           "dataType": "netlist-variable",
-          "netlistId": 85,
+          "netlistId": 89,
           "name": "dut.top.core.decode.funct3",
           "numberFormat": "binary",
           "colorIndex": 0,
@@ -200,7 +200,7 @@
         },
         {
           "dataType": "netlist-variable",
-          "netlistId": 137,
+          "netlistId": 141,
           "name": "dut.top.core.decode.instruction_decode.ALUControl",
           "numberFormat": "hexadecimal",
           "colorIndex": 0,
@@ -213,7 +213,7 @@
         },
         {
           "dataType": "netlist-variable",
-          "netlistId": 90,
+          "netlistId": 78,
           "name": "dut.top.core.decode.rs1",
           "numberFormat": "hexadecimal",
           "colorIndex": 0,
@@ -226,7 +226,7 @@
         },
         {
           "dataType": "netlist-variable",
-          "netlistId": 91,
+          "netlistId": 79,
           "name": "dut.top.core.decode.rs2",
           "numberFormat": "hexadecimal",
           "colorIndex": 0,
@@ -239,7 +239,7 @@
         },
         {
           "dataType": "netlist-variable",
-          "netlistId": 141,
+          "netlistId": 145,
           "name": "dut.top.core.decode.instruction_decode.rd",
           "numberFormat": "decimal",
           "colorIndex": 0,
@@ -252,33 +252,7 @@
         },
         {
           "dataType": "netlist-variable",
-          "netlistId": 72,
-          "name": "dut.top.core.decode.rd_wb",
-          "numberFormat": "hexadecimal",
-          "colorIndex": 0,
-          "rowHeight": 1,
-          "verticalScale": 1,
-          "nameType": "fullPath",
-          "customName": "rd_wb",
-          "renderType": "multiBit",
-          "valueLinkCommand": ""
-        },
-        {
-          "dataType": "netlist-variable",
-          "netlistId": 74,
-          "name": "dut.top.core.decode.data",
-          "numberFormat": "hexadecimal",
-          "colorIndex": 0,
-          "rowHeight": 1,
-          "verticalScale": 1,
-          "nameType": "fullPath",
-          "customName": "data",
-          "renderType": "multiBit",
-          "valueLinkCommand": ""
-        },
-        {
-          "dataType": "netlist-variable",
-          "netlistId": 88,
+          "netlistId": 92,
           "name": "dut.top.core.decode.rd1",
           "numberFormat": "hexadecimal",
           "colorIndex": 0,
@@ -291,7 +265,7 @@
         },
         {
           "dataType": "netlist-variable",
-          "netlistId": 89,
+          "netlistId": 93,
           "name": "dut.top.core.decode.rd2",
           "numberFormat": "hexadecimal",
           "colorIndex": 0,
@@ -304,7 +278,7 @@
         },
         {
           "dataType": "netlist-variable",
-          "netlistId": 138,
+          "netlistId": 142,
           "name": "dut.top.core.decode.instruction_decode.imm_ext",
           "numberFormat": "hexadecimal",
           "colorIndex": 0,
@@ -314,12 +288,38 @@
           "customName": "imm_ext",
           "renderType": "multiBit",
           "valueLinkCommand": ""
+        },
+        {
+          "dataType": "netlist-variable",
+          "netlistId": 74,
+          "name": "dut.top.core.decode.rd_wb",
+          "numberFormat": "hexadecimal",
+          "colorIndex": 0,
+          "rowHeight": 1,
+          "verticalScale": 1,
+          "nameType": "fullPath",
+          "customName": "rd_wb",
+          "renderType": "multiBit",
+          "valueLinkCommand": ""
+        },
+        {
+          "dataType": "netlist-variable",
+          "netlistId": 76,
+          "name": "dut.top.core.decode.data",
+          "numberFormat": "hexadecimal",
+          "colorIndex": 0,
+          "rowHeight": 1,
+          "verticalScale": 1,
+          "nameType": "fullPath",
+          "customName": "data",
+          "renderType": "multiBit",
+          "valueLinkCommand": ""
         }
       ]
     },
     {
       "dataType": "netlist-variable",
-      "netlistId": 73,
+      "netlistId": 75,
       "name": "dut.top.core.decode.RegWriteW",
       "numberFormat": "binary",
       "colorIndex": 0,
@@ -337,7 +337,7 @@
       "children": [
         {
           "dataType": "netlist-variable",
-          "netlistId": 174,
+          "netlistId": 178,
           "name": "dut.top.core.execute.alu_input_a",
           "numberFormat": "hexadecimal",
           "colorIndex": 0,
@@ -350,7 +350,7 @@
         },
         {
           "dataType": "netlist-variable",
-          "netlistId": 175,
+          "netlistId": 179,
           "name": "dut.top.core.execute.alu_input_b",
           "numberFormat": "hexadecimal",
           "colorIndex": 0,
@@ -363,7 +363,7 @@
         },
         {
           "dataType": "netlist-variable",
-          "netlistId": 171,
+          "netlistId": 175,
           "name": "dut.top.core.execute.alu_result",
           "numberFormat": "hexadecimal",
           "colorIndex": 0,
@@ -383,7 +383,7 @@
       "children": [
         {
           "dataType": "netlist-variable",
-          "netlistId": 193,
+          "netlistId": 197,
           "name": "dut.top.core.memory_stage.ALUResultM",
           "numberFormat": "hexadecimal",
           "colorIndex": 0,
@@ -396,7 +396,7 @@
         },
         {
           "dataType": "netlist-variable",
-          "netlistId": 188,
+          "netlistId": 192,
           "name": "dut.top.core.memory_stage.dataToMemory",
           "numberFormat": "hexadecimal",
           "colorIndex": 0,
@@ -409,7 +409,7 @@
         },
         {
           "dataType": "netlist-variable",
-          "netlistId": 195,
+          "netlistId": 199,
           "name": "dut.top.core.memory_stage.MemWrite",
           "numberFormat": "binary",
           "colorIndex": 0,
@@ -422,7 +422,7 @@
         },
         {
           "dataType": "netlist-variable",
-          "netlistId": 203,
+          "netlistId": 207,
           "name": "dut.top.core.memory_stage.memory_loader.byteindex",
           "numberFormat": "hexadecimal",
           "colorIndex": 0,
@@ -448,7 +448,7 @@
         },
         {
           "dataType": "netlist-variable",
-          "netlistId": 196,
+          "netlistId": 200,
           "name": "dut.top.core.memory_stage.tempMemWriteByteAddress",
           "numberFormat": "binary",
           "colorIndex": 0,
@@ -461,7 +461,7 @@
         },
         {
           "dataType": "netlist-variable",
-          "netlistId": 187,
+          "netlistId": 191,
           "name": "dut.top.core.memory_stage.dataFromMemory",
           "numberFormat": "hexadecimal",
           "colorIndex": 0,
@@ -481,7 +481,7 @@
       "children": [
         {
           "dataType": "netlist-variable",
-          "netlistId": 238,
+          "netlistId": 243,
           "name": "dut.top.core.wb.rd",
           "numberFormat": "hexadecimal",
           "colorIndex": 0,
@@ -494,7 +494,7 @@
         },
         {
           "dataType": "netlist-variable",
-          "netlistId": 237,
+          "netlistId": 242,
           "name": "dut.top.core.wb.result",
           "numberFormat": "hexadecimal",
           "colorIndex": 0,
@@ -514,7 +514,7 @@
       "children": [
         {
           "dataType": "netlist-variable",
-          "netlistId": 226,
+          "netlistId": 231,
           "name": "dut.top.core.u_hazard_unit.ForwardAE",
           "numberFormat": "binary",
           "colorIndex": 0,
@@ -527,7 +527,7 @@
         },
         {
           "dataType": "netlist-variable",
-          "netlistId": 227,
+          "netlistId": 232,
           "name": "dut.top.core.u_hazard_unit.ForwardBE",
           "numberFormat": "binary",
           "colorIndex": 0,
@@ -540,7 +540,7 @@
         },
         {
           "dataType": "netlist-variable",
-          "netlistId": 228,
+          "netlistId": 233,
           "name": "dut.top.core.u_hazard_unit.lwStall",
           "numberFormat": "binary",
           "colorIndex": 0,
@@ -553,7 +553,7 @@
         },
         {
           "dataType": "netlist-variable",
-          "netlistId": 229,
+          "netlistId": 234,
           "name": "dut.top.core.u_hazard_unit.StallF",
           "numberFormat": "binary",
           "colorIndex": 0,
@@ -566,7 +566,7 @@
         },
         {
           "dataType": "netlist-variable",
-          "netlistId": 230,
+          "netlistId": 235,
           "name": "dut.top.core.u_hazard_unit.StallD",
           "numberFormat": "binary",
           "colorIndex": 0,
@@ -579,7 +579,7 @@
         },
         {
           "dataType": "netlist-variable",
-          "netlistId": 231,
+          "netlistId": 236,
           "name": "dut.top.core.u_hazard_unit.FlushD",
           "numberFormat": "binary",
           "colorIndex": 0,
@@ -592,7 +592,7 @@
         },
         {
           "dataType": "netlist-variable",
-          "netlistId": 232,
+          "netlistId": 237,
           "name": "dut.top.core.u_hazard_unit.FlushE",
           "numberFormat": "binary",
           "colorIndex": 0,
@@ -610,7 +610,7 @@
           "children": [
             {
               "dataType": "netlist-variable",
-              "netlistId": 222,
+              "netlistId": 227,
               "name": "dut.top.core.u_hazard_unit.Rs1D",
               "numberFormat": "decimal",
               "colorIndex": 0,
@@ -623,7 +623,7 @@
             },
             {
               "dataType": "netlist-variable",
-              "netlistId": 215,
+              "netlistId": 220,
               "name": "dut.top.core.u_hazard_unit.Rs1E",
               "numberFormat": "decimal",
               "colorIndex": 0,
@@ -636,7 +636,7 @@
             },
             {
               "dataType": "netlist-variable",
-              "netlistId": 223,
+              "netlistId": 228,
               "name": "dut.top.core.u_hazard_unit.Rs2D",
               "numberFormat": "decimal",
               "colorIndex": 0,
@@ -649,7 +649,7 @@
             },
             {
               "dataType": "netlist-variable",
-              "netlistId": 216,
+              "netlistId": 221,
               "name": "dut.top.core.u_hazard_unit.Rs2E",
               "numberFormat": "decimal",
               "colorIndex": 0,
@@ -662,7 +662,7 @@
             },
             {
               "dataType": "netlist-variable",
-              "netlistId": 224,
+              "netlistId": 229,
               "name": "dut.top.core.u_hazard_unit.RdE",
               "numberFormat": "decimal",
               "colorIndex": 0,
@@ -675,7 +675,7 @@
             },
             {
               "dataType": "netlist-variable",
-              "netlistId": 217,
+              "netlistId": 222,
               "name": "dut.top.core.u_hazard_unit.RdM",
               "numberFormat": "decimal",
               "colorIndex": 0,
@@ -688,7 +688,7 @@
             },
             {
               "dataType": "netlist-variable",
-              "netlistId": 218,
+              "netlistId": 223,
               "name": "dut.top.core.u_hazard_unit.RdW",
               "numberFormat": "decimal",
               "colorIndex": 0,
@@ -701,7 +701,7 @@
             },
             {
               "dataType": "netlist-variable",
-              "netlistId": 219,
+              "netlistId": 224,
               "name": "dut.top.core.u_hazard_unit.RegWriteM",
               "numberFormat": "binary",
               "colorIndex": 0,
@@ -714,7 +714,7 @@
             },
             {
               "dataType": "netlist-variable",
-              "netlistId": 221,
+              "netlistId": 226,
               "name": "dut.top.core.u_hazard_unit.ResultSrcE",
               "numberFormat": "hexadecimal",
               "colorIndex": 0,
