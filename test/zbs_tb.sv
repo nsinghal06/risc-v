@@ -10,11 +10,11 @@ logic [31:0] out;
 
 logic [31:0] expected;
 
-zbs uut (
-    .reg1(reg1), 
-    .reg2(reg2), 
-    .inst(inst), 
-    .out(out)
+zbs uut
+  ( .reg1 ( reg1 )
+  , .reg2 ( reg2 )
+  , .inst ( inst )
+  , .out  ( out  )
 );
 
 initial begin
@@ -93,7 +93,7 @@ initial begin
 
 
     // ----------- Randomized Testing (Experimental) -----------
- 
+
     repeat (1000) begin
 
         reg1 = $urandom;
@@ -102,7 +102,7 @@ initial begin
 
         #1;
 
-        case(inst)
+        case (inst)
 
             3'b000: expected = reg1 & ~(32'h1 << reg2[4:0]);
 
@@ -116,9 +116,9 @@ initial begin
 
         endcase
 
-        assert (out == expected)
-            else $fatal("random test failed: inst=%0d reg1=%h reg2=%d expected=%h got=%h",
-                        inst, reg1, reg2, expected, out);
+        assert (out == expected) else
+          $fatal("random test failed: inst=%0d reg1=%h reg2=%d expected=%h got=%h"
+                , inst, reg1, reg2, expected, out);
 
     end
 
