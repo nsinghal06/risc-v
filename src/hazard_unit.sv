@@ -34,15 +34,15 @@ module hazard_unit
   always_comb
     if (((Rs1E == RdM) & RegWriteM) & (Rs1E != 0))
       ForwardAE = FORWARD_A__MEMORY_ALU_RESULT;
-    else if (((Rs1E == RdW) & RegWriteM) & (Rs1E != 0))
+    else if (((Rs1E == RdW) & RegWriteW) & (Rs1E != 0))
       ForwardAE = FORWARD_A__WRITE_BACK_RESULT;
     else
       ForwardAE = FORWARD_A__EXECUTE_RD1;
 
   always_comb
-    if (Rs2E != 0 && Rs2E == RdM && RegWriteW)
+    if (Rs2E != 0 && Rs2E == RdM && RegWriteM)
       ForwardBE = FORWARD_B__MEMORY_ALU_RESULT;
-    else if (Rs2E != 0 && Rs2E == RdW && RegWriteM)
+    else if (Rs2E != 0 && Rs2E == RdW && RegWriteW)
       ForwardBE = FORWARD_B__WRITE_BACK_RESULT;
     else
       ForwardBE = FORWARD_B__EXECUTE_RD2;
