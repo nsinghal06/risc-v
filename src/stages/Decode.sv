@@ -11,6 +11,9 @@ module Decode
   , input wire RegWriteW // regWrite from writeback stage
   , input data_t data
   , output id_to_ex_t ID_to_EX
+
+  , output reg [4:0] rs1
+  , output reg [4:0] rs2
   );
 
   wire                    cfsm__reg_write;
@@ -32,9 +35,6 @@ module Decode
 
   data_t rd1;
   data_t rd2;
-
-  reg  [4:0] rs1;
-  reg  [4:0] rs2;
 
   instr_t instruction;
 

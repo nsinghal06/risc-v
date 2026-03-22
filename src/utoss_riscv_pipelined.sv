@@ -72,6 +72,8 @@ module utoss_riscv_pipelined
     else if (FlushD)  if_to_id_reg <= '0;
     else if (!StallD) if_to_id_reg <= if_to_id_out;
 
+  wire [4:0] id_rs1, id_rs2;
+
   Decode decode
     ( .IF_to_ID    ( if_to_id_reg               )
     , .clk         ( clk                        )
@@ -80,6 +82,9 @@ module utoss_riscv_pipelined
     , .rd_wb       ( wb_rd                      )
     , .RegWriteW   ( mem_to_wb_reg.RegWriteW    )
     , .ID_to_EX    ( id_to_ex_out               )
+
+    , .rs1 ( id_rs1 )
+    , .rs2 ( id_rs2 )
     );
 
   // decode stage end
@@ -153,6 +158,8 @@ module utoss_riscv_pipelined
   hazard_unit u_hazard_unit
     ( .clk ( clk )
 
+    , .Rs1D       ( id_rs1                  )
+    , .Rs2D       ( id_rs2                  )
     , .Rs1E       ( id_to_ex_reg.rs1        )
     , .Rs2E       ( id_to_ex_reg.rs2        )
     , .RdM        ( ex_to_mem_reg.rd        )
