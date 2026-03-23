@@ -44,8 +44,8 @@ module ext__b__decoder
             endcase
           FUNCT7_ZBB__ZEXT:
             case (funct3)
-              3'b100:  
-                case(rs2)
+              3'b100:
+                case (rs2)
                   5'b00000: b_alu_control = B_ALU_CTRL__ZEXTH;
                   default: b_alu_control = B_ALU_CTRL__NONE;
                 endcase
