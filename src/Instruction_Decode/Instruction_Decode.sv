@@ -143,6 +143,7 @@ module Instruction_Decode
     , .funct7        ( funct7        )
     , .opcode        ( opcode        )
     , .rd            ( rd            )
+    , .rs2           ( rs2           )
     , .b_alu_control ( b_alu_control )
     );
 

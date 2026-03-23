@@ -11,6 +11,11 @@ package ext__b__types;
     , B_ALU_CTRL__ANDN   = 4'b0100
     , B_ALU_CTRL__ORN    = 4'b0101
     , B_ALU_CTRL__XNOR   = 4'b0110
+    , B_ALU_CTRL__MIN   = 4'b0111
+    , B_ALU_CTRL__MAX   = 4'b1000
+    , B_ALU_CTRL__SEXTB   = 4'b1001
+    , B_ALU_CTRL__SEXTH   = 4'b1010
+    , B_ALU_CTRL__ZEXTH   = 4'b1011
     } b_alu_control_t;
 
 endpackage;
