@@ -17,7 +17,7 @@ module Logger
 , input imm_t imm_ext
 , input addr_t memory_address
 , input data_t memory_data
-, input wire write_enable
+, input wire [3:0] write_enable
 , input data_t rd1, rd2, result
 , input wire regWrite
 );

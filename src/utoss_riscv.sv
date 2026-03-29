@@ -216,7 +216,7 @@ module utoss_riscv
   , .imm_ext          ( imm_ext          )
   , .memory_address   ( memory__address  )
   , .memory_data      ( mem_load_result  )
-  , .write_enable     ( memory__write_enable[0] )
+  , .write_enable     ( memory__write_enable )
   , .rd1              ( rd1              )
   , .rd2              ( rd2              )
   , .result           ( result           )
