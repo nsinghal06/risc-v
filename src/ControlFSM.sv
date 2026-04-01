@@ -47,7 +47,7 @@ module ControlFSM
 
         if (opcode == JType) next_state = UNCONDJUMP;
         else if (opcode == RType) next_state = EXECUTER;
-        else if (opcode == IType_logic) next_state = EXECUTEI; // "7'b0010011" was reverted back to "IType_logic"
+        else if (opcode == IType_logic) next_state = EXECUTEI;
 
         else if (opcode == IType_load || opcode == SType) next_state = MEMADR;
 
