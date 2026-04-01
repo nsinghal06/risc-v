@@ -55,7 +55,7 @@ module utoss_riscv
   wire __tmp_Branch;
   /* verilator lint_on UNUSEDSIGNAL */
   wire [1:0] __tmp_ALUSrcA, __tmp_ALUSrcB;
-  wire [3:0] __tmp_ALUControl;
+  alu_control_t  __tmp_ALUControl;
 
   /* verilator lint_off UNUSEDSIGNAL */
   wire [1:0] __tmp_ResultSrc;
