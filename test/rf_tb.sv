@@ -1,7 +1,8 @@
-`timescale 1ns/1ps
+`include "src/timescale.svh"
 
 `include "test/utils.svh"
 
+/* verilator lint_off IMPORTSTAR */
 import pkg_control_fsm::*;
 
 module rf_tb;
@@ -101,4 +102,5 @@ module rf_tb;
 
   `SETUP_VCD_DUMP(rf_tb)
 
+/* verilator lint_on IMPORTSTAR */
 endmodule
