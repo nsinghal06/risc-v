@@ -255,7 +255,7 @@ module Logger
         $display("Read Memory Address: 0x%08h", memory_address, " Value: 0x%08h", memory_data);
 
         // If data is being written, display what and where
-        if (write_enable) begin
+        if (|write_enable) begin
         $display("Write Memory Address: 0x%08h", memory_address, " Value: 0x%08h", memory_data);
         end
 
