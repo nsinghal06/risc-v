@@ -15,7 +15,7 @@ wire[31:0] out;
 zba uut(.reg1(reg1)
   , .reg2(reg2)
   , .inst(inst)
-  , .funct3(3'b000) //these were missing
+  , .funct3(3'b000)
   , .funct7(7'b0000000)
   , .out(out)
   );
