@@ -16,7 +16,7 @@ module hazard_unit
   , input  wire [4:0] Rs1D
   , input  wire [4:0] Rs2D
   , input  wire [4:0] RdE
-  , input  wire PCSrcE
+  , input  pc_src_t PCSrcE
   , output forward_a_t ForwardAE
   , output forward_b_t ForwardBE
   , output logic lwStall

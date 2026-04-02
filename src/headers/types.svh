@@ -81,10 +81,9 @@ typedef enum logic [1:0]
   , WRITE_BACK_RESULT_SRC__PC_PLUS_4  = 2'b10
   } write_back_result_src_t;
 
-typedef enum logic [1:0]
-  { PC_SRC__INCREMENT = 2'b00
-  , PC_SRC__JUMP      = 2'b01
-  , PC_SRC__ALU_RESULT = 2'b10
+typedef enum logic
+  { PC_SRC__INCREMENT  = 1'b0
+  , PC_SRC__ALU_RESULT = 1'b1
   } pc_src_t;
 
 `endif
