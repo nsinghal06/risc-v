@@ -14,7 +14,7 @@ typedef struct packed {
   addr_t                  pc_plus_4;
   logic                   Branch;
   logic                   Jump;
-  logic [3:0]             MemWrite;
+  logic                   MemWrite;
   logic                   RegWrite;
   logic [3:0]             ALUControl;
   logic [2:0]             funct3;
