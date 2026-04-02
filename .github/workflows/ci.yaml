@@ -186,6 +186,9 @@ jobs:
         id: synthesize
         run: cd envs/de1-soc && make synthesize
 
+      - name: Gather metrics
+        run: cd envs/de1-soc/quartus && make pretty-metrics
+
       - name: Upload VCD file
         uses: actions/upload-artifact@v4
         if: steps.build-poc.outcome == 'success'
@@ -209,6 +212,8 @@ jobs:
           path: |
             envs/de1-soc/quartus/output_files/utoss-risc-v.sta.summary
             envs/de1-soc/quartus/output_files/utoss-risc-v.fit.summary
+            envs/de1-soc/quartus/metrics/fitter_utilization.csv
+            envs/de1-soc/quartus/metrics/fitter_utilization.pretty.txt
           retention-days: 7
 
   de1-soc-synthesis-metrics-diff:
@@ -258,6 +263,14 @@ jobs:
           "pr-reports/utoss-risc-v.fit.summary"
           "Fitter Summary (.fit.summary)"
           "📊" >> comparison.md
+
+      - name: Compare Fitter Resource Utilization by Entity
+        run: >
+          .github/scripts/de1-soc-synthesis-metrics-diff/compare_metrics_diff.sh
+          "main-reports/fitter_utilization.pretty.txt
+          "pr-reports/fitter_utilization.pretty.txt
+          "Fitter Resource Utilization by Entity"
+          "🔢" >> comparison.md
 
       - name: Compare Timing Analysis Summary
         run: >
