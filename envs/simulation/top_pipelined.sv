@@ -12,7 +12,11 @@ module top_pipelined
   data_t       memory__read_data;
 
   addr_t       imem__address;
-  data_t       imem__data;
+  data_t       imem__read_data;
+
+  // always off
+  data_t       imem__write_data;
+  logic [3:0]  imem__write_enable;
 
   dual_port #( .SIZE ( MEM_SIZE ) )
     memory
@@ -22,7 +26,7 @@ module top_pipelined
       , .write_data               ( memory__write_data   )
       , .write_enable             ( memory__write_enable )
       , .read_data                ( memory__read_data    )
-      , .instruction_read_data    (imem__data            )
+      , .instruction_read_data    ( imem__read_data      )
       );
 
   // MA #( .SIZE ( MEM_SIZE ) )
@@ -54,7 +58,9 @@ module top_pipelined
     , .memory_data__read_data    ( memory__read_data    )
 
     , .memory_instr__address      ( imem__address        )
-    , .memory_instr__read_data    ( imem__data           )
+    , .memory_instr__write_data   ( imem__write_data     )
+    , .memory_instr__write_enable ( imem__write_enable   )
+    , .memory_instr__read_data    ( imem__read_data      )
     );
 
 endmodule
