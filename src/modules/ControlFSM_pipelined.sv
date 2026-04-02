@@ -1,7 +1,9 @@
 `include "src/packages/pkg_execute_stage.svh"
 
 // TODO: review all the signal assignments
+/* verilator lint_off DECLFILENAME */
 module control_fsm_pipelined
+/* verilator lint_off DECLFILENAME */
   ( input var logic clk
   , input var logic reset
 
