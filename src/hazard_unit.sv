@@ -1,7 +1,8 @@
 `include "src/headers/types.svh"
 `include "src/packages/pkg_hazard_unit.svh"
 
-import pkg_hazard_unit::*;
+import pkg_hazard_unit::forward_a_t;
+import pkg_hazard_unit::forward_b_t;
 
 module hazard_unit
   ( input  wire clk
@@ -24,6 +25,8 @@ module hazard_unit
   , output logic FlushD
   , output logic FlushE
   );
+
+  import pkg_hazard_unit::*;
 
   wire ResultSrcE0;
   assign ResultSrcE0 = ResultSrcE[0];
