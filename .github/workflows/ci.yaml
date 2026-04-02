@@ -267,8 +267,8 @@ jobs:
       - name: Compare Fitter Resource Utilization by Entity
         run: >
           .github/scripts/de1-soc-synthesis-metrics-diff/compare_metrics_diff.sh
-          "main-reports/metrics/fitter_utilization.pretty.txt
-          "pr-reports/metrics/fitter_utilization.pretty.txt
+          "main-reports/metrics/fitter_utilization.pretty.txt"
+          "pr-reports/metrics/fitter_utilization.pretty.txt"
           "Fitter Resource Utilization by Entity"
           "🔢" >> comparison.md
 
