@@ -254,18 +254,18 @@ jobs:
       - name: Compare Fitter Summary
         run: >
           .github/scripts/de1-soc-synthesis-metrics-diff/compare_metrics_diff.sh
-            "main-reports/utoss-risc-v.fit.summary"
-            "pr-reports/utoss-risc-v.fit.summary"
-            "Fitter Summary (.fit.summary)"
-            "📊" >> comparison.md
+          "main-reports/utoss-risc-v.fit.summary"
+          "pr-reports/utoss-risc-v.fit.summary"
+          "Fitter Summary (.fit.summary)"
+          "📊" >> comparison.md
 
       - name: Compare Timing Analysis Summary
         run: >
           .github/scripts/de1-soc-synthesis-metrics-diff/compare_metrics_diff.sh
-            "main-reports/utoss-risc-v.sta.summary"
-            "pr-reports/utoss-risc-v.sta.summary"
-            "Timing Analysis Summary (.sta.summary)"
-            "⏱️" >> comparison.md
+          "main-reports/utoss-risc-v.sta.summary"
+          "pr-reports/utoss-risc-v.sta.summary"
+          "Timing Analysis Summary (.sta.summary)"
+          "⏱️" >> comparison.md
 
       - name: Add footer to comparison report
         run: |
