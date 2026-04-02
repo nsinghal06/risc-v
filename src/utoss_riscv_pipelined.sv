@@ -59,6 +59,9 @@ module utoss_riscv_pipelined
     , .imem__data    ( memory_instr__read_data )
     );
 
+  assign memory_instr__write_data = data_t'(0);
+  assign memory_instr__write_enable = 4'b0;
+
   // fetch stage end
 
   // decode stage begin (@marwannismail)
