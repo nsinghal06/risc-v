@@ -2,7 +2,7 @@
 `include "src/interfaces/ex_to_mem_if.svh"
 `include "src/interfaces/mem_to_wb_if.svh"
 
-module Mem_Stage
+module mem_stage
   ( input ex_to_mem_t EX_to_MEM
   , input data_t dataFromMemory
   , output data_t dataToMemory

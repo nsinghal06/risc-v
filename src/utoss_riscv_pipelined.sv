@@ -121,7 +121,7 @@ module utoss_riscv_pipelined
     if (reset) ex_to_mem_reg <= '0;
     else       ex_to_mem_reg <= ex_to_mem_out;
 
-  Mem_Stage memory_stage
+  mem_stage memory_stage
   ( .EX_to_MEM        ( ex_to_mem_reg )
   , .dataFromMemory   (memory_data__read_data)
   , .dataToMemory     (memory_data__write_data)
