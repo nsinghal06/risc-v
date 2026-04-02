@@ -252,7 +252,7 @@ jobs:
           echo "" >> comparison.md
 
       - name: Compare Fitter Summary
-        run: |
+        run: >
           .github/scripts/de1-soc-synthesis-metrics-diff/compare_metrics_diff.sh
           "main-reports/utoss-risc-v.fit.summary"
           "pr-reports/utoss-risc-v.fit.summary"
@@ -260,7 +260,7 @@ jobs:
           "📊" >> comparison.md
 
       - name: Compare Timing Analysis Summary
-        run: |
+        run: >
           .github/scripts/de1-soc-synthesis-metrics-diff/compare_metrics_diff.sh
           "main-reports/utoss-risc-v.sta.summary"
           "pr-reports/utoss-risc-v.sta.summary"
