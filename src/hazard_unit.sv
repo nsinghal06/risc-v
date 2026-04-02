@@ -32,38 +32,31 @@ module hazard_unit
   wire unused = &{ResultSrcE[$bits(write_back_result_src_t) -1:1]};
 
   // Forwarding
-  always_comb begin
+  always_comb
     if ((Rs1E == RdM) && RegWriteM && (Rs1E != 5'd0))
       ForwardAE = FORWARD_A__MEMORY_ALU_RESULT;
     else if ((Rs1E == RdW) && RegWriteW && (Rs1E != 5'd0))
       ForwardAE = FORWARD_A__WRITE_BACK_RESULT;
     else
       ForwardAE = FORWARD_A__EXECUTE_RD1;
-  end
 
-  always_comb begin
+  always_comb
     if ((Rs2E == RdM) && RegWriteM && (Rs2E != 5'd0))
       ForwardBE = FORWARD_B__MEMORY_ALU_RESULT;
     else if ((Rs2E == RdW) && RegWriteW && (Rs2E != 5'd0))
       ForwardBE = FORWARD_B__WRITE_BACK_RESULT;
     else
       ForwardBE = FORWARD_B__EXECUTE_RD2;
-  end
 
   logic lwStall;
 
   //Stall when a load hazard occurs
-  always_comb begin
-    lwStall = ResultSrcE0 && ((Rs1D == RdE) || (Rs2D == RdE)) && (RdE != 5'd0);
-
-    StallF = lwStall;
-    StallD = lwStall;
-  end
+  assign lwStall = ResultSrcE0 && ((Rs1D == RdE) || (Rs2D == RdE)) && (RdE != 5'd0);
+  assign StallF = lwStall;
+  assign StallD = lwStall;
 
   //Flush when a control hazard occurs
-  always_comb begin
-    FlushD = PCSrcE;
-    FlushE = lwStall || PCSrcE;
-  end
+  assign FlushD = PCSrcE;
+  assign FlushE = lwStall || PCSrcE;
 
 endmodule
