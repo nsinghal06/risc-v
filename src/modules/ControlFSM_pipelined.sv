@@ -4,11 +4,7 @@
 /* verilator lint_off DECLFILENAME */
 module control_fsm_pipelined
 /* verilator lint_off DECLFILENAME */
-  ( input var logic clk
-  , input var logic reset
-
-  , input opcode_t opcode
-  , input var logic [2:0] funct3
+  ( input opcode_t opcode
 
   , output var logic               reg_write
   , output write_back_result_src_t result_src

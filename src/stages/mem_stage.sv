@@ -14,14 +14,12 @@ module mem_stage
   // Inputs from EX_to_MEM interface
   data_t WriteDataM;
   data_t ALUResultM;
-  logic [4:0] RdM;
   logic MemWrite;
 
   // logic [3:0] MemWriteByteAddress;
 
   assign WriteDataM = EX_to_MEM.WriteDataE;
   assign ALUResultM = EX_to_MEM.alu_result;
-  assign RdM = EX_to_MEM.rd;
   assign MemWrite = EX_to_MEM.MemWrite;
 
   logic [3:0] tempMemWriteByteAddress;
@@ -44,5 +42,8 @@ module mem_stage
   assign MEM_to_WB.rd = EX_to_MEM.rd;
   assign MEM_to_WB.alu_result = EX_to_MEM.alu_result;
   assign MEM_to_WB.pc_plus_4 = EX_to_MEM.pc_plus_4;
+
+  // TODO: can we remove pc_cur from EX->MEM?
+  wire unused = &{EX_to_MEM.pc_cur};
 
 endmodule

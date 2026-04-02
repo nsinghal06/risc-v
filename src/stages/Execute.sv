@@ -10,8 +10,6 @@ import pkg_hazard_unit::forward_b_t;
 
 module Execute
   ( input id_to_ex_t ID_to_EX
-  , input wire clk
-  , input wire reset
 
   , input forward_a_t hz_forward_a
   , input forward_b_t hz_forward_b
@@ -19,8 +17,6 @@ module Execute
   , input data_t wb_result
   , input data_t mem_alu_result
 
-  , output wire zero_flag
-  , output data_t alu_result
   , output ex_to_if_t EX_to_IF
   , output ex_to_mem_t EX_to_MEM
   );
@@ -32,8 +28,9 @@ module Execute
   data_t alu_input_b;
   data_t safe_rd1; // hazard-safe version of rd1
   data_t safe_rd2; // hazard-safe version of rd2
-  data_t WriteDataE;
+  data_t alu_result;
 
+  logic zero_flag;
   logic JumpE;
   logic BranchE;
 
@@ -98,4 +95,6 @@ module Execute
   assign EX_to_IF.pc_src            = (JumpE | (zero_flag & BranchE)) ? PC_SRC__ALU_RESULT: PC_SRC__INCREMENT;
   assign EX_to_IF.alu_result_for_pc = alu_result;
   assign EX_to_IF.pc_old            = ID_to_EX.pc_cur;
+
+  wire unused = &{ID_to_EX.rs1, ID_to_EX.rs2};
 endmodule

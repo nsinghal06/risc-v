@@ -8,7 +8,6 @@ module Instruction_Decode
   , output wire [3:0] ALUControl
   , output imm_t imm_ext
   , output reg [2:0] funct3
-  , output reg [6:0] funct7
   , output reg [4:0] rd
   , output reg [4:0] rs1
   , output reg [4:0] rs2
@@ -23,6 +22,7 @@ module Instruction_Decode
   /* verilator lint_on UNUSEDSIGNAL */
 
 
+  logic [6:0] funct7;
   assign opcode = instr[6:0];
 
   //combinational logic for extracting funct3 and funct7[5] for ALU Decoder input

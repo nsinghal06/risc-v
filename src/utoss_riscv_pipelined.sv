@@ -37,15 +37,11 @@ module utoss_riscv_pipelined
   ex_to_mem_t ex_to_mem_out;
   ex_to_mem_t ex_to_mem_reg;
 
-  logic  zero_flag;
-  data_t alu_result;
-
   mem_to_wb_t mem_to_wb_out;
   mem_to_wb_t mem_to_wb_reg;
 
   data_t      wb_result;
   logic [4:0] wb_rd;
-  reg [2:0]   funct3;
 
   // common declarations end
 
@@ -98,8 +94,6 @@ module utoss_riscv_pipelined
 
   Execute execute
     ( .ID_to_EX ( id_to_ex_reg  )
-    , .clk      ( clk           )
-    , .reset    ( reset         )
 
     , .hz_forward_a ( hz_forward_a )
     , .hz_forward_b ( hz_forward_b )
@@ -107,8 +101,6 @@ module utoss_riscv_pipelined
     , .wb_result      ( wb_result                )
     , .mem_alu_result ( ex_to_mem_reg.alu_result )
 
-    , .zero_flag  ( zero_flag     )
-    , .alu_result ( alu_result    )
     , .EX_to_MEM  ( ex_to_mem_out )
     , .EX_to_IF   ( ex_to_if_out  )
     );
@@ -139,10 +131,7 @@ module utoss_riscv_pipelined
     else       mem_to_wb_reg <= mem_to_wb_out;
 
   write_back wb
-    ( .clk         ( clk   )
-    , .reset       ( reset )
-
-    , .from_memory ( mem_to_wb_reg )
+    ( .from_memory ( mem_to_wb_reg )
     , .result      ( wb_result     )
     , .rd          ( wb_rd         )
     );
@@ -153,12 +142,10 @@ module utoss_riscv_pipelined
 
   pkg_hazard_unit::forward_a_t hz_forward_a;
   pkg_hazard_unit::forward_b_t hz_forward_b;
-  logic lwStall, StallF, StallD, FlushD, FlushE;
+  logic StallF, StallD, FlushD, FlushE;
 
   hazard_unit u_hazard_unit
-    ( .clk ( clk )
-
-    , .Rs1D       ( id_rs1                  )
+    ( .Rs1D       ( id_rs1                  )
     , .Rs2D       ( id_rs2                  )
     , .Rs1E       ( id_to_ex_reg.rs1        )
     , .Rs2E       ( id_to_ex_reg.rs2        )
@@ -172,7 +159,6 @@ module utoss_riscv_pipelined
 
     , .ForwardAE ( hz_forward_a )
     , .ForwardBE ( hz_forward_b )
-    , .lwStall   ( lwStall      )
     , .StallF    ( StallF       )
     , .StallD    ( StallD       )
     , .FlushD    ( FlushD       )

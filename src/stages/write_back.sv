@@ -3,10 +3,7 @@
 `include "src/interfaces/mem_to_wb_if.svh"
 
 module write_back
-  ( input var logic clk
-  , input var logic reset
-
-  , input mem_to_wb_t from_memory
+  ( input mem_to_wb_t from_memory
 
   , output var data_t      result
   , output var logic [4:0] rd
@@ -22,5 +19,7 @@ module write_back
       WRITE_BACK_RESULT_SRC__PC_PLUS_4:  result = from_memory.pc_plus_4; // TODO: address
       default:                           result = 32'hxxxxxxxx;
     endcase
+
+  wire unused = &{from_memory.RegWriteW};
 
 endmodule

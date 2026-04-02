@@ -42,4 +42,7 @@ module fetch_stage
   assign IF_to_ID.pc_prev = pc_prev_prev;
   assign IF_to_ID.pc_cur = pc_previous;
   assign IF_to_ID.pc_plus_4 = pc_previous + 32'h4;
+
+  // TODO: probably can just get rid of those altogether
+  wire unused = &{EX_to_IF.pc_old, EX_to_IF.imm_ext};
 endmodule

@@ -5,8 +5,7 @@ import pkg_hazard_unit::forward_a_t;
 import pkg_hazard_unit::forward_b_t;
 
 module hazard_unit
-  ( input  wire clk
-  , input  wire [4:0] Rs1E
+  ( input  wire [4:0] Rs1E
   , input  wire [4:0] Rs2E
   , input  wire [4:0] RdM
   , input  wire [4:0] RdW
@@ -19,7 +18,6 @@ module hazard_unit
   , input  pc_src_t PCSrcE
   , output forward_a_t ForwardAE
   , output forward_b_t ForwardBE
-  , output logic lwStall
   , output logic StallF
   , output logic StallD
   , output logic FlushD
@@ -30,6 +28,8 @@ module hazard_unit
 
   wire ResultSrcE0;
   assign ResultSrcE0 = ResultSrcE[0];
+
+  wire unused = &{ResultSrcE[$bits(write_back_result_src_t) -1:1]};
 
   // Forwarding
   always_comb begin
@@ -49,6 +49,8 @@ module hazard_unit
     else
       ForwardBE = FORWARD_B__EXECUTE_RD2;
   end
+
+  logic lwStall;
 
   //Stall when a load hazard occurs
   always_comb begin

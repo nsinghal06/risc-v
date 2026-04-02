@@ -31,7 +31,6 @@ module Decode
   imm_t    imm_ext;
 
   wire [2:0] funct3;
-  reg [6:0] funct7;
 
   wire [4:0] rd;
 
@@ -43,11 +42,7 @@ module Decode
   assign instruction = IF_to_ID.instruction;
 
   control_fsm_pipelined u_ctrl
-    ( .clk      ( clk   )
-    , .reset    ( reset )
-
-    , .opcode  ( opcode )
-    , .funct3  ( funct3  )
+    ( .opcode  ( opcode )
 
     , .reg_write  ( cfsm__reg_write  )
     , .result_src ( cfsm__result_src )
@@ -62,7 +57,6 @@ module Decode
     ( .instr           ( instruction      )
     , .opcode          ( opcode           )
     , .funct3          ( funct3           )
-    , .funct7          ( funct7           )
     , .ALUControl      ( __tmp_ALUControl )
     , .imm_ext         ( imm_ext          )
     , .rd              ( rd               )
