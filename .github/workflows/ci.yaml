@@ -259,24 +259,24 @@ jobs:
       - name: Compare Fitter Summary
         run: >
           .github/scripts/de1-soc-synthesis-metrics-diff/compare_metrics_diff.sh
-          "main-reports/utoss-risc-v.fit.summary"
-          "pr-reports/utoss-risc-v.fit.summary"
+          "main-reports/output_files/utoss-risc-v.fit.summary"
+          "pr-reports/output_files/utoss-risc-v.fit.summary"
           "Fitter Summary (.fit.summary)"
           "📊" >> comparison.md
 
       - name: Compare Fitter Resource Utilization by Entity
         run: >
           .github/scripts/de1-soc-synthesis-metrics-diff/compare_metrics_diff.sh
-          "main-reports/fitter_utilization.pretty.txt
-          "pr-reports/fitter_utilization.pretty.txt
+          "main-reports/metrics/fitter_utilization.pretty.txt
+          "pr-reports/metrics/fitter_utilization.pretty.txt
           "Fitter Resource Utilization by Entity"
           "🔢" >> comparison.md
 
       - name: Compare Timing Analysis Summary
         run: >
           .github/scripts/de1-soc-synthesis-metrics-diff/compare_metrics_diff.sh
-          "main-reports/utoss-risc-v.sta.summary"
-          "pr-reports/utoss-risc-v.sta.summary"
+          "main-reports/output_files/utoss-risc-v.sta.summary"
+          "pr-reports/output_files/utoss-risc-v.sta.summary"
           "Timing Analysis Summary (.sta.summary)"
           "⏱️" >> comparison.md
 
