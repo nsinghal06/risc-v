@@ -14,9 +14,10 @@ module top_pipelined
   addr_t       imem__address;
   data_t       imem__read_data;
 
-  // always off
   data_t       imem__write_data;
   logic [3:0]  imem__write_enable;
+
+  wire unused = &{imem__write_data, imem__write_enable};
 
   dual_port #( .SIZE ( MEM_SIZE ) )
     memory
