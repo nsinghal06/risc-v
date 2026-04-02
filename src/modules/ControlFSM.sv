@@ -3,9 +3,13 @@
 
 `include "src/headers/types.svh"
 `include "src/headers/params.svh"
+`include "src/timescale.svh"
 `include "src/packages/pkg_control_fsm.svh"
 
+
+/* verilator lint_off IMPORTSTAR */
 import pkg_control_fsm::*;
+/* verilator lint_on IMPORTSTAR */
 
 module ControlFSM
   ( input opcode_t opcode
@@ -42,9 +46,7 @@ module ControlFSM
       DECODE: begin
 
         if (opcode == JType) next_state = UNCONDJUMP;
-
         else if (opcode == RType) next_state = EXECUTER;
-
         else if (opcode == IType_logic) next_state = EXECUTEI;
 
         else if (opcode == IType_load || opcode == SType) next_state = MEMADR;
@@ -118,6 +120,7 @@ module ControlFSM
   end
 
   //output logic
+
   always @(*) begin
     Branch = 1'b0;
     pc_src = PC_SRC__INCREMENT;
@@ -233,6 +236,7 @@ module ControlFSM
             end
             else pc_src = PC_SRC__INCREMENT;
           end
+          default:;
         endcase
       end
 
@@ -244,14 +248,14 @@ module ControlFSM
         Branch = 1'b1;
         case (funct3)
           3'b100, 3'b110: begin // BLT, BLTU: branch if rs1 < rs2
-            if (alu_result) begin // Direct SLT/SLTU result
+            if (alu_result[0]) begin // Direct SLT/SLTU result
               pc_src = PC_SRC__JUMP;
               PCUpdate = 1'b1;
             end
             else pc_src = PC_SRC__INCREMENT;
           end
           3'b101, 3'b111: begin // BGE, BGEU: branch if rs1 >= rs2 (invert SLT/SLTU)
-            if (!alu_result) begin // Invert SLT/SLTU result for >= comparison
+            if (!alu_result[0]) begin // Invert SLT/SLTU result for >= comparison
               pc_src = PC_SRC__JUMP;
               PCUpdate = 1'b1;
             end
@@ -263,7 +267,6 @@ module ControlFSM
       end
 
       ALUWB: begin
-
         ResultSrc = RESULT_SRC__ALU_OUT;
         RegWrite = 1'b1;
 
@@ -285,7 +288,6 @@ module ControlFSM
       end
 
       MEMWB: begin
-
         ResultSrc = RESULT_SRC__DATA;
         RegWrite = 1'b1;
 
@@ -313,4 +315,7 @@ module ControlFSM
     end
 
   end
+
+  wire unused = &{alu_result[31:1]};
+
 endmodule

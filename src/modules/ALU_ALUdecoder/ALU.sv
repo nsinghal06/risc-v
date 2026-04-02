@@ -1,4 +1,6 @@
 `include "src/headers/types.svh"
+`include "src/timescale.svh"
+
 module ALU
 (
   input logic [31:0] a

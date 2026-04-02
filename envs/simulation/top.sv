@@ -1,4 +1,6 @@
 `include "src/headers/types.svh"
+`timescale 1ns/1ps
+
 
 module top
   #( parameter MEM_SIZE = 1024 )

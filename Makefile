@@ -27,8 +27,7 @@ UTOSS_RISCV_VERILATOR_DEFINES := $(if $(findstring B,$(UTOSS_RISCV_CONFIG)),-DUT
 # Verilator flags
 # ===========================
 
-VERILATOR_FLAGS := -Wall --binary --trace --timing -sv -cc \
-	-O3 -Wno-fatal $(UTOSS_RISCV_VERILATOR_DEFINES)
+VERILATOR_FLAGS := -Wall --binary --trace --timing -sv -cc -O3 $(UTOSS_RISCV_VERILATOR_DEFINES)
 
 # Testbench-only defines
 TB_DEFINES := -DTESTBENCH

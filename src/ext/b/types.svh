@@ -1,8 +1,8 @@
 `ifndef EXT__B__TYPES
 `define EXT__B__TYPES
-
+/* verilator lint_off DECLFILENAME */
 package ext__b__types;
-
+/* verilator lint_on DECLFILENAME */
   typedef enum logic [3:0]
     { B_ALU_CTRL__NONE   = 4'b0000
     , B_ALU_CTRL__SH1ADD = 4'b0001
@@ -11,6 +11,11 @@ package ext__b__types;
     , B_ALU_CTRL__ANDN   = 4'b0100
     , B_ALU_CTRL__ORN    = 4'b0101
     , B_ALU_CTRL__XNOR   = 4'b0110
+    , B_ALU_CTRL__MIN   = 4'b0111
+    , B_ALU_CTRL__MAX   = 4'b1000
+    , B_ALU_CTRL__SEXTB   = 4'b1001
+    , B_ALU_CTRL__SEXTH   = 4'b1010
+    , B_ALU_CTRL__ZEXTH   = 4'b1011
     } b_alu_control_t;
 
 endpackage;

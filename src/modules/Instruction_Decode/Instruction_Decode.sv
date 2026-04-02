@@ -1,5 +1,6 @@
 `include "src/headers/params.svh"
 `include "src/headers/types.svh"
+`include "src/timescale.svh"
 
 module Instruction_Decode
   ( input wire [31:0] instr
@@ -16,15 +17,20 @@ module Instruction_Decode
   alu_op_t alu_op;
   // reg [2:0] funct3;
   // reg [6:0] funct7;
+
+  /* verilator lint_off UNUSEDSIGNAL */
   wire [3:0] state;
+  /* verilator lint_on UNUSEDSIGNAL */
+
 
   assign opcode = instr[6:0];
 
   //combinational logic for extracting funct3 and funct7[5] for ALU Decoder input
 
+  /* verilator lint_off UNUSEDSIGNAL */
   reg [2:0] default_funct3;
   reg [6:0] default_funct7;
-
+  /* verilator lint_on UNUSEDSIGNAL */
   always @(*) begin
 
     funct3 = 3'b000;
@@ -44,7 +50,7 @@ module Instruction_Decode
       funct3 = instr[14:12];
 
     end
-
+    default:;
     endcase
   end
 
@@ -61,7 +67,6 @@ module Instruction_Decode
       UType_lui:   alu_op = ALU_OP__ADD; // used to add 0 to imm ext
       FENCE:     alu_op = ALU_OP__UNSET;
       default:    alu_op = ALU_OP__UNSET;
-
     endcase
   end
 
@@ -119,8 +124,8 @@ module Instruction_Decode
       SType       : imm_ext = {{20{instr[31]}}, instr[31:25], instr[11:7]};
       BType       : imm_ext = {{20{instr[31]}}, instr[7], instr[30:25], instr[11:8], 1'b0};
       JType       : imm_ext = {{12{instr[31]}}, instr[19:12], instr[20], instr[30:21], 1'b0};
-      UType_auipc  : imm_ext = {instr[31:12], 12'b0};
-      UType_lui  : imm_ext = {instr[31:12], 12'b0};
+      UType_auipc  : imm_ext = {instr[31:12], 12'h000};
+      UType_lui  : imm_ext = {instr[31:12], 12'h000};
       default:     imm_ext = 32'b0;
     endcase
   end
@@ -133,16 +138,16 @@ module Instruction_Decode
     , .alu_op(alu_op)
     , .alu_control(ALUControl)
     );
-
 `ifdef UTOSS_RISCV_ENABLE_B_EXT
-
+/* verilator lint_off UNUSEDSIGNAL */
   ext__b__types::b_alu_control_t b_alu_control;
-
+/* verilator lint_on UNUSEDSIGNAL */
   ext__b__decoder u_ext__b__decoder
     ( .funct3        ( funct3        )
     , .funct7        ( funct7        )
     , .opcode        ( opcode        )
     , .rd            ( rd            )
+    , .rs2           ( rs2           )
     , .b_alu_control ( b_alu_control )
     );
 

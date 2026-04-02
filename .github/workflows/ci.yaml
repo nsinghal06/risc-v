@@ -207,6 +207,9 @@ jobs:
         id: synthesize
         run: cd envs/de1-soc && make synthesize
 
+      - name: Gather metrics
+        run: cd envs/de1-soc/quartus && make pretty-metrics
+
       - name: Upload VCD file
         uses: actions/upload-artifact@v4
         if: steps.build-poc.outcome == 'success'
@@ -230,6 +233,8 @@ jobs:
           path: |
             envs/de1-soc/quartus/output_files/utoss-risc-v.sta.summary
             envs/de1-soc/quartus/output_files/utoss-risc-v.fit.summary
+            envs/de1-soc/quartus/metrics/fitter_utilization.csv
+            envs/de1-soc/quartus/metrics/fitter_utilization.pretty.txt
           retention-days: 7
 
   de1-soc-synthesis-metrics-diff:
@@ -268,13 +273,46 @@ jobs:
           check_artifacts: true
           search_artifacts: true
 
-      - name: Compare FPGA metrics
-        id: compare
-        run: .github/scripts/de1-soc-synthesis-metrics-diff/compare_metrics_diff.sh
+      - name: Initialize comparison report
+        run: |
+          echo "## 🔧 DE1-SoC Synthesis Report Summary Diff" > comparison.md
+          echo "" >> comparison.md
+
+      - name: Compare Fitter Summary
+        run: >
+          .github/scripts/de1-soc-synthesis-metrics-diff/compare_metrics_diff.sh
+          "main-reports/output_files/utoss-risc-v.fit.summary"
+          "pr-reports/output_files/utoss-risc-v.fit.summary"
+          "Fitter Summary (.fit.summary)"
+          "📊" >> comparison.md
+
+      - name: Compare Fitter Resource Utilization by Entity
+        run: >
+          .github/scripts/de1-soc-synthesis-metrics-diff/compare_metrics_diff.sh
+          "main-reports/metrics/fitter_utilization.pretty.txt"
+          "pr-reports/metrics/fitter_utilization.pretty.txt"
+          "Fitter Resource Utilization by Entity"
+          "🔢" >> comparison.md
+
+      - name: Compare Timing Analysis Summary
+        run: >
+          .github/scripts/de1-soc-synthesis-metrics-diff/compare_metrics_diff.sh
+          "main-reports/output_files/utoss-risc-v.sta.summary"
+          "pr-reports/output_files/utoss-risc-v.sta.summary"
+          "Timing Analysis Summary (.sta.summary)"
+          "⏱️" >> comparison.md
+
+      - name: Add footer to comparison report
+        run: |
+          echo "---" >> comparison.md
+          echo "*Comparing synthesis results from main branch vs. this PR*" >> comparison.md
+
+      - name: Publish comparison to job summary
+        run: cat comparison.md >> "$GITHUB_STEP_SUMMARY"
 
       - name: Post comment on PR
         uses: actions/github-script@v7
         with:
           script: |
             const script = require('./.github/scripts/de1-soc-synthesis-metrics-diff/post_comment.js');
-            await script({github, context});
+            await script({github, context, comparisonFile: 'comparison.md'});
