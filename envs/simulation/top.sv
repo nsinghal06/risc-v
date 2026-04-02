@@ -21,7 +21,7 @@ module top
       , .write_enable ( memory__write_enable )
       , .read_data    ( memory__read_data    )
       );
-
+  /* verilator lint_off PINMISSING */
   utoss_riscv core
     ( .clk    ( clk    )
     , .reset  ( reset  )
@@ -31,5 +31,6 @@ module top
     , .memory__write_enable ( memory__write_enable )
     , .memory__read_data    ( memory__read_data    )
     );
+  /* verilator lint_off PINMISSING */
 
 endmodule
