@@ -27,7 +27,7 @@ module write_back
   data_t tempOutput;
   data_t memResult;
 
- MemoryLoader memory_loader
+  MemoryLoader memory_loader
     ( .memory_data         ( dataFromMemory          )
     , .memory_address      ( ALUResultM              )
     , .funct3              ( from_memory.funct3        )
