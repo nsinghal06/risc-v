@@ -86,4 +86,9 @@ typedef enum logic
   , PC_SRC__ALU_RESULT = 1'b1
   } pc_src_t;
 
+typedef enum logic
+  { PC_TARGET_KIND__RELATIVE
+  , PC_TARGET_KIND__ABSOLUTE
+  } pc_target_kind_t;
+
 `endif

@@ -11,6 +11,7 @@ module control_fsm_pipelined
   , output var logic               mem_write
   , output var logic               jump
   , output var logic               branch
+  , output pc_target_kind_t        pc_target_kind
 
   , output pkg_execute_stage::alu_src_a_t alu_src_a
   , output pkg_execute_stage::alu_src_b_t alu_src_b
@@ -39,7 +40,14 @@ module control_fsm_pipelined
 
   always_comb
     case (opcode)
-      RType, IType_logic, IType_load, SType, BType, UType_lui /* TODO: triple check lui */:
+      JType:      pc_target_kind = PC_TARGET_KIND__RELATIVE;
+      IType_jalr: pc_target_kind = PC_TARGET_KIND__ABSOLUTE;
+      default:    pc_target_kind = pc_target_kind_t'('x);
+    endcase
+
+  always_comb
+    case (opcode)
+      RType, IType_logic, IType_load, IType_jalr, SType, BType, UType_lui /* TODO: triple check lui */:
         alu_src_a = pkg_execute_stage::ALU_SRC_A__RD1;
       UType_auipc, JType:
         alu_src_a = pkg_execute_stage::ALU_SRC_A__PC;

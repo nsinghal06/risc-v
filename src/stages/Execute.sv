@@ -73,15 +73,6 @@ module Execute
 
   // branching logic
 
-  logic JumpE;
-  logic BranchE;
-  pc_src_t pc_src;
-  addr_t pc_target;
-
-  assign JumpE = ID_to_EX.Jump;
-  assign BranchE = ID_to_EX.Branch;
-  assign pc_target = ID_to_EX.pc_prev + ID_to_EX.imm_ext; // TODO: why pc_prev? is it same as pc_cur?
-
   typedef enum logic [2:0]
     { FUNCT3__BEQ  = 3'b000
     , FUNCT3__BNE  = 3'b001
@@ -90,6 +81,24 @@ module Execute
     , FUNCT3__BLTU = 3'b110
     , FUNCT3__BGEU = 3'b111
     } funct3_branch_t;
+
+  logic JumpE;
+  logic BranchE;
+  pc_src_t pc_src;
+  addr_t pc_target;
+
+  assign JumpE = ID_to_EX.Jump;
+  assign BranchE = ID_to_EX.Branch;
+
+  always_comb
+    case (ID_to_EX.pc_target_kind)
+      PC_TARGET_KIND__RELATIVE: pc_target = ID_to_EX.pc_prev + ID_to_EX.imm_ext; // TODO: why pc_prev? is it same as pc_cur?
+
+      // here the control FSM arranges for the computation to have been done via the ALU, i.e. to
+      // add the register value to imm_ext to abvoid building another adder
+      PC_TARGET_KIND__ABSOLUTE: pc_target = alu_result;
+      default:                  pc_target = addr_t'('x);
+    endcase
 
   logic branch_condition_met;
   always_comb

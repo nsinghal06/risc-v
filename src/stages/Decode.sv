@@ -22,6 +22,7 @@ module Decode
   wire                           cfsm__mem_write;
   wire                           cfsm__jump;
   wire                           cfsm__branch;
+  pc_target_kind_t               cfsm__pc_target_kind;
   pkg_execute_stage::alu_src_a_t cfsm__alu_src_a;
   pkg_execute_stage::alu_src_b_t cfsm__ALUSrcB;
 
@@ -44,13 +45,14 @@ module Decode
   control_fsm_pipelined u_ctrl
     ( .opcode  ( opcode )
 
-    , .reg_write  ( cfsm__reg_write  )
-    , .result_src ( cfsm__result_src )
-    , .mem_write  ( cfsm__mem_write  )
-    , .jump       ( cfsm__jump       )
-    , .branch     ( cfsm__branch     )
-    , .alu_src_a  ( cfsm__alu_src_a  )
-    , .alu_src_b  ( cfsm__ALUSrcB    )
+    , .reg_write      ( cfsm__reg_write      )
+    , .result_src     ( cfsm__result_src     )
+    , .mem_write      ( cfsm__mem_write      )
+    , .jump           ( cfsm__jump           )
+    , .branch         ( cfsm__branch         )
+    , .pc_target_kind ( cfsm__pc_target_kind )
+    , .alu_src_a      ( cfsm__alu_src_a      )
+    , .alu_src_b      ( cfsm__ALUSrcB        )
     );
 
   Instruction_Decode instruction_decode
@@ -96,6 +98,7 @@ module Decode
     assign ID_to_EX.ResultSrc           = cfsm__result_src;
     assign ID_to_EX.Branch              = cfsm__branch;
     assign ID_to_EX.Jump                = cfsm__jump;
+    assign ID_to_EX.pc_target_kind      = cfsm__pc_target_kind;
     assign ID_to_EX.MemWrite            = cfsm__mem_write;
     assign ID_to_EX.RegWrite            = cfsm__reg_write;
     assign ID_to_EX.ALUControl          = __tmp_ALUControl;
