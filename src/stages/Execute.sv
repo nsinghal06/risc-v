@@ -124,7 +124,7 @@ module Execute
   assign EX_to_MEM.RegWrite         = ID_to_EX.RegWrite;
   assign EX_to_MEM.funct3           = ID_to_EX.funct3;
   assign EX_to_MEM.WriteDataE       = safe_rd2;
-  assign EX_to_MEM.funct3           = ID_to_EX.funct3;
+  // assign EX_to_MEM.funct3           = ID_to_EX.funct3;
   // assign EX_to_MEM.rd2 <= ID_to_EX.rd2;
   assign EX_to_MEM.rd               = ID_to_EX.rd;
   assign EX_to_MEM.alu_result       = alu_result;

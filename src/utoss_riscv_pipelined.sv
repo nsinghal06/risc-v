@@ -146,6 +146,7 @@ module utoss_riscv_pipelined
   write_back wb
     ( .from_memory ( mem_to_wb_reg )
     , .dataFromMemory (memory_data__read_data)
+    , .EX_to_MEM (ex_to_mem_reg)
     , .result      ( wb_result     )
     , .rd          ( wb_rd         )
     );

@@ -5,6 +5,7 @@
 module write_back
   ( input mem_to_wb_t from_memory
   , input data_t dataFromMemory
+  , input ex_to_mem_t EX_to_MEM
   , output var data_t      result
   , output var logic [4:0] rd
   );
@@ -12,15 +13,15 @@ module write_back
 
   data_t WriteDataM;
   data_t ALUResultM;
-  logic [4:0] RdM;
-  logic MemWrite;
+  // logic [4:0] RdM;
+  // logic MemWrite;
 
   // logic [3:0] MemWriteByteAddress;
 
   assign WriteDataM = EX_to_MEM.WriteDataE;
   assign ALUResultM = from_memory.alu_result;
-  assign RdM = EX_to_MEM.rd;
-  assign MemWrite = EX_to_MEM.MemWrite;
+  // assign RdM = EX_to_MEM.rd;
+  // assign MemWrite = EX_to_MEM.MemWrite;
 
   logic [3:0] tempMemWriteByteAddress;
   data_t tempOutput;
@@ -49,6 +50,16 @@ module write_back
       default:                           result = 32'hxxxxxxxx;
     endcase
 
-  wire unused = &{from_memory.RegWriteW, from_memory.pc_plus_4 /* remove/rename? */};
+  wire unused = &{from_memory.RegWriteW
+  , from_memory.pc_plus_4
+  , EX_to_MEM.WriteDataE
+  , EX_to_MEM.rd
+  , EX_to_MEM.MemWrite
+  , tempOutput
+  , tempMemWriteByteAddress /* remove/rename? */};
+
+  wire _unused_ex_to_mem = &{1'b0, EX_to_MEM};
+  wire _unused_from_mem = &{1'b0, from_memory};
+
 
 endmodule
