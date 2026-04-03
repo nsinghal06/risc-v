@@ -41,6 +41,7 @@ module mem_stage
   assign MEM_to_WB.cfsm__result_src = EX_to_MEM.ResultSrc;
   assign MEM_to_WB.rd = EX_to_MEM.rd;
   assign MEM_to_WB.alu_result = EX_to_MEM.alu_result;
+  assign MEM_to_WB.pc_cur = EX_to_MEM.pc_cur;
   assign MEM_to_WB.pc_plus_4 = EX_to_MEM.pc_plus_4;
 
   // TODO: can we remove pc_cur from EX->MEM?
