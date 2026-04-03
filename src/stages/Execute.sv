@@ -38,8 +38,28 @@ module Execute
 
   assign JumpE = ID_to_EX.Jump;
   assign BranchE = ID_to_EX.Branch;
-  assign pc_src = (JumpE | (zero_flag & BranchE)) ? PC_SRC__ALU_RESULT : PC_SRC__INCREMENT;
   assign pc_target = ID_to_EX.pc_prev + ID_to_EX.imm_ext; // TODO: why pc_prev? is it same as pc_cur?
+
+  typedef enum logic [2:0]
+    { FUNCT3__BEQ  = 3'b000
+    , FUNCT3__BNE  = 3'b001
+    , FUNCT3__BLT  = 3'b100
+    , FUNCT3__BGE  = 3'b101
+    , FUNCT3__BLTU = 3'b110
+    , FUNCT3__BGEU = 3'b111
+    } funct3_branch_t;
+
+  logic should_branch;
+  always_comb
+    case (ID_to_EX.funct3)
+      FUNCT3__BEQ:               should_branch =  zero_flag;
+      FUNCT3__BNE:               should_branch = ~zero_flag;
+      FUNCT3__BLT, FUNCT3__BLTU: should_branch =  alu_result[0];
+      FUNCT3__BGE, FUNCT3__BGEU: should_branch = ~alu_result[0];
+      default:                   should_branch = zero_flag;
+    endcase
+
+  assign pc_src = (JumpE | (should_branch & BranchE)) ? PC_SRC__ALU_RESULT : PC_SRC__INCREMENT;
 
   always_comb
     case (hz_forward_a)
