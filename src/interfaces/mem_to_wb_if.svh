@@ -9,6 +9,7 @@ typedef struct packed {
   logic [4:0]             rd;
   addr_t                  pc_cur;
   addr_t                  pc_plus_4;
+  logic [2:0]             funct3;
 } mem_to_wb_t;
 
 `endif

@@ -4,10 +4,39 @@
 
 module write_back
   ( input mem_to_wb_t from_memory
-
+  , input data_t dataFromMemory
   , output var data_t      result
   , output var logic [4:0] rd
   );
+/////
+
+  data_t WriteDataM;
+  data_t ALUResultM;
+  logic [4:0] RdM;
+  logic MemWrite;
+
+  // logic [3:0] MemWriteByteAddress;
+
+  assign WriteDataM = EX_to_MEM.WriteDataE;
+  assign ALUResultM = from_memory.alu_result;
+  assign RdM = EX_to_MEM.rd;
+  assign MemWrite = EX_to_MEM.MemWrite;
+
+  logic [3:0] tempMemWriteByteAddress;
+  data_t tempOutput;
+  data_t memResult;
+
+ MemoryLoader memory_loader
+    ( .memory_data         ( dataFromMemory          )
+    , .memory_address      ( ALUResultM              )
+    , .funct3              ( from_memory.funct3        )
+    , .dataB               ( WriteDataM              )
+    , .mem_load_result     (  memResult)//MEM_to_WB.read_data     )
+    , .MemWriteByteAddress ( tempMemWriteByteAddress )
+    , .__tmp_MemData       ( tempOutput            )
+    );
+
+////
 
   assign rd = from_memory.rd;
 
@@ -15,7 +44,7 @@ module write_back
   always_comb
     case (from_memory.cfsm__result_src)
       WRITE_BACK_RESULT_SRC__ALU_RESULT: result = from_memory.alu_result;
-      WRITE_BACK_RESULT_SRC__READ_DATA:  result = from_memory.read_data;
+      WRITE_BACK_RESULT_SRC__READ_DATA:  result = memResult;//from_memory.read_data;
       WRITE_BACK_RESULT_SRC__PC_PLUS_4:  result = from_memory.pc_cur; // TODO: address
       default:                           result = 32'hxxxxxxxx;
     endcase

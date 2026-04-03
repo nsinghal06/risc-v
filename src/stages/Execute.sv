@@ -122,7 +122,7 @@ module Execute
   // assign EX_to_MEM.MemWriteByteAddress = ID_to_EX.MemWriteByteAddress;
   assign EX_to_MEM.MemWrite         = ID_to_EX.MemWrite;
   assign EX_to_MEM.RegWrite         = ID_to_EX.RegWrite;
-  // assign EX_to_MEM.funct3           = ID_to_EX.funct3;
+  assign EX_to_MEM.funct3           = ID_to_EX.funct3;
   assign EX_to_MEM.WriteDataE       = safe_rd2;
   assign EX_to_MEM.funct3           = ID_to_EX.funct3;
   // assign EX_to_MEM.rd2 <= ID_to_EX.rd2;

@@ -43,6 +43,7 @@ module mem_stage
   assign MEM_to_WB.alu_result = EX_to_MEM.alu_result;
   assign MEM_to_WB.pc_cur = EX_to_MEM.pc_cur;
   assign MEM_to_WB.pc_plus_4 = EX_to_MEM.pc_plus_4;
+  assign MEM_to_WB.funct3 = EX_to_MEM.funct3;
 
   // TODO: can we remove pc_cur from EX->MEM?
   wire unused = &{EX_to_MEM.pc_cur};

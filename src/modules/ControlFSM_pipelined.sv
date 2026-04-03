@@ -18,7 +18,7 @@ module control_fsm_pipelined
   );
 
   always_comb
-    reg_write = opcode inside {JType, RType, IType_logic, IType_jalr, UType_auipc, UType_lui};
+    reg_write = opcode inside {JType, RType, IType_load, IType_logic, IType_jalr, UType_auipc, UType_lui};
 
   always_comb
     case (opcode)
