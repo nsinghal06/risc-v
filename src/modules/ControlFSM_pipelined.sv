@@ -26,7 +26,7 @@ module control_fsm_pipelined
         result_src = WRITE_BACK_RESULT_SRC__ALU_RESULT;
       IType_load:
         result_src = WRITE_BACK_RESULT_SRC__READ_DATA;
-      IType_jalr:
+      JType, IType_jalr:
         result_src = WRITE_BACK_RESULT_SRC__PC_PLUS_4;
       default:
         result_src = write_back_result_src_t'('0);
