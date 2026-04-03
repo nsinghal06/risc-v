@@ -66,9 +66,14 @@ module utoss_riscv_pipelined
 
   // decode stage begin (@marwannismail)
 
+  // we need to flush one cycle later than we discover the control hazard; this is due to
+  // synchronous memory making the instruction available one cycle later than with async memory
+  reg flushD_lag;
+  always_ff @ (posedge clk) flushD_lag <= FlushD;
+
   always_ff @ (posedge clk)
     if (reset) if_to_id_reg <= '0;
-    else if (FlushD)  if_to_id_reg <= '0;
+    else if (flushD_lag) if_to_id_reg <= '0;
     else if (!StallD) if_to_id_reg <= if_to_id_out;
 
   wire [4:0] id_rs1, id_rs2;
@@ -90,9 +95,14 @@ module utoss_riscv_pipelined
 
   // execute stage begin (@MSh-786 and tandr3w)
 
+  // we need to flush both the current data in the execute pipeline and the next one that will be
+  // passed from the decode on the next cycle
+  reg flushE_lag;
+  always_ff @ (posedge clk) flushE_lag <= FlushE;
+
   always_ff @ (posedge clk)
     if (reset) id_to_ex_reg <= '0;
-    else if (FlushE) id_to_ex_reg <= '0;
+    else if (FlushE || flushE_lag) id_to_ex_reg <= '0;
     else       id_to_ex_reg <= id_to_ex_out;
 
   Execute execute
