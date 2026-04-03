@@ -24,7 +24,7 @@ module fetch_stage
   always_comb
     case (EX_to_IF.pc_src)
       PC_SRC__INCREMENT:  pc_next = pc_previous + 32'h4;
-      PC_SRC__ALU_RESULT: pc_next = {EX_to_IF.alu_result_for_pc[31:1], 1'b0};
+      PC_SRC__ALU_RESULT: pc_next = EX_to_IF.pc_target;
       default:            pc_next = 32'hx;
     endcase
 

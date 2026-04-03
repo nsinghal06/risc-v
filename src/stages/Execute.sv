@@ -33,10 +33,13 @@ module Execute
   logic zero_flag;
   logic JumpE;
   logic BranchE;
-
+  pc_src_t pc_src;
+  addr_t pc_target;
 
   assign JumpE = ID_to_EX.Jump;
   assign BranchE = ID_to_EX.Branch;
+  assign pc_src = (JumpE | (zero_flag & BranchE)) ? PC_SRC__ALU_RESULT : PC_SRC__INCREMENT;
+  assign pc_target = ID_to_EX.pc_prev + ID_to_EX.imm_ext; // TODO: why pc_prev? is it same as pc_cur?
 
   always_comb
     case (hz_forward_a)
@@ -92,8 +95,8 @@ module Execute
   assign EX_to_MEM.pc_cur           = ID_to_EX.pc_cur;
   assign EX_to_MEM.pc_plus_4        = ID_to_EX.pc_plus_4;
   assign EX_to_IF.imm_ext           = ID_to_EX.imm_ext;
-  assign EX_to_IF.pc_src            = (JumpE | (zero_flag & BranchE)) ? PC_SRC__ALU_RESULT: PC_SRC__INCREMENT;
-  assign EX_to_IF.alu_result_for_pc = alu_result;
+  assign EX_to_IF.pc_src            = pc_src;
+  assign EX_to_IF.pc_target         = pc_target;;
   assign EX_to_IF.pc_old            = ID_to_EX.pc_cur;
 
   wire unused = &{ID_to_EX.rs1, ID_to_EX.rs2};

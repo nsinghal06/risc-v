@@ -8,7 +8,7 @@ typedef struct packed {
   pc_src_t pc_src;
   addr_t   pc_old;
   imm_t    imm_ext;
-  addr_t   alu_result_for_pc;
+  addr_t   pc_target;
 } ex_to_if_t;
 
 `endif
