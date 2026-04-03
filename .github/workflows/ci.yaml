@@ -146,7 +146,6 @@ jobs:
     needs: select_ci_image
     # dont skip if build_ci_image is skipped
     if: always()
-    continue-on-error: true # temporary allow-fail setup while we are integrating pipelined impl
     runs-on: ubuntu-latest
     container:
       image: ${{ needs.select_ci_image.outputs.image-tag }}
