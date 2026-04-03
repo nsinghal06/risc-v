@@ -39,9 +39,9 @@ module control_fsm_pipelined
 
   always_comb
     case (opcode)
-      RType, IType_logic, IType_load, SType, UType_lui /* TODO: triple check lui */:
+      RType, IType_logic, IType_load, SType, BType, UType_lui /* TODO: triple check lui */:
         alu_src_a = pkg_execute_stage::ALU_SRC_A__RD1;
-      UType_auipc, JType, BType:
+      UType_auipc, JType:
         alu_src_a = pkg_execute_stage::ALU_SRC_A__PC;
       default:
         alu_src_a = pkg_execute_stage::alu_src_a_t'('x);
