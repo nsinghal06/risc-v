@@ -56,7 +56,7 @@ module Execute
       FUNCT3__BNE:               should_branch = ~zero_flag;
       FUNCT3__BLT, FUNCT3__BLTU: should_branch =  alu_result[0];
       FUNCT3__BGE, FUNCT3__BGEU: should_branch = ~alu_result[0];
-      default:                   should_branch = zero_flag;
+      default:                   should_branch =  zero_flag;
     endcase
 
   assign pc_src = (JumpE | (should_branch & BranchE)) ? PC_SRC__ALU_RESULT : PC_SRC__INCREMENT;
