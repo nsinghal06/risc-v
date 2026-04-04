@@ -1,17 +1,13 @@
 `include "src/headers/types.svh"
-`include "src/packages/pkg_hazard_unit.svh"
 `include "src/interfaces/id_to_ex_if.svh"
 `include "src/interfaces/ex_to_mem_if.svh"
 `include "src/interfaces/ex_to_if_if.svh"
 
-import pkg_hazard_unit::forward_a_t;
-import pkg_hazard_unit::forward_b_t;
-
 module Execute
   ( input id_to_ex_t ID_to_EX
 
-  , input forward_a_t hz_forward_a
-  , input forward_b_t hz_forward_b
+  , input hazard_forward_a_t hz_forward_a
+  , input hazard_forward_b_t hz_forward_b
 
   , input data_t wb_result
   , input data_t mem_alu_result
@@ -19,8 +15,6 @@ module Execute
   , output ex_to_if_t EX_to_IF
   , output ex_to_mem_t EX_to_MEM
   );
-
-  import pkg_hazard_unit::*;
 
   data_t alu_input_a;
   data_t alu_input_b;
@@ -33,18 +27,18 @@ module Execute
 
   always_comb
     case (hz_forward_a)
-      FORWARD_A__EXECUTE_RD1:       safe_rd1 = ID_to_EX.rd1;
-      FORWARD_A__WRITE_BACK_RESULT: safe_rd1 = wb_result;
-      FORWARD_A__MEMORY_ALU_RESULT: safe_rd1 = mem_alu_result;
-      default:                      safe_rd1 = 'x;
+      HAZARD_FORWARD_A__EXECUTE_RD1:       safe_rd1 = ID_to_EX.rd1;
+      HAZARD_FORWARD_A__WRITE_BACK_RESULT: safe_rd1 = wb_result;
+      HAZARD_FORWARD_A__MEMORY_ALU_RESULT: safe_rd1 = mem_alu_result;
+      default:                             safe_rd1 = 'x;
     endcase
 
   always_comb
     case (hz_forward_b)
-      FORWARD_B__EXECUTE_RD2:       safe_rd2 = ID_to_EX.rd2;
-      FORWARD_B__WRITE_BACK_RESULT: safe_rd2 = wb_result;
-      FORWARD_B__MEMORY_ALU_RESULT: safe_rd2 = mem_alu_result;
-      default:                      safe_rd2 = 'x;
+      HAZARD_FORWARD_B__EXECUTE_RD2:       safe_rd2 = ID_to_EX.rd2;
+      HAZARD_FORWARD_B__WRITE_BACK_RESULT: safe_rd2 = wb_result;
+      HAZARD_FORWARD_B__MEMORY_ALU_RESULT: safe_rd2 = mem_alu_result;
+      default:                             safe_rd2 = 'x;
     endcase
 
   always_comb

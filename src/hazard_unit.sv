@@ -1,8 +1,4 @@
 `include "src/headers/types.svh"
-`include "src/packages/pkg_hazard_unit.svh"
-
-import pkg_hazard_unit::forward_a_t;
-import pkg_hazard_unit::forward_b_t;
 
 module hazard_unit
   ( input  wire [4:0] Rs1E
@@ -16,15 +12,13 @@ module hazard_unit
   , input  wire [4:0] Rs2D
   , input  wire [4:0] RdE
   , input  pc_src_t PCSrcE
-  , output forward_a_t ForwardAE
-  , output forward_b_t ForwardBE
+  , output hazard_forward_a_t ForwardAE
+  , output hazard_forward_b_t ForwardBE
   , output logic StallF
   , output logic StallD
   , output logic FlushD
   , output logic FlushE
   );
-
-  import pkg_hazard_unit::*;
 
   wire ResultSrcE0;
   assign ResultSrcE0 = ResultSrcE[0];
@@ -34,19 +28,19 @@ module hazard_unit
   // Forwarding
   always_comb
     if ((Rs1E == RdM) && RegWriteM && (Rs1E != 5'd0))
-      ForwardAE = FORWARD_A__MEMORY_ALU_RESULT;
+      ForwardAE = HAZARD_FORWARD_A__MEMORY_ALU_RESULT;
     else if ((Rs1E == RdW) && RegWriteW && (Rs1E != 5'd0))
-      ForwardAE = FORWARD_A__WRITE_BACK_RESULT;
+      ForwardAE = HAZARD_FORWARD_A__WRITE_BACK_RESULT;
     else
-      ForwardAE = FORWARD_A__EXECUTE_RD1;
+      ForwardAE = HAZARD_FORWARD_A__EXECUTE_RD1;
 
   always_comb
     if ((Rs2E == RdM) && RegWriteM && (Rs2E != 5'd0))
-      ForwardBE = FORWARD_B__MEMORY_ALU_RESULT;
+      ForwardBE = HAZARD_FORWARD_B__MEMORY_ALU_RESULT;
     else if ((Rs2E == RdW) && RegWriteW && (Rs2E != 5'd0))
-      ForwardBE = FORWARD_B__WRITE_BACK_RESULT;
+      ForwardBE = HAZARD_FORWARD_B__WRITE_BACK_RESULT;
     else
-      ForwardBE = FORWARD_B__EXECUTE_RD2;
+      ForwardBE = HAZARD_FORWARD_B__EXECUTE_RD2;
 
   logic lwStall;
 
