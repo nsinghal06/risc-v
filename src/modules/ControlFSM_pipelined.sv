@@ -1,4 +1,3 @@
-`include "src/packages/pkg_execute_stage.svh"
 
 // TODO: review all the signal assignments
 /* verilator lint_off DECLFILENAME */
@@ -13,8 +12,8 @@ module control_fsm_pipelined
   , output var logic               branch
   , output pc_target_kind_t        pc_target_kind
 
-  , output pkg_execute_stage::alu_src_a_t alu_src_a
-  , output pkg_execute_stage::alu_src_b_t alu_src_b
+  , output alu_src_a_t alu_src_a
+  , output alu_src_b_t alu_src_b
   );
 
   always_comb
@@ -48,20 +47,20 @@ module control_fsm_pipelined
   always_comb
     case (opcode)
       RType, IType_logic, IType_load, IType_jalr, SType, BType, UType_lui /* TODO: triple check lui */:
-        alu_src_a = pkg_execute_stage::ALU_SRC_A__RD1;
+        alu_src_a = ALU_SRC_A__RD1;
       UType_auipc, JType:
-        alu_src_a = pkg_execute_stage::ALU_SRC_A__PC;
+        alu_src_a = ALU_SRC_A__PC;
       default:
-        alu_src_a = pkg_execute_stage::alu_src_a_t'('x);
+        alu_src_a = alu_src_a_t'('x);
     endcase
 
   always_comb
     case (opcode)
       RType, BType:
-        alu_src_b = pkg_execute_stage::ALU_SRC_B__RD2;
+        alu_src_b = ALU_SRC_B__RD2;
       UType_auipc, UType_lui, IType_logic, IType_jalr, IType_load, SType:
-        alu_src_b = pkg_execute_stage::ALU_SRC_B__IMM_EXT;
+        alu_src_b = ALU_SRC_B__IMM_EXT;
       default:
-        alu_src_b = pkg_execute_stage::alu_src_b_t'('x);
+        alu_src_b = alu_src_b_t'('x);
     endcase
 endmodule

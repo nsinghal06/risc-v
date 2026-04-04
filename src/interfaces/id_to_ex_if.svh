@@ -5,8 +5,8 @@
 `include "src/headers/types.svh"
 
 typedef struct packed {
-  pkg_execute_stage::alu_src_a_t alu_src_a;
-  pkg_execute_stage::alu_src_b_t ALUSrcB;
+  alu_src_a_t alu_src_a;
+  alu_src_b_t ALUSrcB;
 
   write_back_result_src_t ResultSrc;
   addr_t                  pc_prev;

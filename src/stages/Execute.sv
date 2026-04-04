@@ -1,6 +1,5 @@
 `include "src/headers/types.svh"
 `include "src/packages/pkg_hazard_unit.svh"
-`include "src/packages/pkg_execute_stage.svh"
 `include "src/interfaces/id_to_ex_if.svh"
 `include "src/interfaces/ex_to_mem_if.svh"
 `include "src/interfaces/ex_to_if_if.svh"
@@ -21,7 +20,6 @@ module Execute
   , output ex_to_mem_t EX_to_MEM
   );
 
-  import pkg_execute_stage::*;
   import pkg_hazard_unit::*;
 
   data_t alu_input_a;
