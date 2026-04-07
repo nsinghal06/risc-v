@@ -44,7 +44,7 @@ module Execute
   always_comb
     case (ID_to_EX.alu_src_a)
       ALU_SRC_A__RD1: alu_input_a = safe_rd1;
-      ALU_SRC_A__PC:  alu_input_a = ID_to_EX.pc_prev; // TODO: elaborate on why
+      ALU_SRC_A__PC:  alu_input_a = ID_to_EX.pc_cur;
       default:        alu_input_a = 'x;
     endcase
 
@@ -84,7 +84,7 @@ module Execute
 
   always_comb
     case (ID_to_EX.pc_target_kind)
-      PC_TARGET_KIND__RELATIVE: pc_target = ID_to_EX.pc_prev + ID_to_EX.imm_ext; // TODO: why pc_prev? is it same as pc_cur?
+      PC_TARGET_KIND__RELATIVE: pc_target = ID_to_EX.pc_cur + ID_to_EX.imm_ext;
 
       // here the control FSM arranges for the computation to have been done via the ALU, i.e. to
       // add the register value to imm_ext to abvoid building another adder

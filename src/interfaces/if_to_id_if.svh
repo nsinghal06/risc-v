@@ -6,7 +6,6 @@
 
 typedef struct packed {
   instr_t instruction;
-  addr_t  pc_prev;
   addr_t  pc_cur;
   addr_t  pc_plus_4;
 } if_to_id_t;

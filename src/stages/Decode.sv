@@ -108,7 +108,6 @@ module Decode
     assign ID_to_EX.rs1                 = rs1;
     assign ID_to_EX.rs2                 = rs2;
     assign ID_to_EX.imm_ext             = imm_ext;
-    assign ID_to_EX.pc_prev             = IF_to_ID.pc_prev;
     assign ID_to_EX.pc_cur              = IF_to_ID.pc_cur;
     assign ID_to_EX.pc_plus_4           = IF_to_ID.pc_plus_4;
 

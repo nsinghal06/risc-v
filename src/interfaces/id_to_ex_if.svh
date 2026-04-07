@@ -9,7 +9,6 @@ typedef struct packed {
   alu_src_b_t ALUSrcB;
 
   write_back_result_src_t ResultSrc;
-  addr_t                  pc_prev;
   addr_t                  pc_cur;
   addr_t                  pc_plus_4;
   logic                   Branch;
