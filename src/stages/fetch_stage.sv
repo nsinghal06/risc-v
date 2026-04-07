@@ -48,10 +48,10 @@ module fetch_stage
       default:            pc_next = 32'hx;
     endcase
 
-  always @ (posedge clk)
+  always_ff @ (posedge clk)
     if (!StallF) pc_cur <= reset ? 0 : pc_next;
 
-  always @ (posedge clk)
+  always_ff @ (posedge clk)
     if (!StallF) pc_prev <= reset ? 0 : pc_cur;
 
   assign imem__address = pc_cur;
