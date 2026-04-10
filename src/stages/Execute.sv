@@ -124,7 +124,7 @@ module Execute
   assign EX_to_MEM.pc_plus_4        = ID_to_EX.pc_plus_4;
   assign EX_to_IF.imm_ext           = ID_to_EX.imm_ext;
   assign EX_to_IF.pc_src            = pc_src;
-  assign EX_to_IF.pc_target         = pc_target;;
+  assign EX_to_IF.pc_target         = pc_target;
   assign EX_to_IF.pc_old            = ID_to_EX.pc_cur;
 
   wire unused = &{ID_to_EX.rs1, ID_to_EX.rs2};
