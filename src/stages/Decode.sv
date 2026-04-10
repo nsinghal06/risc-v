@@ -25,7 +25,7 @@ module Decode
   alu_src_a_t             cfsm__alu_src_a;
   alu_src_b_t             cfsm__ALUSrcB;
 
-  wire [3:0]              __tmp_ALUControl;
+  alu_control_t           alu_control;
 
   opcode_t opcode;
   imm_t    imm_ext;
@@ -58,7 +58,7 @@ module Decode
     ( .instr           ( instruction      )
     , .opcode          ( opcode           )
     , .funct3          ( funct3           )
-    , .ALUControl      ( __tmp_ALUControl )
+    , .ALUControl      ( alu_control      )
     , .imm_ext         ( imm_ext          )
     , .rd              ( rd               )
     , .rs1             ( rs1              )
@@ -100,7 +100,7 @@ module Decode
     assign ID_to_EX.pc_target_kind      = cfsm__pc_target_kind;
     assign ID_to_EX.MemWrite            = cfsm__mem_write;
     assign ID_to_EX.RegWrite            = cfsm__reg_write;
-    assign ID_to_EX.ALUControl          = __tmp_ALUControl;
+    assign ID_to_EX.ALUControl          = alu_control;
     assign ID_to_EX.funct3              = funct3;
     assign ID_to_EX.rd1                 = rd1_safe;
     assign ID_to_EX.rd2                 = rd2_safe;

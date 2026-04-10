@@ -5,7 +5,7 @@
 module Instruction_Decode
   ( input wire [31:0] instr
   , output opcode_t opcode
-  , output wire [3:0] ALUControl
+  , output alu_control_t ALUControl
   , output imm_t imm_ext
   , output reg [2:0] funct3
   , output reg [4:0] rd
