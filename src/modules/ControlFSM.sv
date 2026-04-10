@@ -17,7 +17,14 @@ module control_fsm
   );
 
   always_comb
-    reg_write = opcode inside {JType, RType, IType_load, IType_logic, IType_jalr, UType_auipc, UType_lui};
+    reg_write =
+      (opcode == JType) ||
+      (opcode == RType) ||
+      (opcode == IType_load) ||
+      (opcode == IType_logic) ||
+      (opcode == IType_jalr) ||
+      (opcode == UType_auipc) ||
+      (opcode == UType_lui);
 
   always_comb
     case (opcode)
@@ -33,7 +40,7 @@ module control_fsm
 
   always_comb mem_write = opcode == SType;
 
-  always_comb jump = opcode inside {JType, IType_jalr};
+  always_comb jump = (opcode == JType) || (opcode == IType_jalr);
 
   always_comb branch = opcode == BType;
 
