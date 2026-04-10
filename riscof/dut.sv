@@ -7,7 +7,7 @@ module dut;
   reg clk;
   reg reset;
 
-  top_pipelined #( .MEM_SIZE ( 500000 /* 2MB */ ) )
+  top #( .MEM_SIZE ( 500000 /* 2MB */ ) )
     top
       ( .clk   ( clk   )
       , .reset ( reset )
