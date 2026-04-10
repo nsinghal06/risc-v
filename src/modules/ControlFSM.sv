@@ -1,7 +1,7 @@
 
 // TODO: review all the signal assignments
 /* verilator lint_off DECLFILENAME */
-module control_fsm_pipelined
+module control_fsm
 /* verilator lint_off DECLFILENAME */
   ( input opcode_t opcode
 

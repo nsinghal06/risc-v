@@ -41,7 +41,7 @@ module Decode
 
   assign instruction = IF_to_ID.instruction;
 
-  control_fsm_pipelined u_ctrl
+  control_fsm u_ctrl
     ( .opcode  ( opcode )
 
     , .reg_write      ( cfsm__reg_write      )
