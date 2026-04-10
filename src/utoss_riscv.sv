@@ -6,7 +6,7 @@
 `include "src/interfaces/mem_to_wb_if.svh"
 
 // pipelined implementation of our core
-module utoss_riscv_pipelined
+module utoss_riscv
   ( input wire clk
   , input wire reset
 

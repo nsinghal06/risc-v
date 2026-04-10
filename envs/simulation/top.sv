@@ -1,6 +1,6 @@
 `include "src/headers/types.svh"
 
-module top_pipelined
+module top
   #( parameter MEM_SIZE = 1024 ) //maybe change to 2048 if using dual port?
   ( input wire clk
   , input wire reset
@@ -49,7 +49,7 @@ module top_pipelined
   //     );
   // MA
 
-  utoss_riscv_pipelined core
+  utoss_riscv core
     ( .clk    ( clk    )
     , .reset  ( reset  )
 
