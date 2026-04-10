@@ -168,9 +168,8 @@ jobs:
     needs:
       - select_ci_image
       - build_and_test
-    # dont skip if build_ci_image is skipped; need explicit check for needs' success but temporarily
-    # disabling during initial pipelineing integration
-    if: always() && needs.build_and_test.result == 'success' && false
+    # dont skip if build_ci_image is skipped; need explicit check for needs' success
+    if: always() && needs.build_and_test.result == 'success'
     runs-on: ubuntu-latest
     container:
       image: ${{ needs.select_ci_image.outputs.image-tag }}
@@ -225,11 +224,10 @@ jobs:
     needs: de1-soc
     # dont run this on fork PRs; this will fail to permission issues when posting a comment; i don't
     # understand exactly the permission mechanism that prohibits this so will need to look into this
-    # further down the road; temporarily disabling during initial pipelining implementation
+    # further down the road;
     if: >
       github.event.pull_request.head.repo.full_name == github.repository &&
-      github.event_name == 'pull_request' &&
-      false
+      github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
