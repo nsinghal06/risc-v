@@ -1,3 +1,5 @@
+`include "src/timescale.svh"
+
 // sh1add - logical shift left by 1 and add
 // sh2add - logical shift left by 2 and add
 // sh3add - logical shift left by 3 and add

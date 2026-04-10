@@ -1,5 +1,6 @@
 `default_nettype none
 
+`include "src/timescale.svh"
 `include "src/interfaces/mem_to_wb_if.svh"
 
 module write_back

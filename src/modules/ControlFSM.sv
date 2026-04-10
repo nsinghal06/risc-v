@@ -1,3 +1,4 @@
+`include "src/timescale.svh"
 
 // TODO: review all the signal assignments
 /* verilator lint_off DECLFILENAME */

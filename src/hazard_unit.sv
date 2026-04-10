@@ -1,3 +1,4 @@
+`include "src/timescale.svh"
 `include "src/headers/types.svh"
 
 module hazard_unit

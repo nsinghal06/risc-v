@@ -1,3 +1,4 @@
+`include "src/timescale.svh"
 `include "src/headers/params.svh"
 `include "src/headers/types.svh"
 `include "src/interfaces/if_to_id_if.svh"
