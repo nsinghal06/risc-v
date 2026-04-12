@@ -21,7 +21,8 @@ if [ ! -f "$PR_REPORT" ]; then
 fi
 
 {
-  echo "### $EMOJI $TITLE"
+  echo "<details>"
+  echo "<summary><h3>$EMOJI $TITLE</h3></summary>"
   echo ""
 
   if [ -f "$MAIN_REPORT" ]; then
@@ -45,5 +46,7 @@ fi
     echo "\`\`\`"
     echo "</details>"
   fi
+  echo ""
+  echo "</details>"
   echo ""
 }
