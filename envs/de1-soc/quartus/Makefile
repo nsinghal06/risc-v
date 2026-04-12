@@ -7,8 +7,11 @@ QUARTUS_SHELL := quartus_sh
 QUARTUS_CDB   := quartus_cdb
 QUARTUS_ASM   := quartus_asm
 
+UTOSS_RISCV_CONFIG ?= RV32I
+
 synthesize:
-	$(QUARTUS_SHELL) --flow compile $(QUARTUS_PROJECT_NAME)
+	QUARTUS_PROJECT_NAME=$(QUARTUS_PROJECT_NAME) UTOSS_RISCV_CONFIG=$(UTOSS_RISCV_CONFIG) \
+		$(QUARTUS_SHELL) -t $(SCRIPTS_DIR)/synthesize.tcl
 
 refresh_ram:
 	$(QUARTUS_CDB) $(QUARTUS_PROJECT_NAME) --update_mif
