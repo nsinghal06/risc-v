@@ -18,6 +18,6 @@ package ext__b__types;
     , B_ALU_CTRL__ZEXTH   = 4'b1011
     } b_alu_control_t;
 
-endpackage;
+endpackage
 
 `endif
