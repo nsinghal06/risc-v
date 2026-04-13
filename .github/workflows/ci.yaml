@@ -266,24 +266,21 @@ jobs:
           .github/scripts/de1-soc-synthesis-metrics-diff/compare_metrics_diff.sh
           "main-reports/output_files/utoss-risc-v.fit.summary"
           "pr-reports/output_files/utoss-risc-v.fit.summary"
-          "Fitter Summary (.fit.summary)"
-          "📊" > metric-diff/fitter_summary.md
+          > metric-diff/fitter_summary.md
 
       - name: Compare Fitter Resource Utilization by Entity
         run: >
           .github/scripts/de1-soc-synthesis-metrics-diff/compare_metrics_diff.sh
           "main-reports/metrics/fitter_utilization.pretty.txt"
           "pr-reports/metrics/fitter_utilization.pretty.txt"
-          "Fitter Resource Utilization by Entity"
-          "🔢" > metric-diff/fitter_by_entity.md
+          > metric-diff/fitter_by_entity.md
 
       - name: Compare Timing Analysis Summary
         run: >
           .github/scripts/de1-soc-synthesis-metrics-diff/compare_metrics_diff.sh
           "main-reports/output_files/utoss-risc-v.sta.summary"
           "pr-reports/output_files/utoss-risc-v.sta.summary"
-          "Timing Analysis Summary (.sta.summary)"
-          "⏱️" > metric-diff/timing_summary.md
+          > metric-diff/timing_summary.md
 
       - name: Upload per-config metrics diff
         uses: actions/upload-artifact@v4
