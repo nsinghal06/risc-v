@@ -25,9 +25,9 @@ fi
     if [ -z "$DIFF_OUTPUT" ]; then
       echo "*No changes detected*"
     else
-      echo "\`\`\`diff"
+      echo "<pre><code class=\"language-diff\">"
       echo "$DIFF_OUTPUT"
-      echo "\`\`\`"
+      echo "</code></pre>"
     fi
   else
     echo "*No baseline available from main branch*"
@@ -35,9 +35,9 @@ fi
     echo "<details>"
     echo "<summary>View PR synthesis results</summary>"
     echo ""
-    echo "\`\`\`"
+    echo "<pre><code>"
     cat "$PR_REPORT"
-    echo "\`\`\`"
+    echo "</code></pre>"
     echo "</details>"
   fi
 }
