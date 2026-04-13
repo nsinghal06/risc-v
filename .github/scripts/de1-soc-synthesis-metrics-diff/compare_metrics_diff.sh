@@ -5,8 +5,8 @@
 
 set -e
 
-if [ $# -lt 3 ]; then
-  echo "Usage: $0 <main_report_path> <pr_report_path> <human_readable_name> [emoji]" >&2
+if [ $# -lt 2 ]; then
+  echo "Usage: $0 <main_report_path> <pr_report_path>" >&2
   exit 1
 fi
 
