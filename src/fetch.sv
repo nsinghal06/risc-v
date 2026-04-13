@@ -26,14 +26,17 @@ module fetch
   );
 
   addr_t pc_next;
+  addr_t pc_cur_plus_4;
+
+  assign pc_cur_plus_4 = pc_cur + 32'h4;
 
   always @ (*) begin
     if (cfsm__pc_update) begin
       case (cfsm__pc_src)
-        PC_SRC__INCREMENT:  pc_next = pc_cur + 32'h4;
+        PC_SRC__INCREMENT:  pc_next = pc_cur_plus_4;
         PC_SRC__JUMP:       pc_next = pc_old + imm_ext;
         PC_SRC__ALU_RESULT: pc_next = {alu_result_for_pc[31:1], 1'b0};
-        default:            pc_next = pc_cur + 32'h4;
+        default:            pc_next = pc_cur_plus_4;
       endcase
     end else begin
       pc_next = pc_cur;
