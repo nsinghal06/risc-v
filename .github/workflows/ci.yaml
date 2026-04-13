@@ -196,7 +196,7 @@ jobs:
         uses: actions/upload-artifact@v4
         if: steps.build-poc.outcome == 'success'
         with:
-          name: de1-soc-tb-vcd
+          name: de1-soc-tb-vcd-${{ matrix.config }}
           path: envs/de1-soc/top_tb.vcd
           retention-days: 7
 
@@ -204,7 +204,7 @@ jobs:
         uses: actions/upload-artifact@v4
         if: steps.synthesize.outcome == 'success'
         with:
-          name: de1-soc-sof
+          name: de1-soc-sof-${{ matrix.config }}
           path: envs/de1-soc/quartus/output_files/utoss-risc-v.sof
 
       - name: Upload Quartus reports
