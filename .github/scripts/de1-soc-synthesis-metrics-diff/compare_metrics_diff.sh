@@ -23,14 +23,14 @@ fi
     # Generate diff and capture output
     DIFF_OUTPUT=$(diff -u "$MAIN_REPORT" "$PR_REPORT" | tail -n +3 || true)
     if [ -z "$DIFF_OUTPUT" ]; then
-      echo "*No changes detected*"
+      echo "<em>No changes detected</em>"
     else
       echo "<pre><code class=\"language-diff\">"
       echo "$DIFF_OUTPUT"
       echo "</code></pre>"
     fi
   else
-    echo "*No baseline available from main branch*"
+    echo "<em>No baseline available from main branch</em>"
     echo ""
     echo "<details>"
     echo "<summary>View PR synthesis results</summary>"
