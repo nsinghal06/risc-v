@@ -1,7 +1,7 @@
 #!/bin/bash
 # Script to compare a synthesis report between main and PR branches
-# Usage: compare_metrics_diff.sh <main_report_path> <pr_report_path> <human_readable_name> [emoji]
-# Example: compare_metrics_diff.sh "main-reports/report.summary" "pr-reports/report.summary" "Fitter Summary" "📊"
+# Usage: compare_metrics_diff.sh <main_report_path> <pr_report_path>
+# Example: compare_metrics_diff.sh "main-reports/report.summary" "pr-reports/report.summary"
 
 set -e
 
@@ -12,8 +12,6 @@ fi
 
 MAIN_REPORT="$1"
 PR_REPORT="$2"
-TITLE="$3"
-EMOJI="${4:---}"
 
 if [ ! -f "$PR_REPORT" ]; then
   echo "ERROR: PR report not found at $PR_REPORT" >&2
@@ -21,10 +19,6 @@ if [ ! -f "$PR_REPORT" ]; then
 fi
 
 {
-  echo "<details>"
-  echo "<summary><h3>$EMOJI $TITLE</h3></summary>"
-  echo ""
-
   if [ -f "$MAIN_REPORT" ]; then
     # Generate diff and capture output
     DIFF_OUTPUT=$(diff -u "$MAIN_REPORT" "$PR_REPORT" | tail -n +3 || true)
@@ -46,7 +40,4 @@ fi
     echo "\`\`\`"
     echo "</details>"
   fi
-  echo ""
-  echo "</details>"
-  echo ""
 }
