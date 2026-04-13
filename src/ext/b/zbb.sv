@@ -8,6 +8,8 @@ module zbb(
   , output zeroE
   );
 
+  import ext__b__types::*;
+
   always_comb
     case (b_alu_control)
       B_ALU_CTRL__ANDN: out = a & ~b; //andn
