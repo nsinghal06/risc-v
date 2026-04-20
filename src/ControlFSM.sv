@@ -130,6 +130,8 @@ module ControlFSM
     RegWrite = 1'b0;
     AdrSrc    = ADR_SRC__PC;
     ResultSrc = RESULT_SRC__ALU_OUT;
+    ALUSrcA = alu_src_a_t'('0);
+    ALUSrcB = alu_src_b_t'('0);
     FSMState = current_state;
 
     case (current_state)
