@@ -2,11 +2,7 @@
 
 module MemoryLoader
 ( input  data_t memory_data
-
-/* verilator lint_off UNUSEDSIGNAL */
 , input  addr_t memory_address
-/* verilator lint_on UNUSEDSIGNAL */
-
 , input  logic [2:0]  funct3
 , input  logic [31:0] dataB
 , output data_t mem_load_result
@@ -93,5 +89,7 @@ module MemoryLoader
                 MemWriteByteAddress = 4'bxxxx;
             end
         endcase
+
+  wire _unused = &{memory_address[$bits(addr_t) - 1:1]};
 endmodule
 
