@@ -8,7 +8,9 @@
 //rs2 --> a register inside RF memory, holding data to be written into destination register
 //rd --> a register inside RF memory, holding address of register to be written into
 
+/* verilator lint_off DECLFILENAME */
 module registerFile
+/* verilator lint_on DECLFILENAME */
   ( input  [4:0]  Addr1
   , input  [4:0]  Addr2
   , input  [4:0]  Addr3

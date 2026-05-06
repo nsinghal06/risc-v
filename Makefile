@@ -15,11 +15,19 @@ RISCOF_DUT_BIN       := $(RISCOF_DIR)/dut_sim
 RISCOF_CONFIG_TEMPLATE := $(RISCOF_DIR)/config.ini.m4
 RISCOF_CONFIG        := $(RISCOF_DIR)/config.ini
 
+# =============
+# Build config
+# =============
+
+UTOSS_RISCV_CONFIG ?= RV32I
+
+UTOSS_RISCV_VERILATOR_DEFINES := $(if $(findstring B,$(UTOSS_RISCV_CONFIG)),-DUTOSS_RISCV_ENABLE_B_EXT)
+
 # ===========================
 # Verilator flags
 # ===========================
-VERILATOR_FLAGS := -Wall --binary --trace --timing -sv -cc \
-	-O3 -Wno-fatal
+
+VERILATOR_FLAGS := -Wall --binary --trace --timing -sv -cc -O3 $(UTOSS_RISCV_VERILATOR_DEFINES)
 
 # Testbench-only defines
 TB_DEFINES := -DTESTBENCH

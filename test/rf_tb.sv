@@ -1,7 +1,8 @@
-`timescale 1ns/1ps
+`include "src/timescale.svh"
 
 `include "test/utils.svh"
 
+/* verilator lint_off IMPORTSTAR */
 import pkg_control_fsm::*;
 
 module rf_tb;
@@ -16,6 +17,10 @@ module rf_tb;
   //DUT outputs
   logic [31:0] baseAddr, writeData;
 
+  /* verilator lint_off UNUSEDSIGNAL */
+  logic [31:0] dbg_regs [0:31];
+  /* verilator lint_on UNUSEDSIGNAL */
+
   //Instantiate the DUT
   registerFile dut
     ( .Addr1(Addr1)
@@ -27,6 +32,7 @@ module rf_tb;
     , .reset(reset)
     , .baseAddr(baseAddr)
     , .writeData(writeData)
+    , .dbg_regs ( dbg_regs )
     );
 
   //Clock generation
@@ -101,4 +107,5 @@ module rf_tb;
 
   `SETUP_VCD_DUMP(rf_tb)
 
+/* verilator lint_on IMPORTSTAR */
 endmodule

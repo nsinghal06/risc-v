@@ -6,12 +6,17 @@ on:
     branches:
       - main
 
+
 permissions:
   contents: read
   packages: write
 
 jobs:
   build_ci_image:
+    # do this during a push to a branch (e.g. to main) or on a non-fork PR
+    if: >
+      github.event_name == 'push' ||
+      github.event.pull_request.head.repo.full_name == github.repository
     uses: ./.github/workflows/docker-image.yml
     with:
       image-name: ghcr.io/utoss/risc-v
@@ -19,7 +24,33 @@ jobs:
       tag-prefix: ci-
     secrets: inherit
 
+  # we have both internal and external collaborators, and we need to differentiate which CI image
+  # thier pipelines use; this is because internaly, every PR builds and caches (via docker push) a
+  # new CI image; this helps reduce friction when adding new dependencies to the CI image but
+  # requires write access to the GHCR repo for the org, which only org members have; to address
+  # this, this job selects `ci-branch-main` image for external collaborators so that they don't need
+  # to write anythign to GHCR; there is a chance that PR might diverge from the `ci-branch-main` tag
+  # and might cause issues for the contributor, but we'll see if that ever happens first
+  select_ci_image:
+    runs-on: ubuntu-latest
+    needs: build_ci_image
+    if: always() # dont skip if build_ci_image is skipped
+    outputs:
+      image-tag: ${{ steps.image.outputs.tag }}
+    steps:
+      - id: image
+        run: |
+          if [ "${{ github.event.pull_request.head.repo.full_name }}" == "${{ github.repository }}" ]; then
+            echo "tag=${{ needs.build_ci_image.outputs.image-primary-tag }}" >> $GITHUB_OUTPUT
+          else
+            echo "tag=ghcr.io/utoss/risc-v:ci-branch-main" >> $GITHUB_OUTPUT
+          fi
+
   build_devcontainer_image:
+    # do this during a push to a branch (e.g. to main) or on a non-fork PR
+    if: >
+      github.event_name == 'push' ||
+      github.event.pull_request.head.repo.full_name == github.repository
     uses: ./.github/workflows/docker-image.yml
     with:
       image-name: ghcr.io/utoss/risc-v-devcontainer
@@ -28,10 +59,11 @@ jobs:
     secrets: inherit
 
   svlint:
-    needs: build_ci_image
+    needs: select_ci_image
+    if: always() # dont skip if build_ci_image is skipped
     runs-on: ubuntu-latest
     container:
-      image: ${{ needs.build_ci_image.outputs.image-primary-tag }}
+      image: ${{ needs.select_ci_image.outputs.image-tag }}
 
     steps:
       - name: Checkout code
@@ -48,10 +80,17 @@ jobs:
 
   build_and_test:
     timeout-minutes: 30
-    needs: build_ci_image
+    needs: select_ci_image
+    if: always() # dont skip if build_ci_image is skipped
     runs-on: ubuntu-latest
     container:
-      image: ${{ needs.build_ci_image.outputs.image-primary-tag }}
+      image: ${{ needs.select_ci_image.outputs.image-tag }}
+
+    strategy:
+      matrix: &utoss-risc-v-matrix
+        config:
+          - RV32I
+          - RV32IB
 
     steps:
       - name: Checkout code
@@ -59,11 +98,11 @@ jobs:
 
       - name: Build top
         id: build-top
-        run: make build_top
+        run: make build_top UTOSS_RISCV_CONFIG=${{ matrix.config }}
 
       - name: Build testbench
         id: build-testbench
-        run: make build_tb
+        run: make build_tb UTOSS_RISCV_CONFIG=${{ matrix.config }}
 
       - name: Run testbench
         run: make run_tb
@@ -72,7 +111,7 @@ jobs:
         uses: actions/upload-artifact@v4
         if: steps.build-testbench.outcome == 'success'
         with:
-          name: vcd-files
+          name: vcd-files-${{ matrix.config }}
           path: test/vcd/*.vcd
           retention-days: 7
 
@@ -80,23 +119,27 @@ jobs:
         uses: actions/upload-artifact@v4
         if: steps.build-top.outcome == 'success'
         with:
-          name: vvp-files
+          name: vvp-files-${{ matrix.config }}
           path: out/*.vvp
           retention-days: 7
 
   riscof:
     timeout-minutes: 30
-    needs: build_ci_image
+    needs: select_ci_image
+    if: always() # dont skip if build_ci_image is skipped
     runs-on: ubuntu-latest
     container:
-      image: ${{ needs.build_ci_image.outputs.image-primary-tag }}
+      image: ${{ needs.select_ci_image.outputs.image-tag }}
+
+    strategy:
+      matrix: *utoss-risc-v-matrix
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Build DUT
-        run: make riscof_build_dut
+        run: make riscof_build_dut UTOSS_RISCV_CONFIG=${{ matrix.config }}
 
       - name: Validate YAML
         run: make riscof_validateyaml
@@ -111,7 +154,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: riscof-report
+          name: riscof-report-${{ matrix.config }}
           path: |
             riscof/riscof_work/report.html
             riscof/riscof_work/style.css
@@ -120,11 +163,16 @@ jobs:
   de1-soc:
     timeout-minutes: 30
     needs:
-      - build_ci_image
+      - select_ci_image
       - build_and_test
+    # dont skip if build_ci_image is skipped; need explicit check for needs' success
+    if: always() && needs.build_and_test.result == 'success'
     runs-on: ubuntu-latest
     container:
-      image: ${{ needs.build_ci_image.outputs.image-primary-tag }}
+      image: ${{ needs.select_ci_image.outputs.image-tag }}
+
+    strategy:
+      matrix: *utoss-risc-v-matrix
 
     steps:
       - name: Checkout code
@@ -139,13 +187,16 @@ jobs:
 
       - name: Synthesize
         id: synthesize
-        run: cd envs/de1-soc && make synthesize
+        run: cd envs/de1-soc/quartus && make synthesize UTOSS_RISCV_CONFIG=${{ matrix.config }}
+
+      - name: Gather metrics
+        run: cd envs/de1-soc/quartus && make pretty-metrics
 
       - name: Upload VCD file
         uses: actions/upload-artifact@v4
         if: steps.build-poc.outcome == 'success'
         with:
-          name: de1-soc-tb-vcd
+          name: de1-soc-tb-vcd-${{ matrix.config }}
           path: envs/de1-soc/top_tb.vcd
           retention-days: 7
 
@@ -153,26 +204,36 @@ jobs:
         uses: actions/upload-artifact@v4
         if: steps.synthesize.outcome == 'success'
         with:
-          name: de1-soc-sof
+          name: de1-soc-sof-${{ matrix.config }}
           path: envs/de1-soc/quartus/output_files/utoss-risc-v.sof
 
       - name: Upload Quartus reports
         uses: actions/upload-artifact@v4
         if: steps.synthesize.outcome == 'success'
         with:
-          name: de1-soc-quartus-reports
+          name: de1-soc-quartus-reports-${{ matrix.config }}
           path: |
             envs/de1-soc/quartus/output_files/utoss-risc-v.sta.summary
             envs/de1-soc/quartus/output_files/utoss-risc-v.fit.summary
+            envs/de1-soc/quartus/metrics/fitter_utilization.csv
+            envs/de1-soc/quartus/metrics/fitter_utilization.pretty.txt
           retention-days: 7
 
   de1-soc-synthesis-metrics-diff:
-    if: github.event_name == 'pull_request'
     timeout-minutes: 10
     needs: de1-soc
+    # dont run this on fork PRs; this will fail to permission issues when posting a comment; i don't
+    # understand exactly the permission mechanism that prohibits this so will need to look into this
+    # further down the road
+    if: >
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
+
+    strategy:
+      matrix: *utoss-risc-v-matrix
 
     steps:
       - name: Checkout code
@@ -181,7 +242,7 @@ jobs:
       - name: Download PR Quartus reports
         uses: actions/download-artifact@v4
         with:
-          name: de1-soc-quartus-reports
+          name: de1-soc-quartus-reports-${{ matrix.config }}
           path: pr-reports
 
       - name: Download main branch Quartus reports
@@ -191,18 +252,72 @@ jobs:
         with:
           workflow: ci.yaml
           branch: main
-          name: de1-soc-quartus-reports
+          name: de1-soc-quartus-reports-${{ matrix.config }}
           path: main-reports
           check_artifacts: true
           search_artifacts: true
 
-      - name: Compare FPGA metrics
-        id: compare
-        run: .github/scripts/de1-soc-synthesis-metrics-diff/compare_metrics_diff.sh
+      - name: Initialize metrics diff files
+        run: |
+          mkdir -p metric-diff
+
+      - name: Compare Fitter Summary
+        run: >
+          .github/scripts/de1-soc-synthesis-metrics-diff/compare_metrics_diff.sh
+          "main-reports/output_files/utoss-risc-v.fit.summary"
+          "pr-reports/output_files/utoss-risc-v.fit.summary"
+          > metric-diff/fitter_summary.md
+
+      - name: Compare Fitter Resource Utilization by Entity
+        run: >
+          .github/scripts/de1-soc-synthesis-metrics-diff/compare_metrics_diff.sh
+          "main-reports/metrics/fitter_utilization.pretty.txt"
+          "pr-reports/metrics/fitter_utilization.pretty.txt"
+          > metric-diff/fitter_by_entity.md
+
+      - name: Compare Timing Analysis Summary
+        run: >
+          .github/scripts/de1-soc-synthesis-metrics-diff/compare_metrics_diff.sh
+          "main-reports/output_files/utoss-risc-v.sta.summary"
+          "pr-reports/output_files/utoss-risc-v.sta.summary"
+          > metric-diff/timing_summary.md
+
+      - name: Upload per-config metrics diff
+        uses: actions/upload-artifact@v4
+        with:
+          name: de1-soc-synthesis-metrics-diff-${{ matrix.config }}
+          path: metric-diff/*.md
+          retention-days: 7
+
+  de1-soc-synthesis-metrics-diff-aggregate:
+    timeout-minutes: 10
+    needs: de1-soc-synthesis-metrics-diff
+    if: >
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download per-config metrics diff artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: de1-soc-synthesis-metrics-diff-*
+          path: metrics-diff
+
+      - name: Build combined comparison report
+        run: bash .github/scripts/de1-soc-synthesis-metrics-diff/aggregate_metrics.sh metrics-diff comparison.md
+
+      - name: Publish comparison to job summary
+        run: cat comparison.md >> "$GITHUB_STEP_SUMMARY"
 
       - name: Post comment on PR
         uses: actions/github-script@v7
         with:
           script: |
             const script = require('./.github/scripts/de1-soc-synthesis-metrics-diff/post_comment.js');
-            await script({github, context});
+            await script({github, context, comparisonFile: 'comparison.md'});

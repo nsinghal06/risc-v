@@ -1,7 +1,7 @@
+`include "src/timescale.svh"
 `include "src/types.svh"
 `include "src/packages/pkg_control_fsm.svh"
 
-import pkg_control_fsm::state_t;
 
 module utoss_riscv
   ( input wire clk
@@ -15,6 +15,8 @@ module utoss_riscv
   , output logic [31:0] dbg_regs [0:31]
   , output addr_t dbg_pc
   );
+
+  import pkg_control_fsm::state_t;
 
   wire         cfsm__pc_update;
   wire         cfsm__reg_write;
@@ -30,14 +32,15 @@ module utoss_riscv
   reg [2:0] funct3;
   reg [6:0] funct7;
 
+/* verilator lint_off UNUSEDSIGNAL */
   integer byteindex;
+/* verilator lint_on UNUSEDSIGNAL */
 
   data_t result;
   data_t mem_load_result;
 
   data_t rd1;
   data_t rd2;
-
   data_t alu_input_a;
   data_t alu_input_b;
   data_t alu_result;
@@ -48,10 +51,17 @@ module utoss_riscv
   wire alu__zero_flag;
 
   adr_src_t cfsm__adr_src;
+
+  /* verilator lint_off UNUSEDSIGNAL */
   wire __tmp_Branch;
+  /* verilator lint_on UNUSEDSIGNAL */
   wire [1:0] __tmp_ALUSrcA, __tmp_ALUSrcB;
-  wire [3:0] __tmp_ALUControl;
+  alu_control_t  __tmp_ALUControl;
+
+  /* verilator lint_off UNUSEDSIGNAL */
   wire [1:0] __tmp_ResultSrc;
+  /* verilator lint_on UNUSEDSIGNAL */
+
   state_t __tmp_FSMState;
   data_t     dataA, dataB;
   reg  [4:0] rd, rs1, rs2;

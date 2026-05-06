@@ -1,9 +1,14 @@
-`timescale 1ns/1ps
+`include "src/timescale.svh"
 
 `include "test/utils.svh"
 `include "src/packages/pkg_control_fsm.svh"
 
+/* verilator lint_off IMPORTSTAR */
+/* verilator lint_off WIDTHEXPAND */
+/* verilator lint_off UNUSEDSIGNAL */
+/* verilator lint_off INITIALDLY */
 import pkg_control_fsm::*;
+/* verilator lint_on IMPORTSTAR */
 
 module addi_tb;
 
@@ -20,18 +25,18 @@ module addi_tb;
     forever #5 clk = ~clk;
   end
 
-  task wait_till_next_cfsm_state(input [5:0] expected_state);
+  task wait_till_next_cfsm_state(input state_t expected_state);
     @(posedge clk); #1;
     `assert_equal(uut.core.control_fsm.current_state, expected_state)
   endtask
 
   initial begin
-    reset <= `TRUE;
+    reset = 1'b1;
 
     // Set up instruction memory
-    uut.memory.M[ 0] = 32'h00010093; // addi x1, x2, 0
-    uut.memory.M[ 1] = 32'h00410093; // addi x1, x2, 4
-    uut.memory.M[ 2] = 32'hff810093; // addi x1, x2, -8
+    uut.memory.M[0] = 32'h00010093; // correct encoding for addi x1, x2, 0
+    uut.memory.M[1] = 32'h00410093; // addi x1, x2, 4
+    uut.memory.M[2] = 32'hff810093; // addi x1, x2, -8
 
     // Set up register file
     uut.core.RegFile.RFMem[1] = 0; // x1 = 0
@@ -39,7 +44,7 @@ module addi_tb;
 
     wait_till_next_cfsm_state(FETCH);
 
-    reset <= `FALSE;
+    reset = 1'b0;
 
     wait_till_next_cfsm_state(FETCH_WAIT);
 
@@ -48,7 +53,7 @@ module addi_tb;
     `assert_equal(uut.core.opcode, 7'b0010011)
     `assert_equal(uut.core.instruction_decode.rs1, 2)
     `assert_equal(uut.core.instruction_decode.rd, 1)
-    `assert_equal(uut.core.instruction_decode.imm_ext, 0)
+    `assert_equal(uut.core.instruction_decode.imm_ext, 32'd0)
 
     wait_till_next_cfsm_state(EXECUTEI);
     `assert_equal(uut.core.alu.a, 42)
@@ -97,5 +102,9 @@ module addi_tb;
   end
 
   `SETUP_VCD_DUMP(addi_tb)
+
+/* verilator lint_on WIDTHEXPAND */
+/* verilator lint_on UNUSEDSIGNAL */
+/* verilator lint_on INITIALDLY */
 
 endmodule

@@ -1,10 +1,17 @@
 `include "src/types.svh"
+`timescale 1ns/1ps
+
 
 module top
   #( parameter MEM_SIZE = 1024 )
   ( input wire clk
   , input wire reset
   );
+
+  /* verilator lint_off UNUSEDSIGNAL */
+  logic [31:0] dbg_regs [0:31];
+  addr_t dbg_pc;
+  /* verilator lint_on UNUSEDSIGNAL */
 
   addr_t       memory__address;
   data_t       memory__write_data;
@@ -28,6 +35,9 @@ module top
     , .memory__write_data   ( memory__write_data   )
     , .memory__write_enable ( memory__write_enable )
     , .memory__read_data    ( memory__read_data    )
+
+    , .dbg_regs ( dbg_regs )
+    , .dbg_pc   ( dbg_pc   )
     );
 
 endmodule

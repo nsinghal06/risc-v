@@ -1,0 +1,79 @@
+`include "src/ext/b/types.svh"
+/* verilator lint_off DECLFILENAME */
+module ext__b__decoder
+/* verilator lint_on DECLFILENAME */
+  ( input [2:0] funct3
+  , input [6:0] funct7
+  , input [6:0] opcode
+  /* verilator lint_off UNUSEDSIGNAL */
+  , input [4:0] rd
+  /* verilator lint_on UNUSEDSIGNAL */
+  , input [4:0] rs2
+  , output ext__b__types::b_alu_control_t b_alu_control
+  );
+
+  import ext__b__types::*;
+
+  localparam bit [6:0] FUNCT7_ZBA = 7'b0010000;
+  localparam bit [6:0] FUNCT7_ZBB__LOGICAL = 7'b0100000;
+  localparam bit [6:0] FUNCT7_ZBB__MINMAX = 7'b0000101;
+  localparam bit [6:0] FUNCT7_ZBB__SEXT = 7'b0110000;
+  localparam bit [6:0] FUNCT7_ZBB__ZEXT = 7'b0000100;
+
+  always_comb
+    case (opcode)
+      7'b0110011:
+        case (funct7)
+          FUNCT7_ZBA:
+            case (funct3)
+              3'b010:  b_alu_control = B_ALU_CTRL__SH1ADD;
+              3'b100:  b_alu_control = B_ALU_CTRL__SH2ADD;
+              3'b110:  b_alu_control = B_ALU_CTRL__SH3ADD;
+              default: b_alu_control = B_ALU_CTRL__NONE;
+            endcase
+
+          FUNCT7_ZBB__LOGICAL:
+            case (funct3)
+              3'b111:  b_alu_control = B_ALU_CTRL__ANDN;
+              3'b110:  b_alu_control = B_ALU_CTRL__ORN;
+              3'b100:  b_alu_control = B_ALU_CTRL__XNOR;
+              default: b_alu_control = B_ALU_CTRL__NONE;
+            endcase
+          FUNCT7_ZBB__MINMAX:
+            case (funct3)
+              3'b100:  b_alu_control = B_ALU_CTRL__MIN;
+              3'b110:  b_alu_control = B_ALU_CTRL__MAX;
+              default: b_alu_control = B_ALU_CTRL__NONE;
+            endcase
+          FUNCT7_ZBB__ZEXT:
+            case (funct3)
+              3'b100:
+                case (rs2)
+                  5'b00000: b_alu_control = B_ALU_CTRL__ZEXTH;
+                  default: b_alu_control = B_ALU_CTRL__NONE;
+                endcase
+              default: b_alu_control = B_ALU_CTRL__NONE;
+            endcase
+          // TODO: Implement zbs into ALU decoder, also confirm what zbb instructions are being implemented.
+          default: b_alu_control = B_ALU_CTRL__NONE;
+
+        endcase
+      7'b0010011:
+        case (funct7)
+          FUNCT7_ZBB__SEXT:
+            case (funct3)
+              3'b001:
+                case (rs2)
+                  5'b00100:  b_alu_control = B_ALU_CTRL__SEXTB;
+                  5'b00101:  b_alu_control = B_ALU_CTRL__SEXTH;
+                  default: b_alu_control = B_ALU_CTRL__NONE;
+                endcase
+              default: b_alu_control = B_ALU_CTRL__NONE;
+            endcase
+          default: b_alu_control = B_ALU_CTRL__NONE;
+
+        endcase
+      default: b_alu_control = B_ALU_CTRL__NONE;
+    endcase
+
+endmodule
