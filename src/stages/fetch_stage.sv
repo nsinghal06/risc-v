@@ -5,8 +5,8 @@
 `include "src/interfaces/ex_to_if_if.svh"
 
 module fetch_stage
-  ( output if_to_id_t IF_to_ID
-  , input ex_to_if_t  EX_to_IF
+  ( output if_to_id_t if_to_id
+  , input ex_to_if_t  ex_to_if
 
   , input wire clk
   , input wire reset
@@ -44,9 +44,9 @@ module fetch_stage
   addr_t pc_next;
 
   always_comb
-    case (EX_to_IF.pc_src)
+    case (ex_to_if.pc_src)
       PC_SRC__INCREMENT:  pc_next = pc_cur + 32'h4;
-      PC_SRC__ALU_RESULT: pc_next = EX_to_IF.pc_target;
+      PC_SRC__ALU_RESULT: pc_next = ex_to_if.pc_target;
       default:            pc_next = 32'hx;
     endcase
 
@@ -77,10 +77,10 @@ module fetch_stage
 
   assign imem__address = pc_cur;
 
-  assign IF_to_ID.instruction = stalled_instr_valid ? stalled_instr : imem__data;
-  assign IF_to_ID.pc_cur      = pc_prev;
-  assign IF_to_ID.pc_plus_4   = pc_prev + 32'h4; // TODO: revisit
+  assign if_to_id.instruction = stalled_instr_valid ? stalled_instr : imem__data;
+  assign if_to_id.pc_cur      = pc_prev;
+  assign if_to_id.pc_plus_4   = pc_prev + 32'h4; // TODO: revisit
 
   // TODO: probably can just get rid of those altogether
-  wire unused = &{EX_to_IF.pc_old, EX_to_IF.imm_ext};
+  wire unused = &{ex_to_if.pc_old, ex_to_if.imm_ext};
 endmodule

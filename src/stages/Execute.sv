@@ -5,7 +5,7 @@
 `include "src/interfaces/ex_to_if_if.svh"
 
 module Execute
-  ( input id_to_ex_t ID_to_EX
+  ( input id_to_ex_t id_to_ex
 
   , input hazard_forward_a_t hz_forward_a
   , input hazard_forward_b_t hz_forward_b
@@ -13,8 +13,8 @@ module Execute
   , input data_t wb_result
   , input data_t mem_alu_result
 
-  , output ex_to_if_t EX_to_IF
-  , output ex_to_mem_t EX_to_MEM
+  , output ex_to_if_t ex_to_if
+  , output ex_to_mem_t ex_to_mem
   );
 
   data_t alu_input_a;
@@ -28,7 +28,7 @@ module Execute
 
   always_comb
     case (hz_forward_a)
-      HAZARD_FORWARD_A__EXECUTE_RD1:       safe_rd1 = ID_to_EX.rd1;
+      HAZARD_FORWARD_A__EXECUTE_RD1:       safe_rd1 = id_to_ex.rd1;
       HAZARD_FORWARD_A__WRITE_BACK_RESULT: safe_rd1 = wb_result;
       HAZARD_FORWARD_A__MEMORY_ALU_RESULT: safe_rd1 = mem_alu_result;
       default:                             safe_rd1 = 'x;
@@ -36,30 +36,30 @@ module Execute
 
   always_comb
     case (hz_forward_b)
-      HAZARD_FORWARD_B__EXECUTE_RD2:       safe_rd2 = ID_to_EX.rd2;
+      HAZARD_FORWARD_B__EXECUTE_RD2:       safe_rd2 = id_to_ex.rd2;
       HAZARD_FORWARD_B__WRITE_BACK_RESULT: safe_rd2 = wb_result;
       HAZARD_FORWARD_B__MEMORY_ALU_RESULT: safe_rd2 = mem_alu_result;
       default:                             safe_rd2 = 'x;
     endcase
 
   always_comb
-    case (ID_to_EX.alu_src_a)
+    case (id_to_ex.alu_src_a)
       ALU_SRC_A__RD1: alu_input_a = safe_rd1;
-      ALU_SRC_A__PC:  alu_input_a = ID_to_EX.pc_cur;
+      ALU_SRC_A__PC:  alu_input_a = id_to_ex.pc_cur;
       default:        alu_input_a = 'x;
     endcase
 
   always_comb
-    case (ID_to_EX.alu_src_b)
+    case (id_to_ex.alu_src_b)
       ALU_SRC_B__RD2:     alu_input_b = safe_rd2;
-      ALU_SRC_B__IMM_EXT: alu_input_b = ID_to_EX.imm_ext;
+      ALU_SRC_B__IMM_EXT: alu_input_b = id_to_ex.imm_ext;
       default:            alu_input_b = 'x;
     endcase
 
   ALU alu
     ( .a              ( alu_input_a         )
     , .b              ( alu_input_b         )
-    , .alu_control    ( ID_to_EX.alu_control )
+    , .alu_control    ( id_to_ex.alu_control )
     , .out            ( alu_result          )
     , .zeroE          ( zero_flag           )
     );
@@ -80,12 +80,12 @@ module Execute
   pc_src_t pc_src;
   addr_t pc_target;
 
-  assign JumpE = ID_to_EX.jump;
-  assign BranchE = ID_to_EX.branch;
+  assign JumpE = id_to_ex.jump;
+  assign BranchE = id_to_ex.branch;
 
   always_comb
-    case (ID_to_EX.pc_target_kind)
-      PC_TARGET_KIND__RELATIVE: pc_target = ID_to_EX.pc_cur + ID_to_EX.imm_ext;
+    case (id_to_ex.pc_target_kind)
+      PC_TARGET_KIND__RELATIVE: pc_target = id_to_ex.pc_cur + id_to_ex.imm_ext;
 
       // here the control FSM arranges for the computation to have been done via the ALU, i.e. to
       // add the register value to imm_ext to abvoid building another adder
@@ -95,7 +95,7 @@ module Execute
 
   logic branch_condition_met;
   always_comb
-    case (ID_to_EX.funct3)
+    case (id_to_ex.funct3)
       FUNCT3__BEQ:               branch_condition_met =  zero_flag;
       FUNCT3__BNE:               branch_condition_met = ~zero_flag;
       FUNCT3__BLT, FUNCT3__BLTU: branch_condition_met =  alu_result[0];
@@ -108,19 +108,19 @@ module Execute
 
   assign pc_src = should_branch ? PC_SRC__ALU_RESULT : PC_SRC__INCREMENT;
 
-  assign EX_to_MEM.result_src   = ID_to_EX.result_src;
-  assign EX_to_MEM.mem_write    = ID_to_EX.mem_write;
-  assign EX_to_MEM.reg_write    = ID_to_EX.reg_write;
-  assign EX_to_MEM.funct3       = ID_to_EX.funct3;
-  assign EX_to_MEM.write_data_e = safe_rd2;
-  assign EX_to_MEM.rd           = ID_to_EX.rd;
-  assign EX_to_MEM.alu_result   = alu_result;
-  assign EX_to_MEM.pc_cur       = ID_to_EX.pc_cur;
-  assign EX_to_MEM.pc_plus_4    = ID_to_EX.pc_plus_4;
-  assign EX_to_IF.imm_ext       = ID_to_EX.imm_ext;
-  assign EX_to_IF.pc_src        = pc_src;
-  assign EX_to_IF.pc_target     = pc_target;
-  assign EX_to_IF.pc_old        = ID_to_EX.pc_cur;
+  assign ex_to_mem.result_src   = id_to_ex.result_src;
+  assign ex_to_mem.mem_write    = id_to_ex.mem_write;
+  assign ex_to_mem.reg_write    = id_to_ex.reg_write;
+  assign ex_to_mem.funct3       = id_to_ex.funct3;
+  assign ex_to_mem.write_data_e = safe_rd2;
+  assign ex_to_mem.rd           = id_to_ex.rd;
+  assign ex_to_mem.alu_result   = alu_result;
+  assign ex_to_mem.pc_cur       = id_to_ex.pc_cur;
+  assign ex_to_mem.pc_plus_4    = id_to_ex.pc_plus_4;
+  assign ex_to_if.imm_ext       = id_to_ex.imm_ext;
+  assign ex_to_if.pc_src        = pc_src;
+  assign ex_to_if.pc_target     = pc_target;
+  assign ex_to_if.pc_old        = id_to_ex.pc_cur;
 
-  wire unused = &{ID_to_EX.rs1, ID_to_EX.rs2};
+  wire unused = &{id_to_ex.rs1, id_to_ex.rs2};
 endmodule

@@ -6,7 +6,7 @@
 module write_back
   ( input mem_to_wb_t from_memory
   , input data_t dataFromMemory
-  , input ex_to_mem_t EX_to_MEM
+  , input ex_to_mem_t ex_to_mem
   , output var data_t      result
   , output var logic [4:0] rd
   );
@@ -19,10 +19,10 @@ module write_back
 
   // logic [3:0] MemWriteByteAddress;
 
-  assign WriteDataM = EX_to_MEM.write_data_e;
+  assign WriteDataM = ex_to_mem.write_data_e;
   assign ALUResultM = from_memory.alu_result;
-  // assign RdM = EX_to_MEM.rd;
-  // assign MemWrite = EX_to_MEM.MemWrite;
+  // assign RdM = ex_to_mem.rd;
+  // assign MemWrite = ex_to_mem.MemWrite;
 
   logic [3:0] tempMemWriteByteAddress;
   data_t tempOutput;
@@ -53,13 +53,13 @@ module write_back
 
   wire unused = &{from_memory.reg_write
   , from_memory.pc_plus_4
-  , EX_to_MEM.write_data_e
-  , EX_to_MEM.rd
-  , EX_to_MEM.mem_write
+  , ex_to_mem.write_data_e
+  , ex_to_mem.rd
+  , ex_to_mem.mem_write
   , tempOutput
   , tempMemWriteByteAddress /* remove/rename? */};
 
-  wire _unused_ex_to_mem = &{1'b0, EX_to_MEM};
+  wire _unused_ex_to_mem = &{1'b0, ex_to_mem};
   wire _unused_from_mem = &{1'b0, from_memory};
 
 

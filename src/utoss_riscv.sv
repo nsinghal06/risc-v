@@ -49,8 +49,8 @@ module utoss_riscv
   // fetch stage start (@thatlittlegit)
 
   fetch_stage u_fetch_stage
-    ( .IF_to_ID ( if_to_id_out )
-    , .EX_to_IF ( ex_to_if_out )
+    ( .if_to_id ( if_to_id_out )
+    , .ex_to_if ( ex_to_if_out )
 
     , .clk    ( clk    )
     , .reset  ( reset  )
@@ -76,13 +76,13 @@ module utoss_riscv
   wire [4:0] id_rs1, id_rs2;
 
   Decode decode
-    ( .IF_to_ID    ( if_to_id_reg               )
+    ( .if_to_id    ( if_to_id_reg               )
     , .clk         ( clk                        )
     , .reset       ( reset                      )
     , .data        ( wb_result                  )
     , .rd_wb       ( wb_rd                      )
     , .RegWriteW   ( mem_to_wb_reg.reg_write    )
-    , .ID_to_EX    ( id_to_ex_out               )
+    , .id_to_ex    ( id_to_ex_out               )
 
     , .rs1 ( id_rs1 )
     , .rs2 ( id_rs2 )
@@ -98,7 +98,7 @@ module utoss_riscv
     else       id_to_ex_reg <= id_to_ex_out;
 
   Execute execute
-    ( .ID_to_EX ( id_to_ex_reg  )
+    ( .id_to_ex ( id_to_ex_reg  )
 
     , .hz_forward_a ( hz_forward_a )
     , .hz_forward_b ( hz_forward_b )
@@ -106,8 +106,8 @@ module utoss_riscv
     , .wb_result      ( wb_result                )
     , .mem_alu_result ( ex_to_mem_reg.alu_result )
 
-    , .EX_to_MEM  ( ex_to_mem_out )
-    , .EX_to_IF   ( ex_to_if_out  )
+    , .ex_to_mem  ( ex_to_mem_out )
+    , .ex_to_if   ( ex_to_if_out  )
     );
 
   // execute stage end
@@ -119,12 +119,12 @@ module utoss_riscv
     else       ex_to_mem_reg <= ex_to_mem_out;
 
   mem_stage memory_stage
-  ( .EX_to_MEM        ( ex_to_mem_reg )
+  ( .ex_to_mem        ( ex_to_mem_reg )
   , .dataFromMemory   (memory_data__read_data)
   , .dataToMemory     (memory_data__write_data)
   , .memWriteEnable (memory_data__write_enable) // TODO: Is this required?
   , .mem_address      ( memory_data__address )
-  , .MEM_to_WB        (mem_to_wb_out)
+  , .mem_to_wb        (mem_to_wb_out)
   );
 
   // memory stage end
@@ -138,7 +138,7 @@ module utoss_riscv
   write_back wb
     ( .from_memory ( mem_to_wb_reg )
     , .dataFromMemory (memory_data__read_data)
-    , .EX_to_MEM (ex_to_mem_reg)
+    , .ex_to_mem (ex_to_mem_reg)
     , .result      ( wb_result     )
     , .rd          ( wb_rd         )
     );
