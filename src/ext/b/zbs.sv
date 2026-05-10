@@ -13,7 +13,7 @@
 module zbs (
     input  data_t reg1 // rs1 operand
   , input  data_t reg2 // rs2 or immediate (bit index source)
-    , input  alu_control_t inst // operation selector
+  , input  alu_control_t inst // operation selector
   , output data_t out //result
 );
 
