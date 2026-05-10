@@ -101,21 +101,20 @@ jobs:
         id: build-top
         run: make build_top UTOSS_RISCV_CONFIG=${{ matrix.config }}
 
-      # TODO: reinstate basic simulation testing
-      # - name: Build testbench
-      #   id: build-testbench
-      #   run: make build_tb UTOSS_RISCV_CONFIG=${{ matrix.config }}
+      - name: Build testbench
+        id: build-testbench
+        run: make build_tb UTOSS_RISCV_CONFIG=${{ matrix.config }}
 
-      # - name: Run testbench
-      #   run: make run_tb
+      - name: Run testbench
+        run: make run_tb
 
-      # - name: Upload VCD files
-      #   uses: actions/upload-artifact@v4
-      #   if: steps.build-testbench.outcome == 'success'
-      #   with:
-      #     name: vcd-files-${{ matrix.config }}
-      #     path: test/vcd/*.vcd
-      #     retention-days: 7
+      - name: Upload VCD files
+        uses: actions/upload-artifact@v4
+        if: steps.build-testbench.outcome == 'success'
+        with:
+          name: vcd-files-${{ matrix.config }}
+          path: test/vcd/*.vcd
+          retention-days: 7
 
       - name: Upload VVP files
         uses: actions/upload-artifact@v4
