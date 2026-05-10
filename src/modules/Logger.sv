@@ -1,281 +1,290 @@
 `include "src/headers/types.svh"
 `include "src/headers/params.svh"
+`include "src/interfaces/if_to_id_if.svh"
+`include "src/interfaces/id_to_ex_if.svh"
+`include "src/interfaces/ex_to_mem_if.svh"
+`include "src/interfaces/ex_to_if_if.svh"
+`include "src/interfaces/mem_to_wb_if.svh"
 `include "src/timescale.svh"
-`include "src/packages/pkg_control_fsm.svh"
-
-import pkg_control_fsm::state_t;
 
 module Logger
 ( input wire clk
-, input addr_t pc_cur
-, input instr_t instruction
-, input state_t FSM_State
-, input wire [6:0] opcode
-, input logic [2:0] funct3
-, input logic [6:0] funct7
-, input logic [4:0] rs1, rs2, rd
-, input imm_t imm_ext
-, input addr_t memory_address
-, input data_t memory_data
-, input wire [3:0] write_enable
-, input data_t rd1, rd2, result
-, input wire regWrite
+, input wire reset
+
+, input if_to_id_t  if_stage
+, input if_to_id_t  id_stage
+, input id_to_ex_t  ex_stage
+, input ex_to_mem_t ex_stage_out
+, input ex_to_if_t  ex_to_if
+, input ex_to_mem_t mem_stage
+, input mem_to_wb_t mem_stage_out
+, input mem_to_wb_t wb_stage
+
+, input addr_t      imem_address
+, input addr_t      dmem_address
+, input data_t      dmem_read_data
+, input data_t      dmem_write_data
+, input logic [3:0] dmem_write_enable
+
+, input data_t      wb_result
+, input logic [4:0] wb_rd
+
+, input logic StallF
+, input logic StallD
+, input logic FlushF
+, input logic FlushD
+, input logic FlushE
 );
 
     /* verilator lint_off PROCASSINIT */
     integer cycle = 32'h0;
-    string operation = "unknown";
-    string source_register1 = "unkown";
-    string source_register2 = "unknown";
-    string destination_register = "unknown";
-    string complete_instruction = "unknown";
     /* verilator lint_on PROCASSINIT */
 
-    data_t new_pc;
+    function automatic string reg_name(input logic [4:0] reg_idx);
+        case (reg_idx)
+            5'd0:  reg_name = "zero";
+            5'd1:  reg_name = "ra";
+            5'd2:  reg_name = "sp";
+            5'd3:  reg_name = "gp";
+            5'd4:  reg_name = "tp";
+            5'd5:  reg_name = "t0";
+            5'd6:  reg_name = "t1";
+            5'd7:  reg_name = "t2";
+            5'd8:  reg_name = "s0";
+            5'd9:  reg_name = "s1";
+            5'd10: reg_name = "a0";
+            5'd11: reg_name = "a1";
+            5'd12: reg_name = "a2";
+            5'd13: reg_name = "a3";
+            5'd14: reg_name = "a4";
+            5'd15: reg_name = "a5";
+            5'd16: reg_name = "a6";
+            5'd17: reg_name = "a7";
+            5'd18: reg_name = "s2";
+            5'd19: reg_name = "s3";
+            5'd20: reg_name = "s4";
+            5'd21: reg_name = "s5";
+            5'd22: reg_name = "s6";
+            5'd23: reg_name = "s7";
+            5'd24: reg_name = "s8";
+            5'd25: reg_name = "s9";
+            5'd26: reg_name = "s10";
+            5'd27: reg_name = "s11";
+            5'd28: reg_name = "t3";
+            5'd29: reg_name = "t4";
+            5'd30: reg_name = "t5";
+            5'd31: reg_name = "t6";
+            default: reg_name = "x?";
+        endcase
+    endfunction
 
-    assign new_pc = pc_cur + imm_ext + 'h4;
+        function automatic string op_name
+            ( input logic [6:0] opcode
+            , input logic [2:0] funct3
+            , input logic [6:0] funct7
+            );
+        op_name = "unknown";
 
-    always @(posedge clk) begin //stricter by enforcing purely sequential block
-        // Display the high-level PC and instruction information
-        $display("Cycle %d: \nPC: %08h \nInstruction (Hex): %08h", cycle, pc_cur, instruction);
-
-        // Display the FSM State we are in
-        $display("FSM State: %0d", FSM_State);
-
-        // Parse the instruction we are executing
         case (opcode)
-        RType: begin
-            case (funct3)
-            3'b000: begin
-                case (funct7)
-                    7'h00: operation <= "add";
-                    7'h20: operation <= "sub";
+            RType:
+                case (funct3)
+                    3'b000: op_name = (funct7 == 7'h20) ? "sub" : "add";
+                    3'b001: op_name = "sll";
+                    3'b010: op_name = "slt";
+                    3'b011: op_name = "sltu";
+                    3'b100: op_name = "xor";
+                    3'b101: op_name = (funct7 == 7'h20) ? "sra" : "srl";
+                    3'b110: op_name = "or";
+                    3'b111: op_name = "and";
                     default:;
                 endcase
-            end
-            3'b001: operation <= "sll";
-            3'b010: operation <= "slt";
-            3'b011: operation <= "sltu";
-            3'b100: operation <= "xor";
-            3'b101: begin
-                case (funct7)
-                    7'h00: operation <= "srl";
-                    7'h20: operation <= "sra";
+
+            IType_logic:
+                case (funct3)
+                    3'b000: op_name = "addi";
+                    3'b001: op_name = "slli";
+                    3'b010: op_name = "slti";
+                    3'b011: op_name = "sltiu";
+                    3'b100: op_name = "xori";
+                    3'b101: op_name = (funct7 == 7'h20) ? "srai" : "srli";
+                    3'b110: op_name = "ori";
+                    3'b111: op_name = "andi";
                     default:;
                 endcase
-            end
-            3'b110: operation <= "or";
-            3'b111: operation <= "and";
-            endcase
-        end
 
-        IType_logic: begin
-            case (funct3)
-            3'b000: operation <= "addi";
-            3'b001: operation <= "slli";
-            3'b010: operation <= "slti";
-            3'b011: operation <= "sltiu";
-            3'b100: operation <= "xori";
-            3'b101: begin
-                case (funct7)
-                    7'h00: operation <= "srli";
-                    7'h20: operation <= "srai";
+            IType_load:
+                case (funct3)
+                    3'b000: op_name = "lb";
+                    3'b001: op_name = "lh";
+                    3'b010: op_name = "lw";
+                    3'b100: op_name = "lbu";
+                    3'b101: op_name = "lhu";
                     default:;
                 endcase
-            end
-            3'b110: operation <= "ori";
-            3'b111: operation <= "andi";
+
+            SType:
+                case (funct3)
+                    3'b000: op_name = "sb";
+                    3'b001: op_name = "sh";
+                    3'b010: op_name = "sw";
+                    default:;
+                endcase
+
+            BType:
+                case (funct3)
+                    3'b000: op_name = "beq";
+                    3'b001: op_name = "bne";
+                    3'b100: op_name = "blt";
+                    3'b101: op_name = "bge";
+                    3'b110: op_name = "bltu";
+                    3'b111: op_name = "bgeu";
+                    default:;
+                endcase
+
+            JType:       op_name = "jal";
+            UType_auipc: op_name = "auipc";
+            UType_lui:   op_name = "lui";
+            IType_jalr:  op_name = "jalr";
+            FENCE:       op_name = "fence";
             default:;
-            endcase
-        end
-
-        IType_load: begin
-            case (funct3)
-            3'b000: operation <= "lb";
-            3'b001: operation <= "lh";
-            3'b010: operation <= "lw";
-            3'b100: operation <= "lbu";
-            3'b101: operation <= "lhu";
-            default:;
-            endcase
-        end
-
-        SType: begin
-            case (funct3)
-            3'b000: operation <= "sb";
-            3'b001: operation <= "sh";
-            3'b010: operation <= "sw";
-            default:;
-            endcase
-        end
-
-        BType: begin
-            case (funct3)
-            3'b000: operation <= "beq";
-            3'b001: operation <= "bne";
-            3'b100: operation <= "blt";
-            3'b101: operation <= "bge";
-            3'b110: operation <= "bltu";
-            3'b111: operation <= "bgeu";
-            default:;
-            endcase
-        end
-
-        JType:         operation <= "jal";
-        UType_auipc:   operation <= "auipc";
-        UType_lui:     operation <= "lui";
-        IType_jalr:    operation <= "jalr";
-        default:       operation <= "unknown";
         endcase
+    endfunction
 
-        // Parse register names
-        case (rs1)
-        5'b00000: source_register1 <= "zero";
-        5'b00001: source_register1 <= "ra";
-        5'b00010: source_register1 <= "sp";
-        5'b00011: source_register1 <= "gp";
-        5'b00100: source_register1 <= "tp";
-        5'b00101: source_register1 <= "t0";
-        5'b00110: source_register1 <= "t1";
-        5'b00111: source_register1 <= "t2";
-        5'b01000: source_register1 <= "s0";
-        5'b01001: source_register1 <= "s1";
-        5'b01010: source_register1 <= "a0";
-        5'b01011: source_register1 <= "a1";
-        5'b01100: source_register1 <= "a2";
-        5'b01101: source_register1 <= "a3";
-        5'b01110: source_register1 <= "a4";
-        5'b01111: source_register1 <= "a5";
-        5'b10000: source_register1 <= "a6";
-        5'b10001: source_register1 <= "a7";
-        5'b10010: source_register1 <= "s2";
-        5'b10011: source_register1 <= "s3";
-        5'b10100: source_register1 <= "s4";
-        5'b10101: source_register1 <= "s5";
-        5'b10110: source_register1 <= "s6";
-        5'b10111: source_register1 <= "s7";
-        5'b11000: source_register1 <= "s8";
-        5'b11001: source_register1 <= "s9";
-        5'b11010: source_register1 <= "s10";
-        5'b11011: source_register1 <= "s11";
-        5'b11100: source_register1 <= "t3";
-        5'b11101: source_register1 <= "t4";
-        5'b11110: source_register1 <= "t5";
-        5'b11111: source_register1 <= "t6";
-        endcase
+    always @(posedge clk) begin
+        if (reset) begin
+            cycle <= 32'h0;
+        end else begin
+            logic [4:0] if_rs1;
+            logic [4:0] if_rs2;
+            logic [4:0] if_rd;
+            logic [4:0] id_rs1;
+            logic [4:0] id_rs2;
+            logic [4:0] id_rd;
 
-        case (rs2)
-        5'b00000: source_register2 <= "zero";
-        5'b00001: source_register2 <= "ra";
-        5'b00010: source_register2 <= "sp";
-        5'b00011: source_register2 <= "gp";
-        5'b00100: source_register2 <= "tp";
-        5'b00101: source_register2 <= "t0";
-        5'b00110: source_register2 <= "t1";
-        5'b00111: source_register2 <= "t2";
-        5'b01000: source_register2 <= "s0";
-        5'b01001: source_register2 <= "s1";
-        5'b01010: source_register2 <= "a0";
-        5'b01011: source_register2 <= "a1";
-        5'b01100: source_register2 <= "a2";
-        5'b01101: source_register2 <= "a3";
-        5'b01110: source_register2 <= "a4";
-        5'b01111: source_register2 <= "a5";
-        5'b10000: source_register2 <= "a6";
-        5'b10001: source_register2 <= "a7";
-        5'b10010: source_register2 <= "s2";
-        5'b10011: source_register2 <= "s3";
-        5'b10100: source_register2 <= "s4";
-        5'b10101: source_register2 <= "s5";
-        5'b10110: source_register2 <= "s6";
-        5'b10111: source_register2 <= "s7";
-        5'b11000: source_register2 <= "s8";
-        5'b11001: source_register2 <= "s9";
-        5'b11010: source_register2 <= "s10";
-        5'b11011: source_register2 <= "s11";
-        5'b11100: source_register2 <= "t3";
-        5'b11101: source_register2 <= "t4";
-        5'b11110: source_register2 <= "t5";
-        5'b11111: source_register2 <= "t6";
-        endcase
+            if_rs1 = if_stage.instruction[19:15];
+            if_rs2 = if_stage.instruction[24:20];
+            if_rd  = if_stage.instruction[11:7];
+            id_rs1 = id_stage.instruction[19:15];
+            id_rs2 = id_stage.instruction[24:20];
+            id_rd  = id_stage.instruction[11:7];
 
-        case (rd)
-        5'b00000: destination_register <= "zero";
-        5'b00001: destination_register <= "ra";
-        5'b00010: destination_register <= "sp";
-        5'b00011: destination_register <= "gp";
-        5'b00100: destination_register <= "tp";
-        5'b00101: destination_register <= "t0";
-        5'b00110: destination_register <= "t1";
-        5'b00111: destination_register <= "t2";
-        5'b01000: destination_register <= "s0";
-        5'b01001: destination_register <= "s1";
-        5'b01010: destination_register <= "a0";
-        5'b01011: destination_register <= "a1";
-        5'b01100: destination_register <= "a2";
-        5'b01101: destination_register <= "a3";
-        5'b01110: destination_register <= "a4";
-        5'b01111: destination_register <= "a5";
-        5'b10000: destination_register <= "a6";
-        5'b10001: destination_register <= "a7";
-        5'b10010: destination_register <= "s2";
-        5'b10011: destination_register <= "s3";
-        5'b10100: destination_register <= "s4";
-        5'b10101: destination_register <= "s5";
-        5'b10110: destination_register <= "s6";
-        5'b10111: destination_register <= "s7";
-        5'b11000: destination_register <= "s8";
-        5'b11001: destination_register <= "s9";
-        5'b11010: destination_register <= "s10";
-        5'b11011: destination_register <= "s11";
-        5'b11100: destination_register <= "t3";
-        5'b11101: destination_register <= "t4";
-        5'b11110: destination_register <= "t5";
-        5'b11111: destination_register <= "t6";
-        endcase
+                        $display("================ Pipeline Cycle %0d ================", cycle);
+                        $display
+                            ( "Hazard ctrl: StallF=%0b StallD=%0b FlushF=%0b FlushD=%0b FlushE=%0b"
+                            , StallF
+                            , StallD
+                            , FlushF
+                            , FlushD
+                            , FlushE
+                            );
 
-        // Construct the instruction to display
-        case (opcode)
-        RType:         complete_instruction <= {operation, " ", destination_register, ", ", source_register1, ", ", source_register2};
-        IType_logic:   complete_instruction <= {operation, " ", destination_register, ", ", source_register1, ", 0x", $sformatf("%08h", imm_ext)};
-        IType_load:    complete_instruction <= {operation, " ", destination_register, ", ", $sformatf("%0d", imm_ext), "(", source_register1, ")"};
-        SType:         complete_instruction <= {operation, " ", source_register2, ", ", $sformatf("%0d", imm_ext), "(", source_register1, ")"};
-        BType:         complete_instruction <= {operation, " ", source_register1, ", ", source_register2, ", 0x", $sformatf("%08h", new_pc)};
-        JType:         complete_instruction <= {operation, " ", destination_register, ", 0x", $sformatf("%08h", new_pc)};
-        UType_auipc:   complete_instruction <= {operation, " ", destination_register, ", 0x", $sformatf("%08h", imm_ext)};
-        UType_lui:     complete_instruction <= {operation, " ", destination_register, ", 0x", $sformatf("%08h", imm_ext)};
-        IType_jalr:    complete_instruction <= {operation, " ", destination_register, ", ", source_register1, ", 0x", $sformatf("%08h", new_pc)};
-        default:       complete_instruction <= "unknown";
-        endcase
+                        $display
+                            ( "IF : pc=%08h instr=%08h op=%s rs1=%s rs2=%s rd=%s imem_addr=%08h"
+                            , if_stage.pc_cur
+                            , if_stage.instruction
+                                                        , op_name
+                                                            ( if_stage.instruction[6:0]
+                                                            , if_stage.instruction[14:12]
+                                                            , if_stage.instruction[31:25]
+                                                            )
+                            , reg_name(if_rs1)
+                            , reg_name(if_rs2)
+                            , reg_name(if_rd)
+                            , imem_address
+                            );
 
-        // Display the parsed instruction
-        $display("Parsed Instruction: %s", complete_instruction);
+                        $display
+                            ( "ID : pc=%08h instr=%08h op=%s rs1=%s rs2=%s rd=%s imm=%08h"
+                            , id_stage.pc_cur
+                            , id_stage.instruction
+                                                        , op_name
+                                                            ( id_stage.instruction[6:0]
+                                                            , id_stage.instruction[14:12]
+                                                            , id_stage.instruction[31:25]
+                                                            )
+                            , reg_name(id_rs1)
+                            , reg_name(id_rs2)
+                            , reg_name(id_rd)
+                            , ex_stage.imm_ext
+                            );
 
-        // Display the value read from memory
-        $display("Read Memory Address: 0x%08h", memory_address, " Value: 0x%08h", memory_data);
+                        $display
+                            ( "EX : pc=%08h rd1=%08h rd2=%08h alu_ctl=%0d alu_result=%08h branch=%0b jump=%0b pc_src=%0b pc_target=%08h rd=%s regwrite=%0b memwrite=%0b"
+                            , ex_stage.pc_cur
+                            , ex_stage.rd1
+                            , ex_stage.rd2
+                            , ex_stage.ALUControl
+                            , ex_stage_out.alu_result
+                            , ex_stage.Branch
+                            , ex_stage.Jump
+                            , ex_to_if.pc_src
+                            , ex_to_if.pc_target
+                            , reg_name(ex_stage_out.rd)
+                            , ex_stage_out.RegWrite
+                            , ex_stage_out.MemWrite
+                            );
 
-        // If data is being written, display what and where
-        if (|write_enable) begin
-        $display("Write Memory Address: 0x%08h", memory_address, " Value: 0x%08h", memory_data);
+                        $display
+                            ( "MEM: addr=%08h we=%b wdata=%08h rdata=%08h alu_result=%08h rd=%s result_src=%0d regwrite=%0b"
+                            , dmem_address
+                            , dmem_write_enable
+                            , dmem_write_data
+                            , dmem_read_data
+                            , mem_stage.alu_result
+                            , reg_name(mem_stage.rd)
+                            , mem_stage.ResultSrc
+                            , mem_stage.RegWrite
+                            );
+
+                        $display
+                            ( "WB : rd=%s(%0d) regwrite=%0b result_src=%0d wb_result=%08h alu_result=%08h mem_read_data=%08h"
+                            , reg_name(wb_rd)
+                            , wb_rd
+                            , wb_stage.RegWriteW
+                            , wb_stage.cfsm__result_src
+                            , wb_result
+                            , wb_stage.alu_result
+                            , wb_stage.read_data
+                            );
+
+            $display("=====================================================\n");
+            cycle <= cycle + 1'b1;
         end
-
-        // Display values read from register file
-        if (rs1 != 5'b00000) begin
-        $display("Read Register: %s", source_register1, " Value: 0x%08h", rd1);
-        end
-
-        if (rs2 != 5'b00000) begin
-        $display("Read Register: %s", source_register2, " Value: 0x%08h", rd2);
-        end
-
-        // If data is being written to register, display what and where
-        if (regWrite && rd != 5'b00000) begin
-        $display("Write Register: %s", destination_register, " Value: 0x%08h", result);
-        end
-
-        // Include new line to separate log into packets
-        $display("\n");
-
-        cycle <= cycle + 1'b1;
     end
+
+        wire unused = &{
+                1'b0
+            , ex_stage
+            , ex_stage_out
+            , mem_stage
+            , if_stage.pc_plus_4
+            , id_stage.pc_plus_4
+            , ex_stage.alu_src_a
+            , ex_stage.ALUSrcB
+            , ex_stage.ResultSrc
+            , ex_stage.pc_plus_4
+            , ex_stage.pc_target_kind
+            , ex_stage.rs1
+            , ex_stage.rs2
+            , ex_to_if.pc_old
+            , ex_to_if.imm_ext
+            , mem_stage.WriteDataE
+            , mem_stage.funct3
+            , mem_stage.pc_cur
+            , mem_stage.pc_plus_4
+            , mem_stage_out.RegWriteW
+            , mem_stage_out.cfsm__result_src
+            , mem_stage_out.read_data
+            , mem_stage_out.alu_result
+            , mem_stage_out.rd
+            , mem_stage_out.pc_cur
+            , mem_stage_out.pc_plus_4
+            , mem_stage_out.funct3
+            , wb_stage.rd
+            , wb_stage.pc_cur
+            , wb_stage.pc_plus_4
+            , wb_stage.funct3
+            , dmem_write_enable
+        };
+
 endmodule

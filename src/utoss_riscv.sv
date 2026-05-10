@@ -177,5 +177,36 @@ module utoss_riscv
 
   // hazard module end
 
+`ifdef UTOSS_PIPELINE_LOGGER
+  Logger u_logger
+    ( .clk               ( clk                      )
+    , .reset             ( reset                    )
+
+    , .if_stage          ( if_to_id_out             )
+    , .id_stage          ( if_to_id_reg             )
+    , .ex_stage          ( id_to_ex_reg             )
+    , .ex_stage_out      ( ex_to_mem_out            )
+    , .ex_to_if          ( ex_to_if_out             )
+    , .mem_stage         ( ex_to_mem_reg            )
+    , .mem_stage_out     ( mem_to_wb_out            )
+    , .wb_stage          ( mem_to_wb_reg            )
+
+    , .imem_address      ( memory_instr__address    )
+    , .dmem_address      ( memory_data__address     )
+    , .dmem_read_data    ( memory_data__read_data   )
+    , .dmem_write_data   ( memory_data__write_data  )
+    , .dmem_write_enable ( memory_data__write_enable)
+
+    , .wb_result         ( wb_result                )
+    , .wb_rd             ( wb_rd                    )
+
+    , .StallF            ( StallF                   )
+    , .StallD            ( StallD                   )
+    , .FlushF            ( FlushF                   )
+    , .FlushD            ( FlushD                   )
+    , .FlushE            ( FlushE                   )
+    );
+`endif
+
 
 endmodule
