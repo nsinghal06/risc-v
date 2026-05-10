@@ -27,8 +27,8 @@ initial begin
 
     expected = reg1 & ~(32'h1 << reg2[4:0]);
 
-    assert (out == expected)
-        else $fatal("bclr failed: expected %b got %b", expected, out);
+    assert (out == expected) else
+     $fatal("bclr failed: expected %b got %b", expected, out);
 
 
     // -------- bset test --------
@@ -39,8 +39,8 @@ initial begin
 
     expected = reg1 | (32'h1 << reg2[4:0]);
 
-    assert (out == expected)
-        else $fatal("bset failed: expected %b got %b", expected, out);
+     assert (out == expected) else
+      $fatal("bset failed: expected %b got %b", expected, out);
 
 
     // -------- binv test --------
@@ -51,8 +51,8 @@ initial begin
 
     expected = reg1 ^ (32'h1 << reg2[4:0]);
 
-    assert (out == expected)
-        else $fatal("binv failed: expected %b got %b", expected, out);
+    assert (out == expected) else
+     $fatal("binv failed: expected %b got %b", expected, out);
 
 
     // -------- bext test --------
@@ -63,8 +63,8 @@ initial begin
 
     expected = {31'b0, reg1[reg2[4:0]]};
 
-    assert (out == expected)
-        else $fatal("bext failed: expected %b got %b", expected, out);
+    assert (out == expected) else
+     $fatal("bext failed: expected %b got %b", expected, out);
 
     // -------- Edge Cases ---------
 
@@ -76,8 +76,8 @@ initial begin
 
     expected = reg1 & ~(32'h1 << reg2[4:0]);
 
-    assert (out == expected)
-        else $fatal("corner case bit0 failed");
+    assert (out == expected) else
+     $fatal("corner case bit0 failed");
 
 
     // Bit 31 boundary
@@ -88,29 +88,37 @@ initial begin
 
     expected = reg1 & ~(32'h1 << reg2[4:0]);
 
-    assert (out == expected)
-        else $fatal("corner case bit31 failed");
+    assert (out == expected) else
+     $fatal("corner case bit31 failed");
 
 
     // ----------- Randomized Testing (Experimental) -----------
 
     repeat (1000) begin
 
-        reg1 = $urandom;
-        reg2 = $urandom % 32;
-        inst = alu_control_t'((4'b1010) + ($urandom % 4));
+                reg1 = $urandom;
+                reg2 = $urandom % 32;
 
-        #1;
+                // pick a Zbs operation without arithmetic on enums to avoid width expansion
+                case ($urandom % 4)
+                    0: inst = ALU_CONTROL_BCLR;
+                    1: inst = ALU_CONTROL_BSET;
+                    2: inst = ALU_CONTROL_BINV;
+                    3: inst = ALU_CONTROL_BEXT;
+                    default: inst = ALU_CONTROL_BCLR;
+                endcase
 
-        case (inst)
+                #1;
 
-            ALU_CONTROL_BCLR: expected = reg1 & ~(32'h1 << reg2[4:0]);
+                case ( inst )
 
-            ALU_CONTROL_BSET: expected = reg1 | (32'h1 << reg2[4:0]);
+                        ALU_CONTROL_BCLR: expected = reg1 & ~(32'h1 << reg2[4:0]);
 
-            ALU_CONTROL_BINV: expected = reg1 ^ (32'h1 << reg2[4:0]);
+                        ALU_CONTROL_BSET: expected = reg1 | (32'h1 << reg2[4:0]);
 
-            ALU_CONTROL_BEXT: expected = {31'b0, reg1[reg2[4:0]]};
+                        ALU_CONTROL_BINV: expected = reg1 ^ (32'h1 << reg2[4:0]);
+
+                        ALU_CONTROL_BEXT: expected = {31'b0, reg1[reg2[4:0]]};
 
             default: expected = 32'd0;
 

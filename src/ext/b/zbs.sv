@@ -20,30 +20,28 @@ module zbs (
     logic [4:0] index;
     data_t mask;
 
-    always_comb
+    always_comb begin
         index = reg2[4:0];
-
-    always_comb
         mask = data_t'(32'h1) << index;
 
-    always_comb
-        case (inst)
+        case ( inst )
 
-            // 00 : bclr / bclri  → clear selected bit
+            // bclr / bclri  → clear selected bit
             ALU_CONTROL_BCLR: out = reg1 & ~mask;
 
-            // 01 : bset / bseti  → set selected bit
+            // bset / bseti  → set selected bit
             ALU_CONTROL_BSET: out = reg1 | mask;
 
-            // 10 : binv / binvi  → invert selected bit
+            // binv / binvi  → invert selected bit
             ALU_CONTROL_BINV: out = reg1 ^ mask;
 
-            // 11 : bext / bexti  → extract selected bit (to bit[0])
+            // bext / bexti  → extract selected bit (to bit[0])
             ALU_CONTROL_BEXT: out = (reg1 >> index) & data_t'(32'h1);
 
-            // others → safe default
+            // safe default
             default: out = '0;
 
         endcase
+    end
 
 endmodule
