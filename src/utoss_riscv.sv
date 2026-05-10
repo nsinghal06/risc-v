@@ -69,23 +69,25 @@ module utoss_riscv
   // decode stage begin (@marwannismail)
 
   always_ff @ (posedge clk)
-    if (reset) if_to_id_reg <= '0;
-    else if (FlushD) if_to_id_reg <= '0;
+    if (reset)        if_to_id_reg <= '0;
+    else if (FlushD)  if_to_id_reg <= '0;
     else if (!StallD) if_to_id_reg <= if_to_id_out;
 
   wire [4:0] id_rs1, id_rs2;
 
   Decode decode
-    ( .if_to_id    ( if_to_id_reg               )
-    , .clk         ( clk                        )
-    , .reset       ( reset                      )
-    , .data        ( wb_result                  )
-    , .rd_wb       ( wb_rd                      )
-    , .RegWriteW   ( mem_to_wb_reg.reg_write    )
-    , .id_to_ex    ( id_to_ex_out               )
+    ( .if_to_id ( if_to_id_reg )
+
+    , .clk       ( clk                     )
+    , .reset     ( reset                   )
+    , .data      ( wb_result               )
+    , .rd_wb     ( wb_rd                   )
+    , .RegWriteW ( mem_to_wb_reg.reg_write )
 
     , .rs1 ( id_rs1 )
     , .rs2 ( id_rs2 )
+
+    , .id_to_ex ( id_to_ex_out )
     );
 
   // decode stage end
@@ -93,12 +95,12 @@ module utoss_riscv
   // execute stage begin (@MSh-786 and tandr3w)
 
   always_ff @ (posedge clk)
-    if (reset) id_to_ex_reg <= '0;
+    if (reset)       id_to_ex_reg <= '0;
     else if (FlushE) id_to_ex_reg <= '0;
-    else       id_to_ex_reg <= id_to_ex_out;
+    else             id_to_ex_reg <= id_to_ex_out;
 
   Execute execute
-    ( .id_to_ex ( id_to_ex_reg  )
+    ( .id_to_ex ( id_to_ex_reg )
 
     , .hz_forward_a ( hz_forward_a )
     , .hz_forward_b ( hz_forward_b )
@@ -119,12 +121,14 @@ module utoss_riscv
     else       ex_to_mem_reg <= ex_to_mem_out;
 
   mem_stage memory_stage
-  ( .ex_to_mem        ( ex_to_mem_reg )
-  , .dataFromMemory   (memory_data__read_data)
-  , .dataToMemory     (memory_data__write_data)
-  , .memWriteEnable (memory_data__write_enable) // TODO: Is this required?
-  , .mem_address      ( memory_data__address )
-  , .mem_to_wb        (mem_to_wb_out)
+  ( .ex_to_mem      ( ex_to_mem_reg )
+
+  , .dataFromMemory ( memory_data__read_data    )
+  , .dataToMemory   ( memory_data__write_data   )
+  , .memWriteEnable ( memory_data__write_enable ) // TODO: Is this required?
+  , .mem_address    ( memory_data__address      )
+
+  , .mem_to_wb      ( mem_to_wb_out)
   );
 
   // memory stage end
@@ -136,11 +140,12 @@ module utoss_riscv
     else       mem_to_wb_reg <= mem_to_wb_out;
 
   write_back wb
-    ( .from_memory ( mem_to_wb_reg )
-    , .dataFromMemory (memory_data__read_data)
-    , .ex_to_mem (ex_to_mem_reg)
-    , .result      ( wb_result     )
-    , .rd          ( wb_rd         )
+    ( .from_memory    ( mem_to_wb_reg )
+    , .ex_to_mem      ( ex_to_mem_reg )
+
+    , .dataFromMemory ( memory_data__read_data )
+    , .result         ( wb_result              )
+    , .rd             ( wb_rd                  )
     );
 
   // writeback stage end
@@ -179,32 +184,32 @@ module utoss_riscv
 
 `ifdef UTOSS_PIPELINE_LOGGER
   Logger u_logger
-    ( .clk               ( clk                      )
-    , .reset             ( reset                    )
+    ( .clk   ( clk   )
+    , .reset ( reset )
 
-    , .if_stage          ( if_to_id_out             )
-    , .id_stage          ( if_to_id_reg             )
-    , .ex_stage          ( id_to_ex_reg             )
-    , .ex_stage_out      ( ex_to_mem_out            )
-    , .ex_to_if          ( ex_to_if_out             )
-    , .mem_stage         ( ex_to_mem_reg            )
-    , .mem_stage_out     ( mem_to_wb_out            )
-    , .wb_stage          ( mem_to_wb_reg            )
+    , .if_stage      ( if_to_id_out  )
+    , .id_stage      ( if_to_id_reg  )
+    , .ex_stage      ( id_to_ex_reg  )
+    , .ex_stage_out  ( ex_to_mem_out )
+    , .ex_to_if      ( ex_to_if_out  )
+    , .mem_stage     ( ex_to_mem_reg )
+    , .mem_stage_out ( mem_to_wb_out )
+    , .wb_stage      ( mem_to_wb_reg )
 
-    , .imem_address      ( memory_instr__address    )
-    , .dmem_address      ( memory_data__address     )
-    , .dmem_read_data    ( memory_data__read_data   )
-    , .dmem_write_data   ( memory_data__write_data  )
-    , .dmem_write_enable ( memory_data__write_enable)
+    , .imem_address      ( memory_instr__address     )
+    , .dmem_address      ( memory_data__address      )
+    , .dmem_read_data    ( memory_data__read_data    )
+    , .dmem_write_data   ( memory_data__write_data   )
+    , .dmem_write_enable ( memory_data__write_enable )
 
-    , .wb_result         ( wb_result                )
-    , .wb_rd             ( wb_rd                    )
+    , .wb_result ( wb_result )
+    , .wb_rd     ( wb_rd     )
 
-    , .StallF            ( StallF                   )
-    , .StallD            ( StallD                   )
-    , .FlushF            ( FlushF                   )
-    , .FlushD            ( FlushD                   )
-    , .FlushE            ( FlushE                   )
+    , .StallF ( StallF )
+    , .StallD ( StallD )
+    , .FlushF ( FlushF )
+    , .FlushD ( FlushD )
+    , .FlushE ( FlushE )
     );
 `endif
 
