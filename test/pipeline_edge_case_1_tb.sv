@@ -35,15 +35,15 @@ module pipeline_edge_case_1_tb;
     // nop
     // nop
     // nop
-    uut.memory.M[0] = 32'h00012083;
-    uut.memory.M[1] = 32'h00508093;
-    uut.memory.M[2] = 32'h00000013;
-    uut.memory.M[3] = 32'h00000013;
-    uut.memory.M[4] = 32'h00000013;
-    uut.memory.M[5] = 32'h00000013;
+    uut.u_memory.M[0] = 32'h00012083;
+    uut.u_memory.M[1] = 32'h00508093;
+    uut.u_memory.M[2] = 32'h00000013;
+    uut.u_memory.M[3] = 32'h00000013;
+    uut.u_memory.M[4] = 32'h00000013;
+    uut.u_memory.M[5] = 32'h00000013;
 
     // Data loaded by the lw above: 7 + 5 = 12.
-    uut.memory.M[40] = 32'h00000007;
+    uut.u_memory.M[40] = 32'h00000007;
 
     // x2 points at address 0xa0.
     uut.core.decode.RegFile.RFMem[2] = 32'ha0;

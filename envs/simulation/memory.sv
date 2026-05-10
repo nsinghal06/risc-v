@@ -1,6 +1,7 @@
 `include "src/headers/types.svh"
 
-module dual_port
+// a dual-read single-write memory block that we use with our core in simulation environment
+module memory
   #( parameter SIZE = 1024 )
   ( input  wire         clk
   , input  addr_t       address
@@ -26,7 +27,6 @@ module dual_port
   end
 `endif
 
-  // TODO: same pattern in MA.sv; DRY this up
   localparam int unsigned SIZE_W = $clog2(SIZE);
 
   if (SIZE_W >= `PROCESSOR_BITNESS) begin: l_check_size
@@ -49,21 +49,4 @@ module dual_port
     if (write_enable[3]) M[address[SIZE_W +1:2]][31:24] <= write_data[31:24];
   end
 
-//   MA #( .SIZE ( SIZE ) )
-//     memory
-//       ( .clk          ( clk                  )
-//       , .address      ( address      )
-//       , .write_data   ( write_data   )
-//       , .write_enable ( write_enable )
-//       , .read_data    ( read_data    )
-//       );
-
-// MA #( .SIZE ( SIZE ) )
-//   imem
-//     ( .clk          ( clk           )
-//     , .address      ( instruction_address )
-//     , .write_data   ( 32'hxxxx_xxxx )
-//     , .write_enable ( 4'b0000       )
-//     , .read_data    ( instruction_read_data    )
-//     );
 endmodule
