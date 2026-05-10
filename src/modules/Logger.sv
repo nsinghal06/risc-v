@@ -213,15 +213,15 @@ module Logger
                             , ex_stage.pc_cur
                             , ex_stage.rd1
                             , ex_stage.rd2
-                            , ex_stage.ALUControl
+                            , ex_stage.alu_control
                             , ex_stage_out.alu_result
-                            , ex_stage.Branch
-                            , ex_stage.Jump
+                            , ex_stage.branch
+                            , ex_stage.jump
                             , ex_to_if.pc_src
                             , ex_to_if.pc_target
                             , reg_name(ex_stage_out.rd)
-                            , ex_stage_out.RegWrite
-                            , ex_stage_out.MemWrite
+                            , ex_stage_out.reg_write
+                            , ex_stage_out.mem_write
                             );
 
                         $display
@@ -232,16 +232,16 @@ module Logger
                             , dmem_read_data
                             , mem_stage.alu_result
                             , reg_name(mem_stage.rd)
-                            , mem_stage.ResultSrc
-                            , mem_stage.RegWrite
+                            , mem_stage.result_src
+                            , mem_stage.reg_write
                             );
 
                         $display
                             ( "WB : rd=%s(%0d) regwrite=%0b result_src=%0d wb_result=%08h alu_result=%08h mem_read_data=%08h"
                             , reg_name(wb_rd)
                             , wb_rd
-                            , wb_stage.RegWriteW
-                            , wb_stage.cfsm__result_src
+                            , wb_stage.reg_write
+                            , wb_stage.result_src
                             , wb_result
                             , wb_stage.alu_result
                             , wb_stage.read_data
@@ -260,20 +260,20 @@ module Logger
             , if_stage.pc_plus_4
             , id_stage.pc_plus_4
             , ex_stage.alu_src_a
-            , ex_stage.ALUSrcB
-            , ex_stage.ResultSrc
+            , ex_stage.alu_src_b
+            , ex_stage.result_src
             , ex_stage.pc_plus_4
             , ex_stage.pc_target_kind
             , ex_stage.rs1
             , ex_stage.rs2
             , ex_to_if.pc_old
             , ex_to_if.imm_ext
-            , mem_stage.WriteDataE
+            , mem_stage.write_data_e
             , mem_stage.funct3
             , mem_stage.pc_cur
             , mem_stage.pc_plus_4
-            , mem_stage_out.RegWriteW
-            , mem_stage_out.cfsm__result_src
+            , mem_stage_out.reg_write
+            , mem_stage_out.result_src
             , mem_stage_out.read_data
             , mem_stage_out.alu_result
             , mem_stage_out.rd

@@ -93,23 +93,23 @@ module Decode
     if (rd_wb == rs2 && RegWriteW && rd_wb != 0) rd2_safe = data;
     else                                         rd2_safe = rd2;
 
-    assign ID_to_EX.alu_src_a           = cfsm__alu_src_a;
-    assign ID_to_EX.ALUSrcB             = cfsm__ALUSrcB;
-    assign ID_to_EX.ResultSrc           = cfsm__result_src;
-    assign ID_to_EX.Branch              = cfsm__branch;
-    assign ID_to_EX.Jump                = cfsm__jump;
-    assign ID_to_EX.pc_target_kind      = cfsm__pc_target_kind;
-    assign ID_to_EX.MemWrite            = cfsm__mem_write;
-    assign ID_to_EX.RegWrite            = cfsm__reg_write;
-    assign ID_to_EX.ALUControl          = alu_control;
-    assign ID_to_EX.funct3              = funct3;
-    assign ID_to_EX.rd1                 = rd1_safe;
-    assign ID_to_EX.rd2                 = rd2_safe;
-    assign ID_to_EX.rd                  = rd;
-    assign ID_to_EX.rs1                 = rs1;
-    assign ID_to_EX.rs2                 = rs2;
-    assign ID_to_EX.imm_ext             = imm_ext;
-    assign ID_to_EX.pc_cur              = IF_to_ID.pc_cur;
-    assign ID_to_EX.pc_plus_4           = IF_to_ID.pc_plus_4;
+    assign ID_to_EX.alu_src_a      = cfsm__alu_src_a;
+    assign ID_to_EX.alu_src_b      = cfsm__ALUSrcB;
+    assign ID_to_EX.result_src     = cfsm__result_src;
+    assign ID_to_EX.branch         = cfsm__branch;
+    assign ID_to_EX.jump           = cfsm__jump;
+    assign ID_to_EX.pc_target_kind = cfsm__pc_target_kind;
+    assign ID_to_EX.mem_write      = cfsm__mem_write;
+    assign ID_to_EX.reg_write      = cfsm__reg_write;
+    assign ID_to_EX.alu_control    = alu_control;
+    assign ID_to_EX.funct3         = funct3;
+    assign ID_to_EX.rd1            = rd1_safe;
+    assign ID_to_EX.rd2            = rd2_safe;
+    assign ID_to_EX.rd             = rd;
+    assign ID_to_EX.rs1            = rs1;
+    assign ID_to_EX.rs2            = rs2;
+    assign ID_to_EX.imm_ext        = imm_ext;
+    assign ID_to_EX.pc_cur         = IF_to_ID.pc_cur;
+    assign ID_to_EX.pc_plus_4      = IF_to_ID.pc_plus_4;
 
 endmodule

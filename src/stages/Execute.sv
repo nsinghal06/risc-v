@@ -50,7 +50,7 @@ module Execute
     endcase
 
   always_comb
-    case (ID_to_EX.ALUSrcB)
+    case (ID_to_EX.alu_src_b)
       ALU_SRC_B__RD2:     alu_input_b = safe_rd2;
       ALU_SRC_B__IMM_EXT: alu_input_b = ID_to_EX.imm_ext;
       default:            alu_input_b = 'x;
@@ -59,7 +59,7 @@ module Execute
   ALU alu
     ( .a              ( alu_input_a         )
     , .b              ( alu_input_b         )
-    , .alu_control    ( ID_to_EX.ALUControl )
+    , .alu_control    ( ID_to_EX.alu_control )
     , .out            ( alu_result          )
     , .zeroE          ( zero_flag           )
     );
@@ -80,8 +80,8 @@ module Execute
   pc_src_t pc_src;
   addr_t pc_target;
 
-  assign JumpE = ID_to_EX.Jump;
-  assign BranchE = ID_to_EX.Branch;
+  assign JumpE = ID_to_EX.jump;
+  assign BranchE = ID_to_EX.branch;
 
   always_comb
     case (ID_to_EX.pc_target_kind)
@@ -108,25 +108,19 @@ module Execute
 
   assign pc_src = should_branch ? PC_SRC__ALU_RESULT : PC_SRC__INCREMENT;
 
-  assign EX_to_MEM.ResultSrc        = ID_to_EX.ResultSrc;
-  // assign EX_to_MEM.AdrSrc = ID_to_EX.AdrSrc;
-  // assign EX_to_MEM.pc_src = ID_to_EX.pc_src;
-  // assign EX_to_MEM.IRWrite = ID_to_EX.IRWrite;
-  // assign EX_to_MEM.MemWriteByteAddress = ID_to_EX.MemWriteByteAddress;
-  assign EX_to_MEM.MemWrite         = ID_to_EX.MemWrite;
-  assign EX_to_MEM.RegWrite         = ID_to_EX.RegWrite;
-  assign EX_to_MEM.funct3           = ID_to_EX.funct3;
-  assign EX_to_MEM.WriteDataE       = safe_rd2;
-  // assign EX_to_MEM.funct3           = ID_to_EX.funct3;
-  // assign EX_to_MEM.rd2 <= ID_to_EX.rd2;
-  assign EX_to_MEM.rd               = ID_to_EX.rd;
-  assign EX_to_MEM.alu_result       = alu_result;
-  assign EX_to_MEM.pc_cur           = ID_to_EX.pc_cur;
-  assign EX_to_MEM.pc_plus_4        = ID_to_EX.pc_plus_4;
-  assign EX_to_IF.imm_ext           = ID_to_EX.imm_ext;
-  assign EX_to_IF.pc_src            = pc_src;
-  assign EX_to_IF.pc_target         = pc_target;
-  assign EX_to_IF.pc_old            = ID_to_EX.pc_cur;
+  assign EX_to_MEM.result_src   = ID_to_EX.result_src;
+  assign EX_to_MEM.mem_write    = ID_to_EX.mem_write;
+  assign EX_to_MEM.reg_write    = ID_to_EX.reg_write;
+  assign EX_to_MEM.funct3       = ID_to_EX.funct3;
+  assign EX_to_MEM.write_data_e = safe_rd2;
+  assign EX_to_MEM.rd           = ID_to_EX.rd;
+  assign EX_to_MEM.alu_result   = alu_result;
+  assign EX_to_MEM.pc_cur       = ID_to_EX.pc_cur;
+  assign EX_to_MEM.pc_plus_4    = ID_to_EX.pc_plus_4;
+  assign EX_to_IF.imm_ext       = ID_to_EX.imm_ext;
+  assign EX_to_IF.pc_src        = pc_src;
+  assign EX_to_IF.pc_target     = pc_target;
+  assign EX_to_IF.pc_old        = ID_to_EX.pc_cur;
 
   wire unused = &{ID_to_EX.rs1, ID_to_EX.rs2};
 endmodule

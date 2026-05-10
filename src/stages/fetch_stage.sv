@@ -76,9 +76,10 @@ module fetch_stage
       {stalled_instr, stalled_instr_valid} <= {stalled_instr, 1'b0};
 
   assign imem__address = pc_cur;
+
   assign IF_to_ID.instruction = stalled_instr_valid ? stalled_instr : imem__data;
-  assign IF_to_ID.pc_cur = pc_prev;
-  assign IF_to_ID.pc_plus_4 = pc_prev + 32'h4; // TODO: revisit
+  assign IF_to_ID.pc_cur      = pc_prev;
+  assign IF_to_ID.pc_plus_4   = pc_prev + 32'h4; // TODO: revisit
 
   // TODO: probably can just get rid of those altogether
   wire unused = &{EX_to_IF.pc_old, EX_to_IF.imm_ext};

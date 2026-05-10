@@ -81,7 +81,7 @@ module utoss_riscv
     , .reset       ( reset                      )
     , .data        ( wb_result                  )
     , .rd_wb       ( wb_rd                      )
-    , .RegWriteW   ( mem_to_wb_reg.RegWriteW    )
+    , .RegWriteW   ( mem_to_wb_reg.reg_write    )
     , .ID_to_EX    ( id_to_ex_out               )
 
     , .rs1 ( id_rs1 )
@@ -161,9 +161,9 @@ module utoss_riscv
     , .RdM        ( ex_to_mem_reg.rd        )
     , .RdW        ( mem_to_wb_reg.rd        )
     , .RdE        ( id_to_ex_reg.rd         )
-    , .RegWriteM  ( ex_to_mem_reg.RegWrite  )
-    , .RegWriteW  ( mem_to_wb_reg.RegWriteW )
-    , .ResultSrcE ( id_to_ex_reg.ResultSrc  )
+    , .RegWriteM  ( ex_to_mem_reg.reg_write )
+    , .RegWriteW  ( mem_to_wb_reg.reg_write )
+    , .ResultSrcE ( id_to_ex_reg.result_src )
     , .PCSrcE     ( ex_to_if_out.pc_src     )
 
     , .ForwardAE ( hz_forward_a )

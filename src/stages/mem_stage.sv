@@ -19,9 +19,9 @@ module mem_stage
 
   // logic [3:0] MemWriteByteAddress;
 
-  assign WriteDataM = EX_to_MEM.WriteDataE;
+  assign WriteDataM = EX_to_MEM.write_data_e;
   assign ALUResultM = EX_to_MEM.alu_result;
-  assign MemWrite = EX_to_MEM.MemWrite;
+  assign MemWrite = EX_to_MEM.mem_write;
 
   logic [3:0] tempMemWriteByteAddress;
   MemoryLoader memory_loader
@@ -38,13 +38,13 @@ module mem_stage
   assign mem_address = EX_to_MEM.alu_result;
 
   // Combinational assignment to MEM_to_WB interface
-  assign MEM_to_WB.RegWriteW = EX_to_MEM.RegWrite;
-  assign MEM_to_WB.cfsm__result_src = EX_to_MEM.ResultSrc;
-  assign MEM_to_WB.rd = EX_to_MEM.rd;
+  assign MEM_to_WB.reg_write  = EX_to_MEM.reg_write;
+  assign MEM_to_WB.result_src = EX_to_MEM.result_src;
+  assign MEM_to_WB.rd         = EX_to_MEM.rd;
   assign MEM_to_WB.alu_result = EX_to_MEM.alu_result;
-  assign MEM_to_WB.pc_cur = EX_to_MEM.pc_cur;
-  assign MEM_to_WB.pc_plus_4 = EX_to_MEM.pc_plus_4;
-  assign MEM_to_WB.funct3 = EX_to_MEM.funct3;
+  assign MEM_to_WB.pc_cur     = EX_to_MEM.pc_cur;
+  assign MEM_to_WB.pc_plus_4  = EX_to_MEM.pc_plus_4;
+  assign MEM_to_WB.funct3     = EX_to_MEM.funct3;
 
   // TODO: can we remove pc_cur from EX->MEM?
   wire unused = &{EX_to_MEM.pc_cur};
