@@ -11,6 +11,7 @@ module fetch_stage
   , input wire clk
   , input wire reset
   , input wire StallF
+  , input wire FlushF
 
   , output addr_t imem__address
   , input data_t imem__data
@@ -55,8 +56,27 @@ module fetch_stage
   always_ff @ (posedge clk)
     if (!StallF) pc_prev <= reset ? 0 : pc_cur;
 
+  // With synchronous instruction memory, one in-flight instruction can arrive after StallF rises.
+  // Keep a one-entry skid copy so decode can consume it once the stall is released;
+  //
+  // NOTE: this takes up extra space, we could have just used the existing space in the IF->ID
+  // register, but that would require breaking the combinational protocol of the stage logic;
+  // revisit if space becomes a problem
+  instr_t stalled_instr;
+  logic stalled_instr_valid;
+
+  always_ff @ (posedge clk)
+    if (reset)
+      {stalled_instr, stalled_instr_valid} <= {instr_t'(0)  , 1'b0};
+    else if (FlushF)
+      {stalled_instr, stalled_instr_valid} <= {stalled_instr, 1'b0};
+    else if (StallF && !stalled_instr_valid)
+      {stalled_instr, stalled_instr_valid} <= {imem__data   , 1'b1};
+    else if (!StallF && stalled_instr_valid)
+      {stalled_instr, stalled_instr_valid} <= {stalled_instr, 1'b0};
+
   assign imem__address = pc_cur;
-  assign IF_to_ID.instruction = imem__data;
+  assign IF_to_ID.instruction = stalled_instr_valid ? stalled_instr : imem__data;
   assign IF_to_ID.pc_cur = pc_prev;
   assign IF_to_ID.pc_plus_4 = pc_prev + 32'h4; // TODO: revisit
 

@@ -2,7 +2,9 @@
 `include "src/headers/types.svh"
 
 module hazard_unit
-  ( input  wire [4:0] Rs1E
+  ( input logic clk
+
+  , input  wire [4:0] Rs1E
   , input  wire [4:0] Rs2E
   , input  wire [4:0] RdM
   , input  wire [4:0] RdW
@@ -17,6 +19,7 @@ module hazard_unit
   , output hazard_forward_b_t ForwardBE
   , output logic StallF
   , output logic StallD
+  , output logic FlushF
   , output logic FlushD
   , output logic FlushE
   );
@@ -50,8 +53,17 @@ module hazard_unit
   assign StallF = lwStall;
   assign StallD = lwStall;
 
-  //Flush when a control hazard occurs
-  assign FlushD = PCSrcE;
-  assign FlushE = lwStall || PCSrcE;
+  //Flush when a control hazard occurs; we need to flush one cycle later than we discover the
+  // control hazard; this is due to synchronous memory making the instruction available one cycle
+  // later than with async memory
+  reg pc_src_e_lag;
+  always_ff @ (posedge clk) pc_src_e_lag <= PCSrcE;
+
+  wire control_hazard;
+  assign control_hazard = PCSrcE || pc_src_e_lag;
+
+  assign FlushF = control_hazard;
+  assign FlushD = control_hazard;
+  assign FlushE = lwStall || control_hazard;
 
 endmodule

@@ -55,6 +55,7 @@ module utoss_riscv
     , .clk    ( clk    )
     , .reset  ( reset  )
     , .StallF ( StallF )
+    , .FlushF ( FlushF )
 
     , .imem__address ( memory_instr__address   )
     , .imem__data    ( memory_instr__read_data )
@@ -67,14 +68,9 @@ module utoss_riscv
 
   // decode stage begin (@marwannismail)
 
-  // we need to flush one cycle later than we discover the control hazard; this is due to
-  // synchronous memory making the instruction available one cycle later than with async memory
-  reg flushD_lag;
-  always_ff @ (posedge clk) flushD_lag <= FlushD;
-
   always_ff @ (posedge clk)
     if (reset) if_to_id_reg <= '0;
-    else if (flushD_lag) if_to_id_reg <= '0;
+    else if (FlushD) if_to_id_reg <= '0;
     else if (!StallD) if_to_id_reg <= if_to_id_out;
 
   wire [4:0] id_rs1, id_rs2;
@@ -96,14 +92,9 @@ module utoss_riscv
 
   // execute stage begin (@MSh-786 and tandr3w)
 
-  // we need to flush both the current data in the execute pipeline and the next one that will be
-  // passed from the decode on the next cycle
-  reg flushE_lag;
-  always_ff @ (posedge clk) flushE_lag <= FlushE;
-
   always_ff @ (posedge clk)
     if (reset) id_to_ex_reg <= '0;
-    else if (FlushE || flushE_lag) id_to_ex_reg <= '0;
+    else if (FlushE) id_to_ex_reg <= '0;
     else       id_to_ex_reg <= id_to_ex_out;
 
   Execute execute
@@ -158,10 +149,12 @@ module utoss_riscv
 
   hazard_forward_a_t hz_forward_a;
   hazard_forward_b_t hz_forward_b;
-  logic StallF, StallD, FlushD, FlushE;
+  logic StallF, StallD, FlushF, FlushD, FlushE;
 
   hazard_unit u_hazard_unit
-    ( .Rs1D       ( id_rs1                  )
+    ( .clk ( clk )
+
+    , .Rs1D       ( id_rs1                  )
     , .Rs2D       ( id_rs2                  )
     , .Rs1E       ( id_to_ex_reg.rs1        )
     , .Rs2E       ( id_to_ex_reg.rs2        )
@@ -177,6 +170,7 @@ module utoss_riscv
     , .ForwardBE ( hz_forward_b )
     , .StallF    ( StallF       )
     , .StallD    ( StallD       )
+    , .FlushF    ( FlushF       )
     , .FlushD    ( FlushD       )
     , .FlushE    ( FlushE       )
     );
