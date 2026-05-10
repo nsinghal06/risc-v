@@ -5,7 +5,7 @@ module zbs_tb;
 
 logic [31:0] reg1;
 logic [31:0] reg2;
-logic [2:0]  inst;
+alu_control_t inst;
 logic [31:0] out;
 
 logic [31:0] expected;
@@ -22,7 +22,7 @@ initial begin
     // -------- bclr test --------
     reg1 = 32'b1010;
     reg2 = 32'd1;   // clear bit 1
-    inst = 3'b000;
+    inst = ALU_CONTROL_BCLR;
     #10;
 
     expected = reg1 & ~(32'h1 << reg2[4:0]);
@@ -34,7 +34,7 @@ initial begin
     // -------- bset test --------
     reg1 = 32'b1110;
     reg2 = 32'd0;   // set bit 0
-    inst = 3'b001;
+    inst = ALU_CONTROL_BSET;
     #10;
 
     expected = reg1 | (32'h1 << reg2[4:0]);
@@ -46,7 +46,7 @@ initial begin
     // -------- binv test --------
     reg1 = 32'b1010;
     reg2 = 32'd1;
-    inst = 3'b010;
+    inst = ALU_CONTROL_BINV;
     #10;
 
     expected = reg1 ^ (32'h1 << reg2[4:0]);
@@ -58,7 +58,7 @@ initial begin
     // -------- bext test --------
     reg1 = 32'b1010;
     reg2 = 32'd3;
-    inst = 3'b011;
+    inst = ALU_CONTROL_BEXT;
     #10;
 
     expected = {31'b0, reg1[reg2[4:0]]};
@@ -71,7 +71,7 @@ initial begin
     // Bit 0 boundary
     reg1 = 32'hFFFFFFFF;
     reg2 = 32'd0;
-    inst = 3'b000; // bclr
+    inst = ALU_CONTROL_BCLR; // bclr
     #10;
 
     expected = reg1 & ~(32'h1 << reg2[4:0]);
@@ -83,7 +83,7 @@ initial begin
     // Bit 31 boundary
     reg1 = 32'hFFFFFFFF;
     reg2 = 32'd31;
-    inst = 3'b000; // bclr
+    inst = ALU_CONTROL_BCLR; // bclr
     #10;
 
     expected = reg1 & ~(32'h1 << reg2[4:0]);
@@ -98,19 +98,19 @@ initial begin
 
         reg1 = $urandom;
         reg2 = $urandom % 32;
-        inst = $urandom % 4;
+        inst = alu_control_t'((4'b1010) + ($urandom % 4));
 
         #1;
 
         case (inst)
 
-            3'b000: expected = reg1 & ~(32'h1 << reg2[4:0]);
+            ALU_CONTROL_BCLR: expected = reg1 & ~(32'h1 << reg2[4:0]);
 
-            3'b001: expected = reg1 | (32'h1 << reg2[4:0]);
+            ALU_CONTROL_BSET: expected = reg1 | (32'h1 << reg2[4:0]);
 
-            3'b010: expected = reg1 ^ (32'h1 << reg2[4:0]);
+            ALU_CONTROL_BINV: expected = reg1 ^ (32'h1 << reg2[4:0]);
 
-            3'b011: expected = {31'b0, reg1[reg2[4:0]]};
+            ALU_CONTROL_BEXT: expected = {31'b0, reg1[reg2[4:0]]};
 
             default: expected = 32'd0;
 
