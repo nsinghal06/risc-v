@@ -101,10 +101,6 @@ jobs:
         id: build-top
         run: make build_top UTOSS_RISCV_CONFIG=${{ matrix.config }}
 
-      # temporary debugging
-      - name: Dump verilator version
-        run: verilator --version
-
       - name: Build testbench
         id: build-testbench
         run: make build_tb UTOSS_RISCV_CONFIG=${{ matrix.config }}
