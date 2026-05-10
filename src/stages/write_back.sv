@@ -45,10 +45,10 @@ module write_back
   // TODO: `REULST_SRC__ALU_OUT` is no longer covered, revisit during integration
   always_comb
     case (from_memory.cfsm__result_src)
-      WRITE_BACK_RESULT_SRC__ALU_RESULT: result = from_memory.alu_result;
-      WRITE_BACK_RESULT_SRC__READ_DATA:  result = memResult;//from_memory.read_data;
-      WRITE_BACK_RESULT_SRC__PC_PLUS_4:  result = from_memory.pc_plus_4;
-      default:                           result = 32'hxxxxxxxx;
+      RESULT_SRC__ALU_RESULT: result = from_memory.alu_result;
+      RESULT_SRC__READ_DATA:  result = memResult;//from_memory.read_data;
+      RESULT_SRC__PC_PLUS_4:  result = from_memory.pc_plus_4;
+      default:                result = 32'hxxxxxxxx;
     endcase
 
   wire unused = &{from_memory.RegWriteW

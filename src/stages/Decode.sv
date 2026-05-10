@@ -17,16 +17,16 @@ module Decode
   , output reg [4:0] rs2
   );
 
-  wire                    cfsm__reg_write;
-  write_back_result_src_t cfsm__result_src;
-  wire                    cfsm__mem_write;
-  wire                    cfsm__jump;
-  wire                    cfsm__branch;
-  pc_target_kind_t        cfsm__pc_target_kind;
-  alu_src_a_t             cfsm__alu_src_a;
-  alu_src_b_t             cfsm__ALUSrcB;
+  wire             cfsm__reg_write;
+  result_src_t     cfsm__result_src;
+  wire             cfsm__mem_write;
+  wire             cfsm__jump;
+  wire             cfsm__branch;
+  pc_target_kind_t cfsm__pc_target_kind;
+  alu_src_a_t      cfsm__alu_src_a;
+  alu_src_b_t      cfsm__ALUSrcB;
 
-  alu_control_t           alu_control;
+  alu_control_t    alu_control;
 
   opcode_t opcode;
   imm_t    imm_ext;

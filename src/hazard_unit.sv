@@ -10,7 +10,7 @@ module hazard_unit
   , input  wire [4:0] RdW
   , input  wire RegWriteM
   , input  wire RegWriteW
-  , input  write_back_result_src_t ResultSrcE
+  , input  result_src_t ResultSrcE
   , input  wire [4:0] Rs1D
   , input  wire [4:0] Rs2D
   , input  wire [4:0] RdE
@@ -27,7 +27,7 @@ module hazard_unit
   wire ResultSrcE0;
   assign ResultSrcE0 = ResultSrcE[0];
 
-  wire unused = &{ResultSrcE[$bits(write_back_result_src_t) -1:1]};
+  wire unused = &{ResultSrcE[$bits(result_src_t) -1:1]};
 
   // Forwarding
   always_comb
