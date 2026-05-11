@@ -3,22 +3,27 @@
 /* verilator lint_off DECLFILENAME */
 package ext__b__types;
 /* verilator lint_on DECLFILENAME */
-  typedef enum logic [3:0]
-    { B_ALU_CTRL__NONE   = 4'b0000
-    , B_ALU_CTRL__SH1ADD = 4'b0001
-    , B_ALU_CTRL__SH2ADD = 4'b0010
-    , B_ALU_CTRL__SH3ADD = 4'b0011
-    , B_ALU_CTRL__ANDN   = 4'b0100
-    , B_ALU_CTRL__ORN    = 4'b0101
-    , B_ALU_CTRL__XNOR   = 4'b0110
-    , B_ALU_CTRL__MIN   = 4'b0111
-    , B_ALU_CTRL__MAX   = 4'b1000
-    , B_ALU_CTRL__SEXTB   = 4'b1001
-    , B_ALU_CTRL__SEXTH   = 4'b1010
-    , B_ALU_CTRL__ZEXTH   = 4'b1011
-    , B_ALU_CTRL__CLZ     = 4'b1100
-    , B_ALU_CTRL__CTZ     = 4'b1101
-    , B_ALU_CTRL__CPOP    = 4'b1110
+  typedef enum logic [4:0]
+    { B_ALU_CTRL__NONE   = 5'b00000
+    , B_ALU_CTRL__SH1ADD = 5'b00001
+    , B_ALU_CTRL__SH2ADD = 5'b00010
+    , B_ALU_CTRL__SH3ADD = 5'b00011
+    , B_ALU_CTRL__ANDN   = 5'b00100
+    , B_ALU_CTRL__ORN    = 5'b00101
+    , B_ALU_CTRL__XNOR   = 5'b00110
+    , B_ALU_CTRL__MIN    = 5'b00111
+    , B_ALU_CTRL__MAX    = 5'b01000
+    , B_ALU_CTRL__SEXTB  = 5'b01001
+    , B_ALU_CTRL__SEXTH  = 5'b01010
+    , B_ALU_CTRL__ZEXTH  = 5'b01011
+    , B_ALU_CTRL__CLZ    = 5'b01100
+    , B_ALU_CTRL__CTZ    = 5'b01101
+    , B_ALU_CTRL__CPOP   = 5'b01110
+    , B_ALU_CTRL__ROL    = 5'b01111
+    , B_ALU_CTRL__ROR    = 5'b10000
+    , B_ALU_CTRL__RORI   = 5'b10001
+    , B_ALU_CTRL__ORCB   = 5'b10010
+    , B_ALU_CTRL__REV8   = 5'b10011
     } b_alu_control_t;
 
 endpackage
