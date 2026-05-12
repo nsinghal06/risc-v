@@ -3,7 +3,7 @@
 `include "src/interfaces/ex_to_mem_if.svh"
 `include "src/interfaces/mem_to_wb_if.svh"
 
-module mem_stage
+module memory_stage
   ( input ex_to_mem_t ex_to_mem
   , input data_t dataFromMemory
   , output data_t dataToMemory
@@ -13,28 +13,28 @@ module mem_stage
   );
 
   // Inputs from EX_to_MEM interface
-  data_t WriteDataM;
-  data_t ALUResultM;
-  logic MemWrite;
+  data_t write_data_m;
+  data_t alu_result_m;
+  logic mem_write;
 
   // logic [3:0] MemWriteByteAddress;
 
-  assign WriteDataM = ex_to_mem.write_data_e;
-  assign ALUResultM = ex_to_mem.alu_result;
-  assign MemWrite = ex_to_mem.mem_write;
+  assign write_data_m = ex_to_mem.write_data_e;
+  assign alu_result_m = ex_to_mem.alu_result;
+  assign mem_write = ex_to_mem.mem_write;
 
-  logic [3:0] tempMemWriteByteAddress;
+  logic [3:0] temp_mem_write_byte_address;
   MemoryLoader memory_loader
     ( .memory_data         ( dataFromMemory          )
-    , .memory_address      ( ALUResultM              )
+    , .memory_address      ( alu_result_m            )
     , .funct3              ( ex_to_mem.funct3        )
-    , .dataB               ( WriteDataM              )
+    , .dataB               ( write_data_m            )
     , .mem_load_result     ( mem_to_wb.read_data     )
-    , .MemWriteByteAddress ( tempMemWriteByteAddress )
+    , .MemWriteByteAddress ( temp_mem_write_byte_address )
     , .__tmp_MemData       ( dataToMemory            )
     );
 
-  assign memWriteEnable = (MemWrite == 'b0) ? 4'b0 : tempMemWriteByteAddress;
+  assign memWriteEnable = (mem_write == 'b0) ? 4'b0 : temp_mem_write_byte_address;
   assign mem_address = ex_to_mem.alu_result;
 
   // Combinational assignment to MEM_to_WB interface

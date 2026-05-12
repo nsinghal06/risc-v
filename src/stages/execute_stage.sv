@@ -4,7 +4,7 @@
 `include "src/interfaces/ex_to_mem_if.svh"
 `include "src/interfaces/ex_to_if_if.svh"
 
-module Execute
+module execute_stage
   ( input id_to_ex_t id_to_ex
 
   , input hazard_forward_a_t hz_forward_a
@@ -75,13 +75,13 @@ module Execute
     , FUNCT3__BGEU = 3'b111
     } funct3_branch_t;
 
-  logic JumpE;
-  logic BranchE;
+  logic jump_e;
+  logic branch_e;
   pc_src_t pc_src;
   addr_t pc_target;
 
-  assign JumpE = id_to_ex.jump;
-  assign BranchE = id_to_ex.branch;
+  assign jump_e = id_to_ex.jump;
+  assign branch_e = id_to_ex.branch;
 
   always_comb
     case (id_to_ex.pc_target_kind)
@@ -104,7 +104,7 @@ module Execute
     endcase
 
   logic should_branch;
-  assign should_branch = JumpE | (BranchE & branch_condition_met);
+  assign should_branch = jump_e | (branch_e & branch_condition_met);
 
   assign pc_src = should_branch ? PC_SRC__ALU_RESULT : PC_SRC__INCREMENT;
 

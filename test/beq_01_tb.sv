@@ -57,10 +57,10 @@ module beq_01_tb;
     uut.u_memory.M[600] = 32'h00000000;
 
     // Set t0 (x5) to point to word index 600 (byte addr = 600*4)
-    uut.core.decode.RegFile.RFMem[5] = 32'h00000960; // 0x960 == 2400 decimal (600*4)
+    uut.core.u_decode_stage.RegFile.RFMem[5] = 32'h00000960; // 0x960 == 2400 decimal (600*4)
 
     // a1 should start 0 (li a1,0 already encoded) but ensure regs cleared
-    for (i = 0; i < 32; i = i + 1) uut.core.decode.RegFile.RFMem[i] = uut.core.decode.RegFile.RFMem[i];
+    for (i = 0; i < 32; i = i + 1) uut.core.u_decode_stage.RegFile.RFMem[i] = uut.core.u_decode_stage.RegFile.RFMem[i];
 
     tick();
     reset = `FALSE;
@@ -68,10 +68,10 @@ module beq_01_tb;
     // Run for a generous number of cycles to allow the long jump/branch sequence
     repeat (2000) tick();
 
-    $display("[final] a1=0x%0h M[600]=0x%0h", uut.core.decode.RegFile.RFMem[11], uut.u_memory.M[600]);
+    $display("[final] a1=0x%0h M[600]=0x%0h", uut.core.u_decode_stage.RegFile.RFMem[11], uut.u_memory.M[600]);
 
     // Check that a1 (x11) equals 1 as expected by the test
-    `assert_equal(uut.core.decode.RegFile.RFMem[11], 32'h00000001)
+    `assert_equal(uut.core.u_decode_stage.RegFile.RFMem[11], 32'h00000001)
 
     $finish;
   end

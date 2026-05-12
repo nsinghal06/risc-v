@@ -4,7 +4,7 @@
 `include "src/interfaces/if_to_id_if.svh"
 `include "src/interfaces/id_to_ex_if.svh"
 
-module Decode
+module decode_stage
   ( input if_to_id_t if_to_id
   , input wire clk
   , input wire reset
@@ -24,7 +24,7 @@ module Decode
   wire             cfsm__branch;
   pc_target_kind_t cfsm__pc_target_kind;
   alu_src_a_t      cfsm__alu_src_a;
-  alu_src_b_t      cfsm__ALUSrcB;
+  alu_src_b_t      cfsm__alu_src_b;
 
   alu_control_t    alu_control;
 
@@ -52,7 +52,7 @@ module Decode
     , .branch         ( cfsm__branch         )
     , .pc_target_kind ( cfsm__pc_target_kind )
     , .alu_src_a      ( cfsm__alu_src_a      )
-    , .alu_src_b      ( cfsm__ALUSrcB        )
+    , .alu_src_b      ( cfsm__alu_src_b      )
     );
 
   Instruction_Decode instruction_decode
@@ -94,7 +94,7 @@ module Decode
     else                                         rd2_safe = rd2;
 
     assign id_to_ex.alu_src_a      = cfsm__alu_src_a;
-    assign id_to_ex.alu_src_b      = cfsm__ALUSrcB;
+    assign id_to_ex.alu_src_b      = cfsm__alu_src_b;
     assign id_to_ex.result_src     = cfsm__result_src;
     assign id_to_ex.branch         = cfsm__branch;
     assign id_to_ex.jump           = cfsm__jump;

@@ -1,9 +1,10 @@
 `default_nettype none
 
+`include "src/headers/types.svh"
 `include "src/timescale.svh"
 `include "src/interfaces/mem_to_wb_if.svh"
 
-module write_back
+module write_back_stage
   ( input mem_to_wb_t from_memory
   , input data_t dataFromMemory
   , input ex_to_mem_t ex_to_mem
@@ -12,30 +13,30 @@ module write_back
   );
 /////
 
-  data_t WriteDataM;
-  data_t ALUResultM;
+  data_t write_data_m;
+  data_t alu_result_m;
   // logic [4:0] RdM;
   // logic MemWrite;
 
   // logic [3:0] MemWriteByteAddress;
 
-  assign WriteDataM = ex_to_mem.write_data_e;
-  assign ALUResultM = from_memory.alu_result;
+  assign write_data_m = ex_to_mem.write_data_e;
+  assign alu_result_m = from_memory.alu_result;
   // assign RdM = ex_to_mem.rd;
   // assign MemWrite = ex_to_mem.MemWrite;
 
-  logic [3:0] tempMemWriteByteAddress;
-  data_t tempOutput;
-  data_t memResult;
+  logic [3:0] temp_mem_write_byte_address;
+  data_t temp_output;
+  data_t mem_result;
 
   MemoryLoader memory_loader
     ( .memory_data         ( dataFromMemory          )
-    , .memory_address      ( ALUResultM              )
-    , .funct3              ( from_memory.funct3        )
-    , .dataB               ( WriteDataM              )
-    , .mem_load_result     (  memResult)//MEM_to_WB.read_data     )
-    , .MemWriteByteAddress ( tempMemWriteByteAddress )
-    , .__tmp_MemData       ( tempOutput            )
+    , .memory_address      ( alu_result_m            )
+    , .funct3              ( from_memory.funct3      )
+    , .dataB               ( write_data_m            )
+    , .mem_load_result     (  mem_result)//MEM_to_WB.read_data     )
+    , .MemWriteByteAddress ( temp_mem_write_byte_address )
+    , .__tmp_MemData       ( temp_output             )
     );
 
 ////
@@ -46,7 +47,7 @@ module write_back
   always_comb
     case (from_memory.result_src)
       RESULT_SRC__ALU_RESULT: result = from_memory.alu_result;
-      RESULT_SRC__READ_DATA:  result = memResult;//from_memory.read_data;
+      RESULT_SRC__READ_DATA:  result = mem_result;//from_memory.read_data;
       RESULT_SRC__PC_PLUS_4:  result = from_memory.pc_plus_4;
       default:                result = 32'hxxxxxxxx;
     endcase
@@ -56,8 +57,8 @@ module write_back
   , ex_to_mem.write_data_e
   , ex_to_mem.rd
   , ex_to_mem.mem_write
-  , tempOutput
-  , tempMemWriteByteAddress /* remove/rename? */};
+  , temp_output
+  , temp_mem_write_byte_address /* remove/rename? */};
 
   wire _unused_ex_to_mem = &{1'b0, ex_to_mem};
   wire _unused_from_mem = &{1'b0, from_memory};

@@ -46,8 +46,8 @@ module pipeline_edge_case_1_tb;
     uut.u_memory.M[40] = 32'h00000007;
 
     // x2 points at address 0xa0.
-    uut.core.decode.RegFile.RFMem[2] = 32'ha0;
-    uut.core.decode.RegFile.RFMem[1] = 32'hdeadbeef;
+    uut.core.u_decode_stage.RegFile.RFMem[2] = 32'ha0;
+    uut.core.u_decode_stage.RegFile.RFMem[1] = 32'hdeadbeef;
 
     tick();
     reset = `FALSE;
@@ -65,8 +65,8 @@ module pipeline_edge_case_1_tb;
     assert (saw_flush_e)
       else $fatal(1, "Expected FlushE to assert for the load-use hazard");
 
-    `assert_equal(uut.core.decode.RegFile.RFMem[1], 32'd12)
-    `assert_equal(uut.core.decode.RegFile.RFMem[2], 32'ha0)
+    `assert_equal(uut.core.u_decode_stage.RegFile.RFMem[1], 32'd12)
+    `assert_equal(uut.core.u_decode_stage.RegFile.RFMem[2], 32'ha0)
 
     $finish;
   end

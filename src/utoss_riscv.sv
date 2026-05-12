@@ -75,7 +75,7 @@ module utoss_riscv
 
   wire [4:0] id_rs1, id_rs2;
 
-  Decode decode
+  decode_stage u_decode_stage
     ( .if_to_id ( if_to_id_reg )
 
     , .clk       ( clk                     )
@@ -99,7 +99,7 @@ module utoss_riscv
     else if (FlushE) id_to_ex_reg <= '0;
     else             id_to_ex_reg <= id_to_ex_out;
 
-  Execute execute
+  execute_stage u_execute_stage
     ( .id_to_ex ( id_to_ex_reg )
 
     , .hz_forward_a ( hz_forward_a )
@@ -120,7 +120,7 @@ module utoss_riscv
     if (reset) ex_to_mem_reg <= '0;
     else       ex_to_mem_reg <= ex_to_mem_out;
 
-  mem_stage memory_stage
+  memory_stage u_memory_stage
   ( .ex_to_mem      ( ex_to_mem_reg )
 
   , .dataFromMemory ( memory_data__read_data    )
@@ -139,7 +139,7 @@ module utoss_riscv
     if (reset) mem_to_wb_reg <= '0;
     else       mem_to_wb_reg <= mem_to_wb_out;
 
-  write_back wb
+  write_back_stage u_write_back_stage
     ( .from_memory    ( mem_to_wb_reg )
     , .ex_to_mem      ( ex_to_mem_reg )
 

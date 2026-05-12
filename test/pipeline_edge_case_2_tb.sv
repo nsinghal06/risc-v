@@ -51,9 +51,9 @@ module pipeline_edge_case_2_tb;
     uut.u_memory.M[11] = 32'h00000013;
 
     // s0 = 0xb4 so -20(s0) = 0xa0 (byte address), which maps to M[40].
-    uut.core.decode.RegFile.RFMem[8]  = 32'h000000b4;
-    uut.core.decode.RegFile.RFMem[15] = 32'hdeadbeef;
-    uut.core.decode.RegFile.RFMem[14] = 32'hcafebabe;
+    uut.core.u_decode_stage.RegFile.RFMem[8]  = 32'h000000b4;
+    uut.core.u_decode_stage.RegFile.RFMem[15] = 32'hdeadbeef;
+    uut.core.u_decode_stage.RegFile.RFMem[14] = 32'hcafebabe;
 
     // Initial value at -20(s0) is zero.
     uut.u_memory.M[40] = 32'h00000000;
@@ -67,7 +67,7 @@ module pipeline_edge_case_2_tb;
     `assert_equal(uut.u_memory.M[40], 32'h00000001)
 
     // Final a5 after lui/addi must be 0x000f423f.
-    `assert_equal(uut.core.decode.RegFile.RFMem[15], 32'h000f423f)
+    `assert_equal(uut.core.u_decode_stage.RegFile.RFMem[15], 32'h000f423f)
 
     $finish;
   end
