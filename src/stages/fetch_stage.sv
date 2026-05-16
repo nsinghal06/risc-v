@@ -10,8 +10,8 @@ module fetch_stage
 
   , input wire clk
   , input wire reset
-  , input wire StallF
-  , input wire FlushF
+  , input wire stall_f
+  , input wire flush_f
 
   , output addr_t imem__address
   , input data_t imem__data
@@ -51,12 +51,12 @@ module fetch_stage
     endcase
 
   always_ff @ (posedge clk)
-    if (!StallF) pc_cur <= reset ? 0 : pc_next;
+    if (!stall_f) pc_cur <= reset ? 0 : pc_next;
 
   always_ff @ (posedge clk)
-    if (!StallF) pc_prev <= reset ? 0 : pc_cur;
+    if (!stall_f) pc_prev <= reset ? 0 : pc_cur;
 
-  // With synchronous instruction memory, one in-flight instruction can arrive after StallF rises.
+  // With synchronous instruction memory, one in-flight instruction can arrive after stall_f rises.
   // Keep a one-entry skid copy so decode can consume it once the stall is released;
   //
   // NOTE: this takes up extra space, we could have just used the existing space in the IF->ID
@@ -68,11 +68,11 @@ module fetch_stage
   always_ff @ (posedge clk)
     if (reset)
       {stalled_instr, stalled_instr_valid} <= {instr_t'(0)  , 1'b0};
-    else if (FlushF)
+    else if (flush_f)
       {stalled_instr, stalled_instr_valid} <= {stalled_instr, 1'b0};
-    else if (StallF && !stalled_instr_valid)
+    else if (stall_f && !stalled_instr_valid)
       {stalled_instr, stalled_instr_valid} <= {imem__data   , 1'b1};
-    else if (!StallF && stalled_instr_valid)
+    else if (!stall_f && stalled_instr_valid)
       {stalled_instr, stalled_instr_valid} <= {stalled_instr, 1'b0};
 
   assign imem__address = pc_cur;

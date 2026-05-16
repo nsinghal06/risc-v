@@ -29,11 +29,11 @@ module Logger
 , input data_t      wb_result
 , input logic [4:0] wb_rd
 
-, input logic StallF
-, input logic StallD
-, input logic FlushF
-, input logic FlushD
-, input logic FlushE
+, input logic stall_f
+, input logic stall_d
+, input logic flush_f
+, input logic flush_d
+, input logic flush_e
 );
 
     /* verilator lint_off PROCASSINIT */
@@ -170,12 +170,12 @@ module Logger
 
                         $display("================ Pipeline Cycle %0d ================", cycle);
                         $display
-                            ( "Hazard ctrl: StallF=%0b StallD=%0b FlushF=%0b FlushD=%0b FlushE=%0b"
-                            , StallF
-                            , StallD
-                            , FlushF
-                            , FlushD
-                            , FlushE
+                            ( "Hazard ctrl: stall_f=%0b stall_d=%0b flush_f=%0b flush_d=%0b flush_e=%0b"
+                            , stall_f
+                            , stall_d
+                            , flush_f
+                            , flush_d
+                            , flush_e
                             );
 
                         $display

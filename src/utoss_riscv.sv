@@ -52,10 +52,10 @@ module utoss_riscv
     ( .if_to_id ( if_to_id_out )
     , .ex_to_if ( ex_to_if_out )
 
-    , .clk    ( clk    )
-    , .reset  ( reset  )
-    , .StallF ( StallF )
-    , .FlushF ( FlushF )
+    , .clk     ( clk    )
+    , .reset   ( reset  )
+    , .stall_f ( stall_f )
+    , .flush_f ( flush_f )
 
     , .imem__address ( memory_instr__address   )
     , .imem__data    ( memory_instr__read_data )
@@ -69,20 +69,20 @@ module utoss_riscv
   // decode stage begin (@marwannismail)
 
   always_ff @ (posedge clk)
-    if (reset)        if_to_id_reg <= '0;
-    else if (FlushD)  if_to_id_reg <= '0;
-    else if (!StallD) if_to_id_reg <= if_to_id_out;
+    if (reset)         if_to_id_reg <= '0;
+    else if (flush_d)  if_to_id_reg <= '0;
+    else if (!stall_d) if_to_id_reg <= if_to_id_out;
 
   wire [4:0] id_rs1, id_rs2;
 
   decode_stage u_decode_stage
     ( .if_to_id ( if_to_id_reg )
 
-    , .clk       ( clk                     )
-    , .reset     ( reset                   )
-    , .data      ( wb_result               )
-    , .rd_wb     ( wb_rd                   )
-    , .RegWriteW ( mem_to_wb_reg.reg_write )
+    , .clk         ( clk                     )
+    , .reset       ( reset                   )
+    , .data        ( wb_result               )
+    , .rd_wb       ( wb_rd                   )
+    , .reg_write_w ( mem_to_wb_reg.reg_write )
 
     , .rs1 ( id_rs1 )
     , .rs2 ( id_rs2 )
@@ -95,9 +95,9 @@ module utoss_riscv
   // execute stage begin (@MSh-786 and tandr3w)
 
   always_ff @ (posedge clk)
-    if (reset)       id_to_ex_reg <= '0;
-    else if (FlushE) id_to_ex_reg <= '0;
-    else             id_to_ex_reg <= id_to_ex_out;
+    if (reset)        id_to_ex_reg <= '0;
+    else if (flush_e) id_to_ex_reg <= '0;
+    else              id_to_ex_reg <= id_to_ex_out;
 
   execute_stage u_execute_stage
     ( .id_to_ex ( id_to_ex_reg )
@@ -108,8 +108,8 @@ module utoss_riscv
     , .wb_result      ( wb_result                )
     , .mem_alu_result ( ex_to_mem_reg.alu_result )
 
-    , .ex_to_mem  ( ex_to_mem_out )
-    , .ex_to_if   ( ex_to_if_out  )
+    , .ex_to_mem ( ex_to_mem_out )
+    , .ex_to_if  ( ex_to_if_out  )
     );
 
   // execute stage end
@@ -121,14 +121,14 @@ module utoss_riscv
     else       ex_to_mem_reg <= ex_to_mem_out;
 
   memory_stage u_memory_stage
-  ( .ex_to_mem      ( ex_to_mem_reg )
+  ( .ex_to_mem ( ex_to_mem_reg )
 
-  , .dataFromMemory ( memory_data__read_data    )
-  , .dataToMemory   ( memory_data__write_data   )
-  , .memWriteEnable ( memory_data__write_enable ) // TODO: Is this required?
-  , .mem_address    ( memory_data__address      )
+  , .data_from_memory ( memory_data__read_data    )
+  , .data_to_memory   ( memory_data__write_data   )
+  , .mem_write_enable ( memory_data__write_enable ) // TODO: Is this required?
+  , .mem_address      ( memory_data__address      )
 
-  , .mem_to_wb      ( mem_to_wb_out)
+  , .mem_to_wb ( mem_to_wb_out)
   );
 
   // memory stage end
@@ -140,12 +140,12 @@ module utoss_riscv
     else       mem_to_wb_reg <= mem_to_wb_out;
 
   write_back_stage u_write_back_stage
-    ( .from_memory    ( mem_to_wb_reg )
-    , .ex_to_mem      ( ex_to_mem_reg )
+    ( .from_memory ( mem_to_wb_reg )
+    , .ex_to_mem   ( ex_to_mem_reg )
 
-    , .dataFromMemory ( memory_data__read_data )
-    , .result         ( wb_result              )
-    , .rd             ( wb_rd                  )
+    , .data_from_memory ( memory_data__read_data )
+    , .result           ( wb_result              )
+    , .rd               ( wb_rd                  )
     );
 
   // writeback stage end
@@ -154,30 +154,30 @@ module utoss_riscv
 
   hazard_forward_a_t hz_forward_a;
   hazard_forward_b_t hz_forward_b;
-  logic StallF, StallD, FlushF, FlushD, FlushE;
+  logic stall_f, stall_d, flush_f, flush_d, flush_e;
 
   hazard_unit u_hazard_unit
     ( .clk ( clk )
 
-    , .Rs1D       ( id_rs1                  )
-    , .Rs2D       ( id_rs2                  )
-    , .Rs1E       ( id_to_ex_reg.rs1        )
-    , .Rs2E       ( id_to_ex_reg.rs2        )
-    , .RdM        ( ex_to_mem_reg.rd        )
-    , .RdW        ( mem_to_wb_reg.rd        )
-    , .RdE        ( id_to_ex_reg.rd         )
-    , .RegWriteM  ( ex_to_mem_reg.reg_write )
-    , .RegWriteW  ( mem_to_wb_reg.reg_write )
-    , .ResultSrcE ( id_to_ex_reg.result_src )
-    , .PCSrcE     ( ex_to_if_out.pc_src     )
+    , .rs1_d        ( id_rs1                  )
+    , .rs2_d        ( id_rs2                  )
+    , .rs1_e        ( id_to_ex_reg.rs1        )
+    , .rs2_e        ( id_to_ex_reg.rs2        )
+    , .rd_m         ( ex_to_mem_reg.rd        )
+    , .rd_w         ( mem_to_wb_reg.rd        )
+    , .rd_e         ( id_to_ex_reg.rd         )
+    , .reg_write_m  ( ex_to_mem_reg.reg_write )
+    , .reg_write_w  ( mem_to_wb_reg.reg_write )
+    , .result_src_e ( id_to_ex_reg.result_src )
+    , .pc_src_e     ( ex_to_if_out.pc_src     )
 
-    , .ForwardAE ( hz_forward_a )
-    , .ForwardBE ( hz_forward_b )
-    , .StallF    ( StallF       )
-    , .StallD    ( StallD       )
-    , .FlushF    ( FlushF       )
-    , .FlushD    ( FlushD       )
-    , .FlushE    ( FlushE       )
+    , .forward_a_e ( hz_forward_a )
+    , .forward_b_e ( hz_forward_b )
+    , .stall_f    ( stall_f       )
+    , .stall_d    ( stall_d       )
+    , .flush_f    ( flush_f       )
+    , .flush_d    ( flush_d       )
+    , .flush_e    ( flush_e       )
     );
 
   // hazard module end
@@ -205,11 +205,11 @@ module utoss_riscv
     , .wb_result ( wb_result )
     , .wb_rd     ( wb_rd     )
 
-    , .StallF ( StallF )
-    , .StallD ( StallD )
-    , .FlushF ( FlushF )
-    , .FlushD ( FlushD )
-    , .FlushE ( FlushE )
+    , .StallF ( stall_f )
+    , .StallD ( stall_d )
+    , .FlushF ( flush_f )
+    , .FlushD ( flush_d )
+    , .FlushE ( flush_e )
     );
 `endif
 

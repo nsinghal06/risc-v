@@ -55,15 +55,15 @@ module pipeline_edge_case_1_tb;
     repeat (100) begin
       tick();
 
-      if (uut.core.FlushE) begin
+      if (uut.core.flush_e) begin
         saw_flush_e = 1;
-        `assert_equal(uut.core.StallF, 1'b1)
-        `assert_equal(uut.core.StallD, 1'b1)
+        `assert_equal(uut.core.stall_f, 1'b1)
+        `assert_equal(uut.core.stall_d, 1'b1)
       end
     end
 
     assert (saw_flush_e)
-      else $fatal(1, "Expected FlushE to assert for the load-use hazard");
+      else $fatal(1, "Expected flush_e to assert for the load-use hazard");
 
     `assert_equal(uut.core.u_decode_stage.RegFile.RFMem[1], 32'd12)
     `assert_equal(uut.core.u_decode_stage.RegFile.RFMem[2], 32'ha0)

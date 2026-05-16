@@ -5,12 +5,15 @@
 `include "src/interfaces/id_to_ex_if.svh"
 
 module decode_stage
-  ( input if_to_id_t if_to_id
-  , input wire clk
-  , input wire reset
-  , input wire [4:0] rd_wb // rd from writeback
-  , input wire RegWriteW // regWrite from writeback stage
-  , input data_t data
+  ( input  if_to_id_t if_to_id
+
+  , input  wire       clk
+  , input  wire       reset
+
+  , input  wire [4:0] rd_wb // rd from writeback
+  , input  wire       reg_write_w // regWrite from writeback stage
+  , input  data_t     data
+
   , output id_to_ex_t id_to_ex
 
   , output reg [4:0] rs1
@@ -72,7 +75,7 @@ module decode_stage
     , .Addr3           ( rd_wb            )
     , .clk             ( clk              )
     , .reset           ( reset            )
-    , .regWrite        ( RegWriteW        )
+    , .regWrite        ( reg_write_w      )
     , .dataIn          ( data             )
     , .baseAddr        ( rd1              )
     , .writeData       ( rd2              )
@@ -85,31 +88,31 @@ module decode_stage
   // already move on to the next instruction
   data_t rd1_safe;
   always_comb
-    if (rd_wb == rs1 && RegWriteW && rd_wb != 0) rd1_safe = data;
-    else                                         rd1_safe = rd1;
+    if (rd_wb == rs1 && reg_write_w && rd_wb != 0) rd1_safe = data;
+    else                                           rd1_safe = rd1;
 
   data_t rd2_safe;
   always_comb
-    if (rd_wb == rs2 && RegWriteW && rd_wb != 0) rd2_safe = data;
-    else                                         rd2_safe = rd2;
+    if (rd_wb == rs2 && reg_write_w && rd_wb != 0) rd2_safe = data;
+    else                                           rd2_safe = rd2;
 
-    assign id_to_ex.alu_src_a      = cfsm__alu_src_a;
-    assign id_to_ex.alu_src_b      = cfsm__alu_src_b;
-    assign id_to_ex.result_src     = cfsm__result_src;
-    assign id_to_ex.branch         = cfsm__branch;
-    assign id_to_ex.jump           = cfsm__jump;
-    assign id_to_ex.pc_target_kind = cfsm__pc_target_kind;
-    assign id_to_ex.mem_write      = cfsm__mem_write;
-    assign id_to_ex.reg_write      = cfsm__reg_write;
-    assign id_to_ex.alu_control    = alu_control;
-    assign id_to_ex.funct3         = funct3;
-    assign id_to_ex.rd1            = rd1_safe;
-    assign id_to_ex.rd2            = rd2_safe;
-    assign id_to_ex.rd             = rd;
-    assign id_to_ex.rs1            = rs1;
-    assign id_to_ex.rs2            = rs2;
-    assign id_to_ex.imm_ext        = imm_ext;
-    assign id_to_ex.pc_cur         = if_to_id.pc_cur;
-    assign id_to_ex.pc_plus_4      = if_to_id.pc_plus_4;
+  assign id_to_ex.alu_src_a      = cfsm__alu_src_a;
+  assign id_to_ex.alu_src_b      = cfsm__alu_src_b;
+  assign id_to_ex.result_src     = cfsm__result_src;
+  assign id_to_ex.branch         = cfsm__branch;
+  assign id_to_ex.jump           = cfsm__jump;
+  assign id_to_ex.pc_target_kind = cfsm__pc_target_kind;
+  assign id_to_ex.mem_write      = cfsm__mem_write;
+  assign id_to_ex.reg_write      = cfsm__reg_write;
+  assign id_to_ex.alu_control    = alu_control;
+  assign id_to_ex.funct3         = funct3;
+  assign id_to_ex.rd1            = rd1_safe;
+  assign id_to_ex.rd2            = rd2_safe;
+  assign id_to_ex.rd             = rd;
+  assign id_to_ex.rs1            = rs1;
+  assign id_to_ex.rs2            = rs2;
+  assign id_to_ex.imm_ext        = imm_ext;
+  assign id_to_ex.pc_cur         = if_to_id.pc_cur;
+  assign id_to_ex.pc_plus_4      = if_to_id.pc_plus_4;
 
 endmodule

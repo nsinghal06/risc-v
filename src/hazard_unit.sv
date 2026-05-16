@@ -4,66 +4,66 @@
 module hazard_unit
   ( input logic clk
 
-  , input  wire [4:0] Rs1E
-  , input  wire [4:0] Rs2E
-  , input  wire [4:0] RdM
-  , input  wire [4:0] RdW
-  , input  wire RegWriteM
-  , input  wire RegWriteW
-  , input  result_src_t ResultSrcE
-  , input  wire [4:0] Rs1D
-  , input  wire [4:0] Rs2D
-  , input  wire [4:0] RdE
-  , input  pc_src_t PCSrcE
-  , output hazard_forward_a_t ForwardAE
-  , output hazard_forward_b_t ForwardBE
-  , output logic StallF
-  , output logic StallD
-  , output logic FlushF
-  , output logic FlushD
-  , output logic FlushE
+  , input  wire [4:0] rs1_e
+  , input  wire [4:0] rs2_e
+  , input  wire [4:0] rd_m
+  , input  wire [4:0] rd_w
+  , input  wire reg_write_m
+  , input  wire reg_write_w
+  , input  result_src_t result_src_e
+  , input  wire [4:0] rs1_d
+  , input  wire [4:0] rs2_d
+  , input  wire [4:0] rd_e
+  , input  pc_src_t pc_src_e
+  , output hazard_forward_a_t forward_a_e
+  , output hazard_forward_b_t forward_b_e
+  , output logic stall_f
+  , output logic stall_d
+  , output logic flush_f
+  , output logic flush_d
+  , output logic flush_e
   );
 
-  wire ResultSrcE0;
-  assign ResultSrcE0 = ResultSrcE[0];
+  wire result_src_e_0;
+  assign result_src_e_0 = result_src_e[0];
 
-  wire unused = &{ResultSrcE[$bits(result_src_t) -1:1]};
+  wire unused = &{result_src_e[$bits(result_src_t) -1:1]};
 
   // Forwarding
   always_comb
-    if ((Rs1E == RdM) && RegWriteM && (Rs1E != 5'd0))
-      ForwardAE = HAZARD_FORWARD_A__MEMORY_ALU_RESULT;
-    else if ((Rs1E == RdW) && RegWriteW && (Rs1E != 5'd0))
-      ForwardAE = HAZARD_FORWARD_A__WRITE_BACK_RESULT;
+    if ((rs1_e == rd_m) && reg_write_m && (rs1_e != 5'd0))
+      forward_a_e = HAZARD_FORWARD_A__MEMORY_ALU_RESULT;
+    else if ((rs1_e == rd_w) && reg_write_w && (rs1_e != 5'd0))
+      forward_a_e = HAZARD_FORWARD_A__WRITE_BACK_RESULT;
     else
-      ForwardAE = HAZARD_FORWARD_A__EXECUTE_RD1;
+      forward_a_e = HAZARD_FORWARD_A__EXECUTE_RD1;
 
   always_comb
-    if ((Rs2E == RdM) && RegWriteM && (Rs2E != 5'd0))
-      ForwardBE = HAZARD_FORWARD_B__MEMORY_ALU_RESULT;
-    else if ((Rs2E == RdW) && RegWriteW && (Rs2E != 5'd0))
-      ForwardBE = HAZARD_FORWARD_B__WRITE_BACK_RESULT;
+    if ((rs2_e == rd_m) && reg_write_m && (rs2_e != 5'd0))
+      forward_b_e = HAZARD_FORWARD_B__MEMORY_ALU_RESULT;
+    else if ((rs2_e == rd_w) && reg_write_w && (rs2_e != 5'd0))
+      forward_b_e = HAZARD_FORWARD_B__WRITE_BACK_RESULT;
     else
-      ForwardBE = HAZARD_FORWARD_B__EXECUTE_RD2;
+      forward_b_e = HAZARD_FORWARD_B__EXECUTE_RD2;
 
-  logic lwStall;
+  logic lw_stall;
 
   //Stall when a load hazard occurs
-  assign lwStall = ResultSrcE0 && ((Rs1D == RdE) || (Rs2D == RdE)) && (RdE != 5'd0);
-  assign StallF = lwStall;
-  assign StallD = lwStall;
+  assign lw_stall = result_src_e_0 && ((rs1_d == rd_e) || (rs2_d == rd_e)) && (rd_e != 5'd0);
+  assign stall_f = lw_stall;
+  assign stall_d = lw_stall;
 
   //Flush when a control hazard occurs; we need to flush one cycle later than we discover the
   // control hazard; this is due to synchronous memory making the instruction available one cycle
   // later than with async memory
   reg pc_src_e_lag;
-  always_ff @ (posedge clk) pc_src_e_lag <= PCSrcE;
+  always_ff @ (posedge clk) pc_src_e_lag <= pc_src_e;
 
   wire control_hazard;
-  assign control_hazard = PCSrcE || pc_src_e_lag;
+  assign control_hazard = pc_src_e || pc_src_e_lag;
 
-  assign FlushF = control_hazard;
-  assign FlushD = control_hazard;
-  assign FlushE = lwStall || control_hazard;
+  assign flush_f = control_hazard;
+  assign flush_d = control_hazard;
+  assign flush_e = lw_stall || control_hazard;
 
 endmodule
