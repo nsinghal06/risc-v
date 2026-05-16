@@ -6,7 +6,7 @@ module zbb(
   , input [31:0] b
   , input ext__b__types::b_alu_control_t b_alu_control
   , output reg [31:0] out
-  , output zeroE
+  , output wire zeroE
   );
 
   always_comb
