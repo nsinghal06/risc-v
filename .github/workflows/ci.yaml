@@ -173,6 +173,9 @@ jobs:
     container:
       image: ${{ needs.select_ci_image.outputs.image-tag }}
 
+    strategy:
+      matrix: *utoss-risc-v-matrix
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -186,7 +189,7 @@ jobs:
 
       - name: Synthesize
         id: synthesize
-        run: cd envs/de1-soc && make synthesize
+        run: cd envs/de1-soc/quartus && make synthesize UTOSS_RISCV_CONFIG=${{ matrix.config }}
 
       - name: Gather metrics
         run: cd envs/de1-soc/quartus && make pretty-metrics
@@ -195,7 +198,7 @@ jobs:
         uses: actions/upload-artifact@v4
         if: steps.build-poc.outcome == 'success'
         with:
-          name: de1-soc-tb-vcd
+          name: de1-soc-tb-vcd-${{ matrix.config }}
           path: envs/de1-soc/top_tb.vcd
           retention-days: 7
 
@@ -203,14 +206,14 @@ jobs:
         uses: actions/upload-artifact@v4
         if: steps.synthesize.outcome == 'success'
         with:
-          name: de1-soc-sof
+          name: de1-soc-sof-${{ matrix.config }}
           path: envs/de1-soc/quartus/output_files/utoss-risc-v.sof
 
       - name: Upload Quartus reports
         uses: actions/upload-artifact@v4
         if: steps.synthesize.outcome == 'success'
         with:
-          name: de1-soc-quartus-reports
+          name: de1-soc-quartus-reports-${{ matrix.config }}
           path: |
             envs/de1-soc/quartus/output_files/utoss-risc-v.sta.summary
             envs/de1-soc/quartus/output_files/utoss-risc-v.fit.summary
@@ -231,6 +234,9 @@ jobs:
     permissions:
       pull-requests: write
 
+    strategy:
+      matrix: *utoss-risc-v-matrix
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -238,7 +244,7 @@ jobs:
       - name: Download PR Quartus reports
         uses: actions/download-artifact@v4
         with:
-          name: de1-soc-quartus-reports
+          name: de1-soc-quartus-reports-${{ matrix.config }}
           path: pr-reports
 
       - name: Download main branch Quartus reports
@@ -248,44 +254,65 @@ jobs:
         with:
           workflow: ci.yaml
           branch: main
-          name: de1-soc-quartus-reports
+          name: de1-soc-quartus-reports-${{ matrix.config }}
           path: main-reports
           check_artifacts: true
           search_artifacts: true
 
-      - name: Initialize comparison report
+      - name: Initialize metrics diff files
         run: |
-          echo "## 🔧 DE1-SoC Synthesis Report Summary Diff" > comparison.md
-          echo "" >> comparison.md
+          mkdir -p metric-diff
 
       - name: Compare Fitter Summary
         run: >
           .github/scripts/de1-soc-synthesis-metrics-diff/compare_metrics_diff.sh
           "main-reports/output_files/utoss-risc-v.fit.summary"
           "pr-reports/output_files/utoss-risc-v.fit.summary"
-          "Fitter Summary (.fit.summary)"
-          "📊" >> comparison.md
+          > metric-diff/fitter_summary.md
 
       - name: Compare Fitter Resource Utilization by Entity
         run: >
           .github/scripts/de1-soc-synthesis-metrics-diff/compare_metrics_diff.sh
           "main-reports/metrics/fitter_utilization.pretty.txt"
           "pr-reports/metrics/fitter_utilization.pretty.txt"
-          "Fitter Resource Utilization by Entity"
-          "🔢" >> comparison.md
+          > metric-diff/fitter_by_entity.md
 
       - name: Compare Timing Analysis Summary
         run: >
           .github/scripts/de1-soc-synthesis-metrics-diff/compare_metrics_diff.sh
           "main-reports/output_files/utoss-risc-v.sta.summary"
           "pr-reports/output_files/utoss-risc-v.sta.summary"
-          "Timing Analysis Summary (.sta.summary)"
-          "⏱️" >> comparison.md
+          > metric-diff/timing_summary.md
 
-      - name: Add footer to comparison report
-        run: |
-          echo "---" >> comparison.md
-          echo "*Comparing synthesis results from main branch vs. this PR*" >> comparison.md
+      - name: Upload per-config metrics diff
+        uses: actions/upload-artifact@v4
+        with:
+          name: de1-soc-synthesis-metrics-diff-${{ matrix.config }}
+          path: metric-diff/*.md
+          retention-days: 7
+
+  de1-soc-synthesis-metrics-diff-aggregate:
+    timeout-minutes: 10
+    needs: de1-soc-synthesis-metrics-diff
+    if: >
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download per-config metrics diff artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: de1-soc-synthesis-metrics-diff-*
+          path: metrics-diff
+
+      - name: Build combined comparison report
+        run: bash .github/scripts/de1-soc-synthesis-metrics-diff/aggregate_metrics.sh metrics-diff comparison.md
 
       - name: Publish comparison to job summary
         run: cat comparison.md >> "$GITHUB_STEP_SUMMARY"
