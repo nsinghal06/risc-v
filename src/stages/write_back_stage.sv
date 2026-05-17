@@ -22,6 +22,9 @@ module write_back_stage
   data_t temp_output;
   data_t mem_result;
 
+  // TODO: the logic in the memory loader duplicates some of the logic we currently have in the
+  // memory stage, specifically pertaining to the "write enable" and "write data" -- need to remove
+  // that functionality so that its not duplicated
   MemoryLoader memory_loader
     ( .memory_data         ( data_from_memory            )
     , .memory_address      ( alu_result_m                )

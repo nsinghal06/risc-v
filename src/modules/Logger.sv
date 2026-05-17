@@ -237,14 +237,13 @@ module Logger
                             );
 
                         $display
-                            ( "WB : rd=%s(%0d) regwrite=%0b result_src=%0d wb_result=%08h alu_result=%08h mem_read_data=%08h"
+                            ( "WB : rd=%s(%0d) regwrite=%0b result_src=%0d wb_result=%08h alu_result=%08h"
                             , reg_name(wb_rd)
                             , wb_rd
                             , wb_stage.reg_write
                             , wb_stage.result_src
                             , wb_result
                             , wb_stage.alu_result
-                            , wb_stage.read_data
                             );
 
             $display("=====================================================\n");
@@ -274,7 +273,6 @@ module Logger
             , mem_stage.pc_plus_4
             , mem_stage_out.reg_write
             , mem_stage_out.result_src
-            , mem_stage_out.read_data
             , mem_stage_out.alu_result
             , mem_stage_out.rd
             , mem_stage_out.pc_cur

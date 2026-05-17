@@ -123,8 +123,7 @@ module utoss_riscv
   memory_stage u_memory_stage
   ( .ex_to_mem ( ex_to_mem_reg )
 
-  , .data_from_memory ( memory_data__read_data    )
-  , .data_to_memory   ( memory_data__write_data   )
+  , .mem_write_data   ( memory_data__write_data   )
   , .mem_write_enable ( memory_data__write_enable ) // TODO: Is this required?
   , .mem_address      ( memory_data__address      )
 

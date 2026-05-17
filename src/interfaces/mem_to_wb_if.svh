@@ -4,7 +4,6 @@
 typedef struct packed {
   result_src_t result_src;
   logic        reg_write;
-  data_t       read_data;
   data_t       alu_result;
   logic [4:0]  rd;
   addr_t       pc_cur;

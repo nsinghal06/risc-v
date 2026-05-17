@@ -6,36 +6,49 @@
 module memory_stage
   ( input ex_to_mem_t ex_to_mem
 
-  , input  data_t      data_from_memory
-  , output data_t      data_to_memory
+  , output data_t      mem_write_data
   , output logic [3:0] mem_write_enable
   , output addr_t      mem_address
 
   , output mem_to_wb_t mem_to_wb
   );
 
-  // Inputs from EX_to_MEM interface
-  data_t write_data_m;
-  data_t alu_result_m;
-  logic  mem_write;
+  logic [1:0] byte_index;
+  assign byte_index = mem_address[1:0];
 
-  assign write_data_m = ex_to_mem.write_data_e;
-  assign alu_result_m = ex_to_mem.alu_result;
-  assign mem_write    = ex_to_mem.mem_write;
+  typedef enum logic [1:0]
+    { BYTE = 2'b00
+    , HALF = 2'b01
+    , WORD = 2'b10
+    } transfersize_t;
 
-  logic [3:0] temp_mem_write_byte_address;
+  transfersize_t transfersize;
+  assign transfersize = transfersize_t'(ex_to_mem.funct3[1:0]);
 
-  MemoryLoader memory_loader
-    ( .memory_data         ( data_from_memory            )
-    , .memory_address      ( alu_result_m                )
-    , .funct3              ( ex_to_mem.funct3            )
-    , .dataB               ( write_data_m                )
-    , .mem_load_result     ( mem_to_wb.read_data         )
-    , .MemWriteByteAddress ( temp_mem_write_byte_address )
-    , .__tmp_MemData       ( data_to_memory              )
-    );
+  // determine which bytes of memory to write to
+  always_comb
+    if (ex_to_mem.mem_write == '0) mem_write_enable = 4'b0;
+    else
+      case ({transfersize, byte_index})
+        {BYTE, 2'd0}:              mem_write_enable = 4'b0001;
+        {BYTE, 2'd1}:              mem_write_enable = 4'b0010;
+        {BYTE, 2'd2}:              mem_write_enable = 4'b0100;
+        {BYTE, 2'd3}:              mem_write_enable = 4'b1000;
+        {HALF, 2'd0}:              mem_write_enable = 4'b0011;
+        {HALF, 2'd2}:              mem_write_enable = 4'b1100;
+        {WORD, 2'd0}:              mem_write_enable = 4'b1111;
+        default:                   mem_write_enable = 4'bxxxx;
+      endcase
 
-  assign mem_write_enable = (mem_write == 'b0) ? 4'b0 : temp_mem_write_byte_address;
+  // determine which bytes of the result to write to memory
+  always_comb
+    case (transfersize)
+      BYTE:    mem_write_data = {4{ex_to_mem.write_data_e[ 7:0]}};
+      HALF:    mem_write_data = {2{ex_to_mem.write_data_e[15:0]}};
+      WORD:    mem_write_data = ex_to_mem.write_data_e;
+      default: mem_write_data = 32'hxxxxxxxx;
+    endcase
+
   assign mem_address = ex_to_mem.alu_result;
 
   // Combinational assignment to MEM_to_WB interface
@@ -46,8 +59,5 @@ module memory_stage
   assign mem_to_wb.pc_cur     = ex_to_mem.pc_cur;
   assign mem_to_wb.pc_plus_4  = ex_to_mem.pc_plus_4;
   assign mem_to_wb.funct3     = ex_to_mem.funct3;
-
-  // TODO: can we remove pc_cur from EX->MEM?
-  wire unused = &{ex_to_mem.pc_cur};
 
 endmodule
