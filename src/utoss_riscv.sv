@@ -204,11 +204,11 @@ module utoss_riscv
     , .wb_result ( wb_result )
     , .wb_rd     ( wb_rd     )
 
-    , .StallF ( stall_f )
-    , .StallD ( stall_d )
-    , .FlushF ( flush_f )
-    , .FlushD ( flush_d )
-    , .FlushE ( flush_e )
+    , .stall_f ( stall_f )
+    , .stall_d ( stall_d )
+    , .flush_f ( flush_f )
+    , .flush_d ( flush_d )
+    , .flush_e ( flush_e )
     );
 `endif
 
