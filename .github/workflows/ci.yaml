@@ -81,7 +81,8 @@ jobs:
   build_and_test:
     timeout-minutes: 30
     needs: select_ci_image
-    if: always() # dont skip if build_ci_image is skipped
+    # dont skip if build_ci_image is skipped
+    if: always()
     runs-on: ubuntu-latest
     container:
       image: ${{ needs.select_ci_image.outputs.image-tag }}
@@ -126,7 +127,8 @@ jobs:
   riscof:
     timeout-minutes: 30
     needs: select_ci_image
-    if: always() # dont skip if build_ci_image is skipped
+    # dont skip if build_ci_image is skipped
+    if: always()
     runs-on: ubuntu-latest
     container:
       image: ${{ needs.select_ci_image.outputs.image-tag }}
@@ -224,7 +226,7 @@ jobs:
     needs: de1-soc
     # dont run this on fork PRs; this will fail to permission issues when posting a comment; i don't
     # understand exactly the permission mechanism that prohibits this so will need to look into this
-    # further down the road
+    # further down the road;
     if: >
       github.event.pull_request.head.repo.full_name == github.repository &&
       github.event_name == 'pull_request'

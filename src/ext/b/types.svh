@@ -1,5 +1,6 @@
 `ifndef EXT__B__TYPES
 `define EXT__B__TYPES
+
 /* verilator lint_off DECLFILENAME */
 package ext__b__types;
 /* verilator lint_on DECLFILENAME */

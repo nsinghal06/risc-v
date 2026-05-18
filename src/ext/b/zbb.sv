@@ -1,3 +1,5 @@
+`include "src/timescale.svh"
+`include "src/headers/types.svh"
 `include "src/ext/b/types.svh"
 
 module zbb(
@@ -5,7 +7,7 @@ module zbb(
   , input [`PROCESSOR_BITNESS - 1:0] b
   , input ext__b__types::b_alu_control_t b_alu_control
   , output reg [`PROCESSOR_BITNESS - 1:0] out
-  , output zeroE
+  , output wire zeroE
   );
 
   import ext__b__types::*;

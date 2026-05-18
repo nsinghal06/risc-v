@@ -1,3 +1,4 @@
+`include "src/timescale.svh"
 `include "src/ext/b/types.svh"
 /* verilator lint_off DECLFILENAME */
 module ext__b__decoder

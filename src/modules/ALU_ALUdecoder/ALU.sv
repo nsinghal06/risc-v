@@ -1,4 +1,4 @@
-`include "src/types.svh"
+`include "src/headers/types.svh"
 `include "src/timescale.svh"
 
 module ALU

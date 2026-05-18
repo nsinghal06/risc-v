@@ -22,12 +22,14 @@ RISCOF_CONFIG        := $(RISCOF_DIR)/config.ini
 UTOSS_RISCV_CONFIG ?= RV32I
 
 UTOSS_RISCV_VERILATOR_DEFINES := $(if $(findstring B,$(UTOSS_RISCV_CONFIG)),-DUTOSS_RISCV_ENABLE_B_EXT)
+UTOSS_RISCV_RISCOF_VERILATOR_DEFINES := -DUTOSS_PIPELINE_LOGGER
 
 # ===========================
 # Verilator flags
 # ===========================
 
 VERILATOR_FLAGS := -Wall --binary --trace --timing -sv -cc -O3 $(UTOSS_RISCV_VERILATOR_DEFINES)
+RISCOF_VERILATOR_FLAGS := $(VERILATOR_FLAGS) $(UTOSS_RISCV_RISCOF_VERILATOR_DEFINES)
 
 # Testbench-only defines
 TB_DEFINES := -DTESTBENCH
@@ -119,7 +121,7 @@ new_tb:
 # RISCOF
 # ===========================
 $(RISCOF_DUT_BIN): $(SRCS) $(RISCOF_DUT_SRC)
-	$(VERILATOR) $(VERILATOR_FLAGS) \
+	$(VERILATOR) $(RISCOF_VERILATOR_FLAGS) \
 		--top-module dut \
 		--Mdir $(BUILD_DIR)/riscof \
 		-o dut_sim \
