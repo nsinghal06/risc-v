@@ -49,12 +49,7 @@ module uart_top #(
         .i_ready_m        (rx_ready),
         // Serial pins
         .i_rxd            (i_rxd),
-        .o_txd            (o_txd),
-        // Unused status outputs
-        .o_tx_busy        (),
-        .o_rx_busy        (),
-        .o_rx_overrun_error(),
-        .o_rx_frame_error ()
+        .o_txd            (o_txd)
     );
 
     uart_bus_master bus_master_inst (
