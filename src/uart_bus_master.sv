@@ -61,6 +61,8 @@ module uart_bus_master (
     } state_t;
 
     state_t state;
+    assign rx_ready = (state != STATE_SEND);
+
     logic [4:0] reg_idx;
     logic [7:0]  cmd;
     logic [31:0] addr;
