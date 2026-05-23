@@ -74,7 +74,7 @@ ENV PATH="/opt/quartus/quartus/bin:${PATH}"
 # install cocotb
 USER dev
 RUN sudo apt update && sudo apt install -y python3 python3-pip libpython3-dev && \
-  pip3 install cocotb~=1.9
+  pip3 install cocotb~=1.9 cocotbext-uart pyserial
 
 # install svlint
 USER dev

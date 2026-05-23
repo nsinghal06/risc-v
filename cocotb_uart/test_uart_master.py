@@ -88,9 +88,9 @@ async def reset_dut(dut):
     for i in range(32):
         dut.dbg_regs[i].value = 0
     dut.dbg_pc.value = 0
-    await Timer(200, unit="ns")
+    await Timer(200, units="ns")
     dut.rst.value = 0
-    await Timer(100, unit="ns")
+    await Timer(100, units="ns")
 
 
 # ---------------------------------------------------------------------------
@@ -100,7 +100,7 @@ async def reset_dut(dut):
 @cocotb.test()
 async def test_halt(dut):
     """HALT travels through uart_rx → uart_bus_master → uart_tx and back."""
-    cocotb.start_soon(Clock(dut.clk, 20, unit="ns").start())
+    cocotb.start_soon(Clock(dut.clk, 20, units="ns").start())
     source = UartSource(dut.i_rxd, baud=BAUD, bits=8)
     sink   = UartSink  (dut.o_txd, baud=BAUD, bits=8)
     await reset_dut(dut)
@@ -118,7 +118,7 @@ async def test_wr32(dut):
     watcher catches it the cycle it fires; by the time the ACK arrives over
     the serial link the strobe is long gone.
     """
-    cocotb.start_soon(Clock(dut.clk, 20, unit="ns").start())
+    cocotb.start_soon(Clock(dut.clk, 20, units="ns").start())
     source = UartSource(dut.i_rxd, baud=BAUD, bits=8)
     sink   = UartSink  (dut.o_txd, baud=BAUD, bits=8)
     await reset_dut(dut)
@@ -149,7 +149,7 @@ async def test_load_and_run(dut):
     using the same WORDS from test_uart.py. The entire sequence goes through
     uart_rx and uart_tx at real 115200 baud timing.
     """
-    cocotb.start_soon(Clock(dut.clk, 20, unit="ns").start())
+    cocotb.start_soon(Clock(dut.clk, 20, units="ns").start())
     source = UartSource(dut.i_rxd, baud=BAUD, bits=8)
     sink   = UartSink  (dut.o_txd, baud=BAUD, bits=8)
     await reset_dut(dut)
@@ -178,7 +178,7 @@ async def test_load_and_run(dut):
 @cocotb.test()
 async def test_rdreg(dut):
     """Drive dbg_regs[9] to a known value and verify RDREG echoes it back."""
-    cocotb.start_soon(Clock(dut.clk, 20, unit="ns").start())
+    cocotb.start_soon(Clock(dut.clk, 20, units="ns").start())
     source = UartSource(dut.i_rxd, baud=BAUD, bits=8)
     sink   = UartSink  (dut.o_txd, baud=BAUD, bits=8)
     await reset_dut(dut)
@@ -193,7 +193,7 @@ async def test_rdreg(dut):
 @cocotb.test()
 async def test_bad_checksum(dut):
     """Corrupt a packet checksum and verify STATUS_CHK (0x01) is returned."""
-    cocotb.start_soon(Clock(dut.clk, 20, unit="ns").start())
+    cocotb.start_soon(Clock(dut.clk, 20, units="ns").start())
     source = UartSource(dut.i_rxd, baud=BAUD, bits=8)
     sink   = UartSink  (dut.o_txd, baud=BAUD, bits=8)
     await reset_dut(dut)

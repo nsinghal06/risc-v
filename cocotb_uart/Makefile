@@ -7,6 +7,6 @@ VERILOG_SOURCES = \
 	$(PWD)/../src/uart_bus_master.sv \
 	$(PWD)/../src/uart_top.sv
 TOPLEVEL      = uart_top
-COCOTB_TEST_MODULES = test_uart_master
+MODULE = test_uart_master
 
 include $(shell cocotb-config --makefiles)/Makefile.sim
