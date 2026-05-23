@@ -5,7 +5,7 @@ VERILOG_SOURCES = \
 	$(PWD)/../src/uart_tx.sv \
 	$(PWD)/../src/uart.sv \
 	$(PWD)/../src/uart_bus_master.sv \
-	$(PWD)/../src/uart_top.sv
+	$(PWD)/uart_top.sv
 TOPLEVEL      = uart_top
 MODULE = test_uart_master
 
