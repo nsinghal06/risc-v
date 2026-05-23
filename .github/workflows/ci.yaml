@@ -247,15 +247,15 @@ jobs:
           name: de1-soc-quartus-reports-${{ matrix.config }}
           path: pr-reports
 
-      - name: Download main branch Quartus reports
+      - name: Download base branch Quartus reports
         uses: dawidd6/action-download-artifact@v3
         continue-on-error: true
-        id: download-main
+        id: download-base
         with:
           workflow: ci.yaml
-          branch: main
+          branch: ${{ github.base_ref }}
           name: de1-soc-quartus-reports-${{ matrix.config }}
-          path: main-reports
+          path: base-reports
           check_artifacts: true
           search_artifacts: true
 
@@ -266,21 +266,21 @@ jobs:
       - name: Compare Fitter Summary
         run: >
           .github/scripts/de1-soc-synthesis-metrics-diff/compare_metrics_diff.sh
-          "main-reports/output_files/utoss-risc-v.fit.summary"
+          "base-reports/output_files/utoss-risc-v.fit.summary"
           "pr-reports/output_files/utoss-risc-v.fit.summary"
           > metric-diff/fitter_summary.md
 
       - name: Compare Fitter Resource Utilization by Entity
         run: >
           .github/scripts/de1-soc-synthesis-metrics-diff/compare_metrics_diff.sh
-          "main-reports/metrics/fitter_utilization.pretty.txt"
+          "base-reports/metrics/fitter_utilization.pretty.txt"
           "pr-reports/metrics/fitter_utilization.pretty.txt"
           > metric-diff/fitter_by_entity.md
 
       - name: Compare Timing Analysis Summary
         run: >
           .github/scripts/de1-soc-synthesis-metrics-diff/compare_metrics_diff.sh
-          "main-reports/output_files/utoss-risc-v.sta.summary"
+          "base-reports/output_files/utoss-risc-v.sta.summary"
           "pr-reports/output_files/utoss-risc-v.sta.summary"
           > metric-diff/timing_summary.md
 
