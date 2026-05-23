@@ -41,23 +41,23 @@ module uart_bus_master (
     localparam byte STATUS_BUSY = 8'h02;
     localparam byte STATUS_CMD  = 8'h03;
 
-    typedef enum logic [4:0] {
-        STATE_WAIT_SOF = 5'd0
-        , STATE_CMD      = 5'd1
-        , STATE_A0       = 5'd2
-        , STATE_A1       = 5'd3
-        , STATE_A2       = 5'd4
-        , STATE_A3       = 5'd5
-        , STATE_D0       = 5'd6
-        , STATE_D1       = 5'd7
-        , STATE_D2       = 5'd8
-        , STATE_D3       = 5'd9
-        , STATE_CHK      = 5'd10
-        , STATE_DO_WR    = 5'd11
-        , STATE_DO_RD0   = 5'd12
-        , STATE_DO_RD1   = 5'd13
-        , STATE_SEND     = 5'd14
-        , STATE_REG   = 5'd15
+    typedef enum logic [3:0] {
+        STATE_WAIT_SOF = 4'd0
+        , STATE_CMD      = 4'd1
+        , STATE_A0       = 4'd2
+        , STATE_A1       = 4'd3
+        , STATE_A2       = 4'd4
+        , STATE_A3       = 4'd5
+        , STATE_D0       = 4'd6
+        , STATE_D1       = 4'd7
+        , STATE_D2       = 4'd8
+        , STATE_D3       = 4'd9
+        , STATE_CHK      = 4'd10
+        , STATE_DO_WR    = 4'd11
+        , STATE_DO_RD0   = 4'd12
+        , STATE_DO_RD1   = 4'd13
+        , STATE_SEND     = 4'd14
+        , STATE_REG   = 4'd15
     } state_t;
 
     state_t state;

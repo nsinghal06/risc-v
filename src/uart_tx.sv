@@ -18,9 +18,12 @@ module uart_tx #
     // 1 start + DATA_WIDTH data + 1 stop
     localparam int FRAME_BITS = DATA_WIDTH + 2;
 
+    localparam int BIT_IDX_W = (FRAME_BITS <= 1) ? 1 : $clog2(FRAME_BITS);
+    localparam int TIMER_W = (DIV <= 1) ? 1 : $clog2(DIV);
+
     reg [FRAME_BITS - 1:0] data_reg = {FRAME_BITS{1'b1}};
-    reg [3:0] bit_idx;
-    reg [18:0] timer;
+    reg [BIT_IDX_W -1:0] bit_idx;
+    reg [TIMER_W -1:0] timer;
 
     typedef enum logic {STATE_IDLE, STATE_SEND} uart_tx_state_t;
     uart_tx_state_t state;
@@ -31,8 +34,8 @@ module uart_tx #
             o_txd <= 1'b1;
             o_busy <= 1'b0;
             data_reg <= {FRAME_BITS{1'b1}};
-            bit_idx <= 4'd0;
-            timer   <= 19'd0;
+            bit_idx <= {BIT_IDX_W{1'b0}};
+            timer   <= {TIMER_W{1'b0}};
             state   <= STATE_IDLE;
         end else begin
             case (state)
@@ -43,7 +46,7 @@ module uart_tx #
 
                     if (i_valid) begin
                         data_reg <= {1'b1, i_data, 1'b0};
-                        bit_idx <= 4'd0;
+                        bit_idx <= {BIT_IDX_W{1'b0}};
                         o_txd <= 1'b0;
                         timer <= DIV - 1;
                         o_busy <= 1'b1;

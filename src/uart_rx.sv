@@ -32,8 +32,11 @@ module uart_rx #
     } uart_state_t;
     uart_state_t  state = STATE_IDLE;
 
-    reg [18:0] timer;
-    reg [3:0]  bit_idx;
+    localparam int TIMER_W = (DIV <= 1) ? 1 : $clog2(DIV);
+    localparam int BIT_IDX_W = (DATA_WIDTH <= 1) ? 1 : $clog2(DATA_WIDTH);
+
+    reg [TIMER_W -1:0] timer;
+    reg [BIT_IDX_W -1:0]  bit_idx;
     reg [DATA_WIDTH - 1:0] data_reg;
 
     always @(posedge clk) begin
@@ -47,8 +50,8 @@ module uart_rx #
             rxd_q1   <= 1'b1;
             rxd_q1_d <= 1'b1;
             state <= STATE_IDLE;
-            timer <= 0;
-            bit_idx <= 0;
+            timer <= {TIMER_W{1'b0}};
+            bit_idx <= {BIT_IDX_W{1'b0}};
             data_reg <= 0;
         end else begin
             // 2FF synchronizer because aynchronous input
@@ -82,7 +85,7 @@ module uart_rx #
                     end else begin
                         if (rxd_q1 == 1'b0) begin
                             state         <= STATE_DATA;
-                            bit_idx    <= 0;
+                            bit_idx    <= {BIT_IDX_W{1'b0}};
                             data_reg <= 0;
                             timer      <= DIV - 1;
                         end else begin
