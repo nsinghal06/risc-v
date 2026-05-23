@@ -213,8 +213,4 @@ module utoss_riscv
 `endif
 `endif
 
-`ifdef UTOSS_RISCV_HARDENING
-  wire _unused = &{funct7, __tmp_FSMState};
-`endif
-
 endmodule

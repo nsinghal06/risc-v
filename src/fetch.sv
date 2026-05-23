@@ -16,7 +16,9 @@ module fetch
   , input  pc_src_t cfsm__pc_src
   , input  wire     cfsm__ir_write
 
+  /* verilator lint_off UNUSEDSIGNAL */
   , input addr_t alu_result_for_pc
+  /* verilator lint_on UNUSEDSIGNAL */
 
   , input  imm_t    imm_ext
   , output addr_t   pc_cur
@@ -46,7 +48,5 @@ module fetch
       pc_old <= pc_cur;
     end
   end
-
-  wire _unused = &{alu_result_for_pc[0]};
 
 endmodule
