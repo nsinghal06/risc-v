@@ -86,8 +86,6 @@ module uart_bus_master (
         end
     endtask
 
-    assign rx_ready = (state != STATE_SEND);
-
     task automatic prepare_rd(input logic [31:0] d);
         begin
             // 5A 91 d0 d1 d2 d3 chk
