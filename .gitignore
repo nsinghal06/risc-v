@@ -29,6 +29,8 @@ envs/de1-soc/quartus/metrics/*
 !envs/de1-soc/quartus/metrics/.gitkeep
 
 cocotb_uart/__pycache__/
+cocotb_uart/sim_build/
+cocotb_uart/results.xml
 
 out/**
 !out/.gitkeep
