@@ -80,9 +80,9 @@ module uart_bus_master (
             resp[1] = R_ACK;
             resp[2] = status;
             resp[3] = (R_ACK ^ status);
-            resp_len = 3'd4;
-            resp_idx = 3'd0;
-            state = STATE_SEND;
+            resp_len <= 3'd4;
+            resp_idx <= 3'd0;
+            state <= STATE_SEND;
         end
     endtask
 
@@ -98,9 +98,9 @@ module uart_bus_master (
             resp[4] = d[23:16];
             resp[5] = d[31:24];
             resp[6] = (R_RD ^ d[7:0] ^ d[15:8] ^ d[23:16] ^ d[31:24]);
-            resp_len = 3'd7;
-            resp_idx = 3'd0;
-            state = STATE_SEND;
+            resp_len <= 3'd7;
+            resp_idx <= 3'd0;
+            state <= STATE_SEND;
         end
     endtask
 
@@ -114,9 +114,9 @@ module uart_bus_master (
         resp[4] = d[23:16];
         resp[5] = d[31:24];
         resp[6] = (R_RDREG ^ d[7:0] ^ d[15:8] ^ d[23:16] ^ d[31:24]);
-        resp_len = 3'd7;
-        resp_idx = 3'd0;
-        state = STATE_SEND;
+        resp_len <= 3'd7;
+        resp_idx <= 3'd0;
+        state <= STATE_SEND;
     end
     endtask
 
