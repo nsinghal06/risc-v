@@ -25,7 +25,6 @@ module ControlFSM
   , output reg PCUpdate
   , output pc_src_t pc_src
   , output reg [3:0] MemWrite
-  , output reg Branch
   , output alu_src_a_t ALUSrcA
   , output alu_src_b_t ALUSrcB
   , output result_src_t ResultSrc
@@ -122,7 +121,6 @@ module ControlFSM
   //output logic
 
   always @(*) begin
-    Branch = 1'b0;
     pc_src = PC_SRC__INCREMENT;
     PCUpdate = 1'b0;
     IRWrite = 1'b0;
@@ -130,6 +128,8 @@ module ControlFSM
     RegWrite = 1'b0;
     AdrSrc    = ADR_SRC__PC;
     ResultSrc = RESULT_SRC__ALU_OUT;
+    ALUSrcA = alu_src_a_t'('0);
+    ALUSrcB = alu_src_b_t'('0);
     FSMState = current_state;
 
     case (current_state)
@@ -219,7 +219,6 @@ module ControlFSM
         ALUSrcA = ALU_SRC_A__RD1;
         ALUSrcB = ALU_SRC_B__RD2;
         ResultSrc = RESULT_SRC__ALU_OUT;
-        Branch = 1'b1;
         case (funct3)
           3'b000: begin
             if (zero_flag) begin
@@ -245,7 +244,6 @@ module ControlFSM
         ALUSrcA = ALU_SRC_A__RD1;
         ALUSrcB = ALU_SRC_B__RD2;
         ResultSrc = RESULT_SRC__ALU_OUT;
-        Branch = 1'b1;
         case (funct3)
           3'b100, 3'b110: begin // BLT, BLTU: branch if rs1 < rs2
             if (alu_result[0]) begin // Direct SLT/SLTU result

@@ -18,19 +18,10 @@ module Instruction_Decode
   // reg [2:0] funct3;
   // reg [6:0] funct7;
 
-  /* verilator lint_off UNUSEDSIGNAL */
-  wire [3:0] state;
-  /* verilator lint_on UNUSEDSIGNAL */
-
-
   assign opcode = instr[6:0];
 
   //combinational logic for extracting funct3 and funct7[5] for ALU Decoder input
 
-  /* verilator lint_off UNUSEDSIGNAL */
-  reg [2:0] default_funct3;
-  reg [6:0] default_funct7;
-  /* verilator lint_on UNUSEDSIGNAL */
   always @(*) begin
 
     funct3 = 3'b000;
