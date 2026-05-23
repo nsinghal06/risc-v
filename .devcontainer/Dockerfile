@@ -71,7 +71,7 @@ USER dev
 COPY --from=quartus /opt/quartus /opt/quartus
 ENV PATH="/opt/quartus/quartus/bin:${PATH}"
 
-# install cocotb
+# install cocotb and some other deps (for uart testing)
 USER dev
 RUN sudo apt update && sudo apt install -y python3 python3-pip libpython3-dev && \
   pip3 install cocotb~=1.9 cocotbext-uart pyserial
