@@ -16,6 +16,9 @@ package ext__b__types;
     , B_ALU_CTRL__SEXTB   = 4'b1001
     , B_ALU_CTRL__SEXTH   = 4'b1010
     , B_ALU_CTRL__ZEXTH   = 4'b1011
+    , B_ALU_CTRL__CLZ     = 4'b1100
+    , B_ALU_CTRL__CTZ     = 4'b1101
+    , B_ALU_CTRL__CPOP    = 4'b1110
     } b_alu_control_t;
 
 endpackage
