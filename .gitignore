@@ -28,6 +28,8 @@ envs/de1-soc/quartus/*.qws
 envs/de1-soc/quartus/metrics/*
 !envs/de1-soc/quartus/metrics/.gitkeep
 
+cocotb_uart/__pycache__/
+
 out/**
 !out/.gitkeep
 build/**
