@@ -12,27 +12,17 @@ module write_back_stage
   , output var logic [4:0] rd
   );
 
-  data_t write_data_m;
   data_t alu_result_m;
 
-  assign write_data_m = ex_to_mem.write_data_e;
   assign alu_result_m = from_memory.alu_result;
 
-  logic [3:0] temp_mem_write_byte_address;
-  data_t temp_output;
   data_t mem_result;
 
-  // TODO: the logic in the memory loader duplicates some of the logic we currently have in the
-  // memory stage, specifically pertaining to the "write enable" and "write data" -- need to remove
-  // that functionality so that its not duplicated
   MemoryLoader memory_loader
     ( .memory_data         ( data_from_memory            )
     , .memory_address      ( alu_result_m                )
     , .funct3              ( from_memory.funct3          )
-    , .dataB               ( write_data_m                )
     , .mem_load_result     ( mem_result                  )
-    , .MemWriteByteAddress ( temp_mem_write_byte_address )
-    , .__tmp_MemData       ( temp_output                 )
     );
 
   assign rd = from_memory.rd;
@@ -50,9 +40,7 @@ module write_back_stage
   , from_memory.pc_plus_4
   , ex_to_mem.write_data_e
   , ex_to_mem.rd
-  , ex_to_mem.mem_write
-  , temp_output
-  , temp_mem_write_byte_address /* remove/rename? */};
+  , ex_to_mem.mem_write };
 
   wire _unused_ex_to_mem = &{1'b0, ex_to_mem};
   wire _unused_from_mem = &{1'b0, from_memory};
