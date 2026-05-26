@@ -4,6 +4,8 @@ FROM ghcr.io/utoss/risc-v-toolchain:latest AS risc-v-toolchain
 
 FROM ghcr.io/utoss/quartus:latest AS quartus
 
+FROM ghcr.io/utoss/oss-cad-suite:latest AS oss-cad-suite
+
 FROM public.ecr.aws/lts/ubuntu:22.04_stable
 
 ARG DEBIAN_FRONTEND=noninteractive
@@ -70,6 +72,12 @@ RUN sudo apt update && sudo apt install -y ccache
 USER dev
 COPY --from=quartus /opt/quartus /opt/quartus
 ENV PATH="/opt/quartus/quartus/bin:${PATH}"
+
+# copy OSS CAD Suite installation
+USER dev
+COPY --from=oss-cad-suite /opt/oss-cad-suite /opt/oss-cad-suite
+COPY --from=oss-cad-suite /etc/profile.d/oss-cad-suite.sh /etc/profile.d/oss-cad-suite.sh
+ENV PATH="/opt/oss-cad-suite/bin:${PATH}"
 
 # install cocotb
 USER dev
