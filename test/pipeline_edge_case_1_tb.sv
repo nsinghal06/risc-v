@@ -25,7 +25,7 @@ module pipeline_edge_case_1_tb;
   endtask
 
   initial begin
-    bit saw_flush_e = 0;
+    static bit saw_flush_e = 0;
 
     reset = `TRUE;
 
