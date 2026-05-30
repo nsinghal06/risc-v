@@ -20,7 +20,7 @@ module uart_bus_master (
     , output logic [3:0]  bus_write_enable
     , input  wire [31:0]  bus_read_data
     , output logic hold_core
-    // , input  logic [31:0] dbg_regs [0:31]
+    , input  logic [31:0] dbg_regs [0:31]
     , input  logic [31:0] dbg_pc
 );
 
@@ -247,7 +247,7 @@ module uart_bus_master (
                                     else state <= STATE_DO_RD0;
                                 end
                                 CMD_RDREG: begin
-                                    prepare_rdreg('0);
+                                    prepare_rdreg(dbg_regs[reg_idx]);
                                 end
                                 default: begin
                                     prepare_ack(STATUS_CMD);
