@@ -20,8 +20,10 @@ module uart_bus_master (
     , output logic [3:0]  bus_write_enable
     , input  wire [31:0]  bus_read_data
     , output logic hold_core
-    , input  logic [31:0] dbg_regs [0:31]
     , input  logic [31:0] dbg_pc
+    , output logic [4:0]  dbg_reg_addr
+    , output logic dbg_reg_read_en
+    , input  wire  [31:0] dbg_reg_read_data
 );
 
     localparam byte SOF  = 8'hA5;
@@ -59,6 +61,9 @@ module uart_bus_master (
         , STATE_DO_RD2   = 5'd14
         , STATE_SEND     = 5'd15
         , STATE_REG      = 5'd16
+        , STATE_DO_REG0  = 5'd17
+        , STATE_DO_REG1  = 5'd18
+        , STATE_DO_REG2  = 5'd19
     } state_t;
 
     state_t state;
@@ -74,6 +79,7 @@ module uart_bus_master (
     logic [2:0] resp_len;
     logic [2:0] resp_idx;
 
+    logic [31:0] reg_read_data_q;
     task automatic prepare_ack(input byte status);
         begin
             // 5A 90 STATUS CHK
@@ -138,8 +144,12 @@ module uart_bus_master (
             resp_idx  <= 3'd0;
 
             hold_core <= 1'b1;
+            dbg_reg_addr    <= 5'd0;
+            dbg_reg_read_en <= 1'b0;
+            reg_read_data_q <= 32'd0;
         end else begin
             bus_write_enable <= 4'b0000;
+            dbg_reg_read_en  <= 1'b0;
             if (tx_valid && tx_ready) tx_valid <= 1'b0;
 
             if (state == STATE_SEND) begin
@@ -248,7 +258,8 @@ module uart_bus_master (
                                     else state <= STATE_DO_RD0;
                                 end
                                 CMD_RDREG: begin
-                                    prepare_rdreg(dbg_regs[reg_idx]);
+                                    if (!hold_core) prepare_ack(STATUS_BUSY);
+                                    else state <= STATE_DO_REG0;
                                 end
                                 default: begin
                                     prepare_ack(STATUS_CMD);
@@ -277,6 +288,21 @@ module uart_bus_master (
                         prepare_rd(bus_read_data);
                     end
 
+                    STATE_DO_REG0: begin
+                        dbg_reg_addr    <= reg_idx;
+                        dbg_reg_read_en <= 1'b1;
+                        state           <= STATE_DO_REG1;
+                    end
+                    
+                    STATE_DO_REG1: begin
+                        dbg_reg_read_en <= 1'b1;
+                        reg_read_data_q <= dbg_reg_read_data;
+                        state           <= STATE_DO_REG2;
+                    end
+                    
+                    STATE_DO_REG2: begin
+                        prepare_rdreg(reg_read_data_q);
+                    end
                     default: state <= STATE_WAIT_SOF;
                 endcase
             end

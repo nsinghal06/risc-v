@@ -15,6 +15,7 @@ module ControlFSM
   ( input opcode_t opcode
   , input wire clk
   , input wire reset
+  , input wire stall
   , input wire zero_flag
   , input wire [3:0] MemWriteByteAddress
   , input wire [2:0] funct3
@@ -131,7 +132,9 @@ module ControlFSM
     ALUSrcA = alu_src_a_t'('0);
     ALUSrcB = alu_src_b_t'('0);
     FSMState = current_state;
-
+    
+    if (stall) begin
+    end else begin
     case (current_state)
 
     FETCH: begin
@@ -299,7 +302,7 @@ module ControlFSM
 
 
     endcase
-
+  end
   end
 
   //State transition logic (sequential)
@@ -307,7 +310,7 @@ module ControlFSM
 
     if (reset) current_state <= FETCH;
 
-    else begin
+    else if(!stall) begin
       current_state <= next_state;
     end
 

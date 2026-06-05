@@ -6,14 +6,17 @@
 module utoss_riscv
   ( input wire clk
   , input wire reset
-
+  ,input  wire stall
   , output addr_t  memory__address
   , output data_t  memory__write_data
   , output logic  [3:0] memory__write_enable
   , input  data_t  memory__read_data
 
-  , output logic [31:0] dbg_regs [0:31]
+  //, output logic [31:0] dbg_regs [0:31]
   , output addr_t dbg_pc
+  , input  wire [4:0]  dbg_reg_addr
+  , input  wire        dbg_reg_read_en
+  , output wire [31:0] dbg_reg_read_data
   );
 
   import pkg_control_fsm::state_t;
@@ -56,12 +59,14 @@ module utoss_riscv
   reg  [4:0] rd, rs1, rs2;
 
   logic [3:0] MemWriteByteAddress;
-
+  logic [3:0] cfsm__mem_write_enable;
+  assign memory__write_enable = stall ? 4'b0000 : cfsm__mem_write_enable;
   assign dbg_pc = pc_cur;
   ControlFSM control_fsm
     ( .opcode     ( opcode               )
     , .clk        ( clk                  )
     , .reset      ( reset                )
+    , .stall      ( stall                )
     , .zero_flag  ( alu__zero_flag       )
     , .MemWriteByteAddress ( MemWriteByteAddress )
     , .funct3     ( funct3               )
@@ -71,7 +76,7 @@ module utoss_riscv
     , .RegWrite   ( cfsm__reg_write      )
     , .PCUpdate   ( cfsm__pc_update      )
     , .pc_src     ( cfsm__pc_src         )
-    , .MemWrite   ( memory__write_enable )
+    , .MemWrite   ( cfsm__mem_write_enable )
     , .ALUSrcA    ( __tmp_ALUSrcA        )
     , .ALUSrcB    ( __tmp_ALUSrcB        )
     , .ResultSrc  ( cfsm__result_src     )
@@ -81,6 +86,7 @@ module utoss_riscv
   fetch fetch
     ( .clk             ( clk             )
     , .reset           ( reset           )
+    , .stall           ( stall           )
     , .cfsm__pc_update ( cfsm__pc_update )
     , .alu_result_for_pc ( alu_out )
     , .cfsm__pc_src    ( cfsm__pc_src    )
@@ -100,7 +106,7 @@ module utoss_riscv
   end
 
   always @(posedge clk) begin
-    if (cfsm__ir_write) begin
+    if (!stall && cfsm__ir_write) begin
       instruction <= memory__read_data;
     end
   end
@@ -116,7 +122,9 @@ module utoss_riscv
   );
 
   always @(posedge clk) begin
-    data <= mem_load_result;
+    if(!stall) begin
+      data <= mem_load_result;
+    end
   end
 
   Instruction_Decode instruction_decode
@@ -131,17 +139,19 @@ module utoss_riscv
     , .rs2             ( rs2              )
     );
 
-  registerFile RegFile
+  RegisterFile RegFile
     ( .Addr1           ( rs1              )
     , .Addr2           ( rs2              )
     , .Addr3           ( rd               )
     , .clk             ( clk              )
     , .reset           ( reset            )
-    , .regWrite        ( cfsm__reg_write  )
+    , .regWrite        ( cfsm__reg_write && !stall )
     , .dataIn          ( result           )
     , .baseAddr        ( rd1              )
     , .writeData       ( rd2              )
-    , .dbg_regs        ( dbg_regs )
+    , .dbg_reg_addr      ( dbg_reg_addr      )
+    , .dbg_reg_read_en   ( dbg_reg_read_en   )
+    , .dbg_reg_read_data ( dbg_reg_read_data )
     );
 
   ALU alu
@@ -153,7 +163,9 @@ module utoss_riscv
     );
 
   always @(posedge clk) begin
-    alu_out <= alu_result;
+    if(!stall) begin
+      alu_out <= alu_result;
+    end
   end
 
   always @(*) begin
@@ -186,9 +198,11 @@ module utoss_riscv
   end
 
   always @(posedge clk) begin
-    dataA <= rd1;
-    dataB <= rd2;
-  end
+    if (!stall) begin
+      dataA <= rd1;
+      dataB <= rd2;
+    end
+end
 
 `ifndef UTOSS_RISCV_SYNTHESIS
 `ifndef UTOSS_RISCV_HARDENING

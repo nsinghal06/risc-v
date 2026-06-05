@@ -9,7 +9,7 @@
 //rd --> a register inside RF memory, holding address of register to be written into
 
 /* verilator lint_off DECLFILENAME */
-module registerFile
+module RegisterFile
 /* verilator lint_on DECLFILENAME */
   ( input  [4:0]  Addr1
   , input  [4:0]  Addr2
@@ -20,7 +20,10 @@ module registerFile
   , input  reset
   , output wire [31:0] baseAddr
   , output wire [31:0] writeData
-  , output logic [31:0] dbg_regs [0:31]   // NEW, added for UART debugging
+  //NEW for debugging
+  , input  wire [4:0]  dbg_reg_addr
+  , input  wire        dbg_reg_read_en
+  , output wire [31:0] dbg_reg_read_data
   );
 
   reg [31:0] RFMem [0:31] /* synthesis ramstyle = M10K*/;
@@ -28,12 +31,7 @@ module registerFile
   assign baseAddr  = (Addr1 == 5'd0) ? 32'd0 : RFMem[Addr1];
   assign writeData = (Addr2 == 5'd0) ? 32'd0 : RFMem[Addr2];
 
-always @(*) begin
-    dbg_regs[0] = 32'd0;
-    for (int i = 1; i < 32; i++) begin
-        dbg_regs[i] = RFMem[i];
-    end
-end
+  assign dbg_reg_read_data = (!dbg_reg_read_en || dbg_reg_addr == 5'd0) ? 32'd0 : RFMem[dbg_reg_addr];
 
 
   always @(posedge clk) begin
