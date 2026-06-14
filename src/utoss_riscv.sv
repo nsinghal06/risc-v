@@ -97,6 +97,8 @@ module utoss_riscv
   always_ff @ (posedge clk)
     if (reset)        id_to_ex_reg <= '0;
     else if (flush_e) id_to_ex_reg <= '0;
+    //adding stall_e for DIV
+    else if (stall_e) id_to_ex_reg <= id_to_ex_reg;
     else              id_to_ex_reg <= id_to_ex_out;
 
   execute_stage u_execute_stage

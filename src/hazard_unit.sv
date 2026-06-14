@@ -15,10 +15,13 @@ module hazard_unit
   , input  wire [4:0] rs2_d
   , input  wire [4:0] rd_e
   , input  pc_src_t pc_src_e
+  , input wire div_busy_e
+  , input wire div_done_e
   , output hazard_forward_a_t forward_a_e
   , output hazard_forward_b_t forward_b_e
   , output logic stall_f
   , output logic stall_d
+  , output logic stall_e
   , output logic flush_f
   , output logic flush_d
   , output logic flush_e
@@ -50,9 +53,17 @@ module hazard_unit
 
   //Stall when a load hazard occurs
   assign lw_stall = result_src_e_0 && ((rs1_d == rd_e) || (rs2_d == rd_e)) && (rd_e != 5'd0);
-  assign stall_f = lw_stall;
-  assign stall_d = lw_stall;
 
+  logic div_stall;
+
+  assign div_stall = div_busy_e && !div_done_e;
+  //add stall_e for div (long EX stage)
+  assign stall_e = div_stall;
+
+  //TODO: add cancel div
+
+  assign stall_f = lw_stall || div_stall;
+  assign stall_d = lw_stall || div_stall;
   //Flush when a control hazard occurs; we need to flush one cycle later than we discover the
   // control hazard; this is due to synchronous memory making the instruction available one cycle
   // later than with async memory
