@@ -108,8 +108,6 @@ module Compressed_Decode
     is_illegal = 1'b0;
 
     case (quadrant) // Opcode
-      2'b11: instr_out = {16'b0, instr_c}; // Not a compressed instruction, just pass through (should not actually happen i think?)
-
       2'b00: begin // Quadrant 0
         case (funct3)
           3'b000: begin
@@ -194,6 +192,8 @@ module Compressed_Decode
           default: is_illegal = 1'b1;
         endcase
       end
+
+      2'b11: is_illegal = 1'b1; // Not a compressed instruction
     endcase
   end
 
