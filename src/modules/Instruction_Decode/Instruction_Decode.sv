@@ -11,6 +11,9 @@ module Instruction_Decode
   , output reg [4:0] rd
   , output reg [4:0] rs1
   , output reg [4:0] rs2
+  `ifdef UTOSS_RISCV_ENABLE_B_EXT
+  , output ext__b__types::b_alu_control_t b_alu_control //NEW
+  `endif
   );
 
   alu_op_t alu_op;
@@ -93,6 +96,7 @@ module Instruction_Decode
 
         rd = instr[11:7];
         rs1 = instr[19:15];
+        rs2 = instr[24:20];
 
       end
 
@@ -138,10 +142,9 @@ module Instruction_Decode
     , .alu_op(alu_op)
     , .alu_control(ALUControl)
     );
+
+
 `ifdef UTOSS_RISCV_ENABLE_B_EXT
-/* verilator lint_off UNUSEDSIGNAL */
-  ext__b__types::b_alu_control_t b_alu_control;
-/* verilator lint_on UNUSEDSIGNAL */
   ext__b__decoder u_ext__b__decoder
     ( .funct3        ( funct3        )
     , .funct7        ( funct7        )
@@ -150,7 +153,9 @@ module Instruction_Decode
     , .rs2           ( rs2           )
     , .b_alu_control ( b_alu_control )
     );
-
 `endif
 
 endmodule
+// verilator lint_off UNUSEDSIGNAL 
+
+// verilator lint_on UNUSEDSIGNAL 

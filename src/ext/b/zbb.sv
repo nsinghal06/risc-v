@@ -16,23 +16,26 @@ module zbb(
   localparam int COUNT_WIDTH = $clog2(XLEN + 1);
 
   function automatic logic [COUNT_WIDTH - 1:0] get_clz(input logic [XLEN - 1:0] val);
-    get_clz = XLEN;
+    get_clz = COUNT_WIDTH'(XLEN);
     for (int i=0; i < XLEN; i++) begin
-      if (val[i]) get_clz = XLEN - 1 - i;
+      if (val[i]) get_clz = COUNT_WIDTH'(XLEN - 1 - i);
     end
   endfunction
 
   function automatic logic [COUNT_WIDTH - 1:0] get_ctz(input logic [XLEN - 1:0] val);
-    get_ctz = XLEN;
-    for (int i=XLEN - 1; i >= 0; i--) begin
-      if (val[i]) get_ctz = i;
+    get_ctz = COUNT_WIDTH'(XLEN);
+    for (int i=0; i < XLEN; i++) begin
+      if (val[i]) begin
+        get_ctz = COUNT_WIDTH'(i);
+        break;
+      end
     end
   endfunction
 
   function automatic logic [COUNT_WIDTH - 1:0] get_cpop(input logic [XLEN - 1:0] val);
     get_cpop = 0;
     for (int i=0; i < XLEN; i++) begin
-      if (val[i]) get_cpop++;
+      if (val[i]) get_cpop = get_cpop + 1'b1;
     end
   endfunction
 

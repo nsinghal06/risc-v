@@ -21,6 +21,9 @@ module ext__b__decoder
   localparam bit [6:0] FUNCT7_ZBB__SEXT = 7'b0110000;
   localparam bit [6:0] FUNCT7_ZBB__ZEXT = 7'b0000100;
 
+  localparam bit [6:0] FUNCT7_ZBB__CTZ  = 7'b0110001; //NEW
+  localparam bit [6:0] FUNCT7_ZBB__CPOP = 7'b0110010; //NEW
+
   always_comb
     case (opcode)
       7'b0110011:
@@ -59,7 +62,7 @@ module ext__b__decoder
           default: b_alu_control = B_ALU_CTRL__NONE;
 
         endcase
-      7'b0010011:
+      7'b0010011: //NEW modified block to fix the clz test error
         case (funct7)
           FUNCT7_ZBB__SEXT:
             case (funct3)
@@ -67,14 +70,27 @@ module ext__b__decoder
                 case (rs2)
                   5'b00100:  b_alu_control = B_ALU_CTRL__SEXTB;
                   5'b00101:  b_alu_control = B_ALU_CTRL__SEXTH;
-                  default: b_alu_control = B_ALU_CTRL__NONE;
+                  5'b00000:  b_alu_control = B_ALU_CTRL__CLZ;
+                  default:   b_alu_control = B_ALU_CTRL__NONE;
                 endcase
               default: b_alu_control = B_ALU_CTRL__NONE;
             endcase
-          default: b_alu_control = B_ALU_CTRL__NONE;
 
+          FUNCT7_ZBB__CTZ: // 0110001
+            case (funct3)
+              3'b001: b_alu_control = B_ALU_CTRL__CTZ;
+              default: b_alu_control = B_ALU_CTRL__NONE;
+            endcase
+
+          FUNCT7_ZBB__CPOP: // 0110010
+            case (funct3)
+              3'b001: b_alu_control = B_ALU_CTRL__CPOP;
+              default: b_alu_control = B_ALU_CTRL__NONE;
+            endcase
+
+          default: b_alu_control = B_ALU_CTRL__NONE;
         endcase
       default: b_alu_control = B_ALU_CTRL__NONE;
-    endcase
+ endcase
 
 endmodule
