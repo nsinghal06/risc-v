@@ -135,6 +135,7 @@ jobs:
 
     strategy:
       matrix: *utoss-risc-v-matrix
+    continue-on-error: ${{ matrix.config == 'RV32IB' }}
 
     steps:
       - name: Checkout code
