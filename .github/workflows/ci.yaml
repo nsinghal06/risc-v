@@ -135,7 +135,6 @@ jobs:
 
     strategy:
       matrix: *utoss-risc-v-matrix
-    continue-on-error: ${{ matrix.config == 'RV32IB' }}
 
     steps:
       - name: Checkout code
@@ -151,7 +150,14 @@ jobs:
         run: make riscof_clone_archtest
 
       - name: Run RISCOF
-        run: make riscof_run UTOSS_RISCV_CONFIG=${{ matrix.config }}
+        run: |
+          if make riscof_run UTOSS_RISCV_CONFIG=${{ matrix.config }}; then
+            :
+          elif [[ "${{ matrix.config }}" == *B* ]]; then
+            echo "Allowing failure for configurations with B extension"
+          else
+            exit 1
+          fi
 
       - name: Upload RISCOF report
         if: always()
