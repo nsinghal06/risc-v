@@ -12,7 +12,7 @@ module Instruction_Decode
   , output reg [4:0] rs1
   , output reg [4:0] rs2
 `ifdef UTOSS_RISCV_ENABLE_B_EXT
-  , output ext__b__types::b_alu_control_t b_alu_control //NEW
+  , output ext__b__types::b_alu_control_t b_alu_control
 `endif
   );
 

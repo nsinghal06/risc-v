@@ -53,8 +53,8 @@ module ext__b__decoder
             endcase
           FUNCT7_ZBB__ROTATE:
             case (funct3)
-              3'b001:  b_alu_control = B_ALU_CTRL__ROL; // ROL
-              3'b101:  b_alu_control = B_ALU_CTRL__ROR; // ROR
+              3'b001:  b_alu_control = B_ALU_CTRL__ROL;
+              3'b101:  b_alu_control = B_ALU_CTRL__ROR;
               default: b_alu_control = B_ALU_CTRL__NONE;
             endcase
           FUNCT7_ZBB__ZEXT:
@@ -70,9 +70,9 @@ module ext__b__decoder
           default: b_alu_control = B_ALU_CTRL__NONE;
 
         endcase
-      7'b0010011: //NEW modified block to fix the clz test error
+      7'b0010011:
         case (funct7)
-          7'b0110000: //combine FUNCT7_ZBB__SEXT and FUNCT7_ZBB__ROTATE
+          7'b0110000:
             case (funct3)
               3'b001:
                 case (rs2)
@@ -106,7 +106,7 @@ module ext__b__decoder
             case (funct3)
               3'b101:
                 case (rs2)
-                  5'b11000: b_alu_control = B_ALU_CTRL__REV8; // Corrected RV32 constant (24)
+                  5'b11000: b_alu_control = B_ALU_CTRL__REV8;
                   default:  b_alu_control = B_ALU_CTRL__NONE;
                 endcase
               default: b_alu_control = B_ALU_CTRL__NONE;

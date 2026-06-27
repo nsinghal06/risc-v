@@ -72,7 +72,7 @@ module decode_stage
     , .rs1             ( rs1              )
     , .rs2             ( rs2              )
 `ifdef UTOSS_RISCV_ENABLE_B_EXT
-    , .b_alu_control   ( b_alu_control    ) //NEW
+    , .b_alu_control   ( b_alu_control    )
 `endif
     );
 
@@ -113,7 +113,7 @@ module decode_stage
   assign id_to_ex.reg_write      = cfsm__reg_write;
   assign id_to_ex.alu_control    = alu_control;
 `ifdef UTOSS_RISCV_ENABLE_B_EXT
-    assign id_to_ex.b_alu_control = b_alu_control;
+  assign id_to_ex.b_alu_control = b_alu_control;
 `endif
   assign id_to_ex.funct3         = funct3;
   assign id_to_ex.rd1            = rd1_safe;

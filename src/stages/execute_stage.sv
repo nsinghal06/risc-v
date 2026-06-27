@@ -25,8 +25,8 @@ module execute_stage
   logic zero_flag;
 
 `ifdef UTOSS_RISCV_ENABLE_B_EXT
-  data_t zbb_result; //NEW
-  logic  zbb_zero_flag; //NEW
+  data_t zbb_result;
+  logic  zbb_zero_flag;
 `endif
 
 
@@ -97,12 +97,6 @@ assign zero_flag  = zero_flag_base;
     , .zeroE          ( zbb_zero_flag          )
     );
 `endif
-
-
-
-
-  //instantiate ZBB here, put in a single ALU
-  // branching logic
 
   typedef enum logic [2:0]
     { FUNCT3__BEQ  = 3'b000
