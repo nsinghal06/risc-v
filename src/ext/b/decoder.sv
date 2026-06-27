@@ -21,7 +21,8 @@ module ext__b__decoder
   localparam bit [6:0] FUNCT7_ZBB__SEXT = 7'b0110000;
   localparam bit [6:0] FUNCT7_ZBB__ZEXT = 7'b0000100;
   localparam bit [6:0] FUNCT7_ZBB__ROTATE = 7'b0110000;
-  localparam bit [6:0] FUNCT7_ZBB__ORCB_REV8 = 7'b0010100;
+  localparam bit [6:0] FUNCT7_ZBB__ORCB  = 7'b0010100;
+  localparam bit [6:0] FUNCT7_ZBB__REV8  = 7'b0110100;
 
   always_comb
     case (opcode)
@@ -71,7 +72,7 @@ module ext__b__decoder
         endcase
       7'b0010011: //NEW modified block to fix the clz test error
         case (funct7)
-          FUNCT7_ZBB__SEXT:
+          7'b0110000: //combine FUNCT7_ZBB__SEXT and FUNCT7_ZBB__ROTATE
             case (funct3)
               3'b001:
                 case (rs2)
@@ -82,6 +83,7 @@ module ext__b__decoder
                   5'b00010:  b_alu_control = B_ALU_CTRL__CPOP;
                   default:   b_alu_control = B_ALU_CTRL__NONE;
                 endcase
+              3'b101: b_alu_control = B_ALU_CTRL__RORI;
               default: b_alu_control = B_ALU_CTRL__NONE;
             endcase
 
@@ -90,16 +92,25 @@ module ext__b__decoder
                 3'b101:  b_alu_control = B_ALU_CTRL__RORI;
                 default: b_alu_control = B_ALU_CTRL__NONE;
               endcase
-            FUNCT7_ZBB__ORCB_REV8:
-              case (funct3)
-                3'b001:
-                  case (rs2)
-                    5'b00111: b_alu_control = B_ALU_CTRL__ORCB;
-                    5'b00110: b_alu_control = B_ALU_CTRL__REV8;
-                    default:  b_alu_control = B_ALU_CTRL__NONE;
-                  endcase
-                default: b_alu_control = B_ALU_CTRL__NONE;
-              endcase
+            FUNCT7_ZBB__ORCB:
+            case (funct3)
+              3'b101:
+                case (rs2)
+                  5'b00111: b_alu_control = B_ALU_CTRL__ORCB;
+                  default:  b_alu_control = B_ALU_CTRL__NONE;
+                endcase
+              default: b_alu_control = B_ALU_CTRL__NONE;
+            endcase
+
+          FUNCT7_ZBB__REV8:
+            case (funct3)
+              3'b101:
+                case (rs2)
+                  5'b11000: b_alu_control = B_ALU_CTRL__REV8; // Corrected RV32 constant (24)
+                  default:  b_alu_control = B_ALU_CTRL__NONE;
+                endcase
+              default: b_alu_control = B_ALU_CTRL__NONE;
+            endcase
 
           default: b_alu_control = B_ALU_CTRL__NONE;
         endcase
