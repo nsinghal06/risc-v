@@ -46,7 +46,7 @@ module zbb(
     end
     else begin
       get_rol = val << shift_amount;
-      get_rol |= val >> (XLEN - 32'(shift_amount));
+      get_rol |= val >> (XLEN - XLEN'(shift_amount));
     end
   endfunction
 
@@ -56,7 +56,7 @@ module zbb(
     end
     else begin
       get_ror = val >> shift_amount;
-      get_ror |= val << (XLEN - 32'(shift_amount));
+      get_ror |= val << (XLEN - XLEN'(shift_amount));
     end
   endfunction
 
