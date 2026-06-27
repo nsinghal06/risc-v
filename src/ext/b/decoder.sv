@@ -86,12 +86,6 @@ module ext__b__decoder
               3'b101: b_alu_control = B_ALU_CTRL__RORI;
               default: b_alu_control = B_ALU_CTRL__NONE;
             endcase
-
-            FUNCT7_ZBB__ROTATE:
-              case (funct3)
-                3'b101:  b_alu_control = B_ALU_CTRL__RORI;
-                default: b_alu_control = B_ALU_CTRL__NONE;
-              endcase
             FUNCT7_ZBB__ORCB:
             case (funct3)
               3'b101:
