@@ -11,9 +11,9 @@ module Instruction_Decode
   , output reg [4:0] rd
   , output reg [4:0] rs1
   , output reg [4:0] rs2
-  `ifdef UTOSS_RISCV_ENABLE_B_EXT
+`ifdef UTOSS_RISCV_ENABLE_B_EXT
   , output ext__b__types::b_alu_control_t b_alu_control //NEW
-  `endif
+`endif
   );
 
   alu_op_t alu_op;
@@ -156,6 +156,6 @@ module Instruction_Decode
 `endif
 
 endmodule
-// verilator lint_off UNUSEDSIGNAL 
+//verilator lint_off UNUSEDSIGNAL
 
-// verilator lint_on UNUSEDSIGNAL 
+//verilator lint_on UNUSEDSIGNAL

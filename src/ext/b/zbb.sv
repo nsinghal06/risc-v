@@ -84,6 +84,8 @@ module zbb(
       B_ALU_CTRL__XNOR: out = ~(a ^ b); //xnor
       B_ALU_CTRL__MIN: out = ($signed(a) < $signed(b) ? a : b); //min
       B_ALU_CTRL__MAX: out = ($signed(a) < $signed(b) ? b : a); //max
+      B_ALU_CTRL__MINU: out = (a < b) ? a : b; //minu
+      B_ALU_CTRL__MAXU: out = (a < b) ? b : a; //maxu
       B_ALU_CTRL__SEXTB: out = {{(XLEN - 8){a[7]}}, a[7:0]}; //sext.b (sign extend byte)
       B_ALU_CTRL__SEXTH: out = {{(XLEN - 16){a[15]}}, a[15:0]}; //sext.h (sign extend halfword)
       B_ALU_CTRL__ZEXTH: out = {{(XLEN - 16){1'b0}}, a[15:0]}; //zext.h (zero extend halfword)

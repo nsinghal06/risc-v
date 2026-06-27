@@ -20,6 +20,8 @@ module ext__b__decoder
   localparam bit [6:0] FUNCT7_ZBB__MINMAX = 7'b0000101;
   localparam bit [6:0] FUNCT7_ZBB__SEXT = 7'b0110000;
   localparam bit [6:0] FUNCT7_ZBB__ZEXT = 7'b0000100;
+  localparam bit [6:0] FUNCT7_ZBB__ROTATE = 7'b0110000;
+  localparam bit [6:0] FUNCT7_ZBB__ORCB_REV8 = 7'b0010100;
 
   always_comb
     case (opcode)
@@ -43,7 +45,15 @@ module ext__b__decoder
           FUNCT7_ZBB__MINMAX:
             case (funct3)
               3'b100:  b_alu_control = B_ALU_CTRL__MIN;
+              3'b101:  b_alu_control = B_ALU_CTRL__MINU;
               3'b110:  b_alu_control = B_ALU_CTRL__MAX;
+              3'b111:  b_alu_control = B_ALU_CTRL__MAXU;
+              default: b_alu_control = B_ALU_CTRL__NONE;
+            endcase
+          FUNCT7_ZBB__ROTATE:
+            case (funct3)
+              3'b001:  b_alu_control = B_ALU_CTRL__ROL; // ROL
+              3'b101:  b_alu_control = B_ALU_CTRL__ROR; // ROR
               default: b_alu_control = B_ALU_CTRL__NONE;
             endcase
           FUNCT7_ZBB__ZEXT:
@@ -69,15 +79,31 @@ module ext__b__decoder
                   5'b00101:  b_alu_control = B_ALU_CTRL__SEXTH;
                   5'b00000:  b_alu_control = B_ALU_CTRL__CLZ;
                   5'b00001:  b_alu_control = B_ALU_CTRL__CTZ;
-                  5'b00010:  b_alu_control = B_ALU_CTRL__CPOP;  
+                  5'b00010:  b_alu_control = B_ALU_CTRL__CPOP;
                   default:   b_alu_control = B_ALU_CTRL__NONE;
                 endcase
               default: b_alu_control = B_ALU_CTRL__NONE;
             endcase
 
+            FUNCT7_ZBB__ROTATE:
+              case (funct3)
+                3'b101:  b_alu_control = B_ALU_CTRL__RORI;
+                default: b_alu_control = B_ALU_CTRL__NONE;
+              endcase
+            FUNCT7_ZBB__ORCB_REV8:
+              case (funct3)
+                3'b001:
+                  case (rs2)
+                    5'b00111: b_alu_control = B_ALU_CTRL__ORCB;
+                    5'b00110: b_alu_control = B_ALU_CTRL__REV8;
+                    default:  b_alu_control = B_ALU_CTRL__NONE;
+                  endcase
+                default: b_alu_control = B_ALU_CTRL__NONE;
+              endcase
+
           default: b_alu_control = B_ALU_CTRL__NONE;
         endcase
       default: b_alu_control = B_ALU_CTRL__NONE;
- endcase
+    endcase
 
 endmodule

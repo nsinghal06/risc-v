@@ -24,10 +24,10 @@ module execute_stage
   data_t alu_result;
   logic zero_flag;
 
-  `ifdef UTOSS_RISCV_ENABLE_B_EXT
+`ifdef UTOSS_RISCV_ENABLE_B_EXT
   data_t zbb_result; //NEW
   logic  zbb_zero_flag; //NEW
-  `endif
+`endif
 
 
   // ALU computation
@@ -62,7 +62,7 @@ module execute_stage
       default:            alu_input_b = 'x;
     endcase
 
-  logic [`PROCESSOR_BITNESS-1:0] alu_result_base;
+  logic [`PROCESSOR_BITNESS - 1:0] alu_result_base;
   logic zero_flag_base;
   ALU alu
     ( .a              ( alu_input_a         )
@@ -71,8 +71,7 @@ module execute_stage
     , .out            ( alu_result_base          )
     , .zeroE          ( zero_flag_base           ) //added bases for local
     );
-  
-  `ifdef UTOSS_RISCV_ENABLE_B_EXT
+`ifdef UTOSS_RISCV_ENABLE_B_EXT
   always_comb begin
     if (id_to_ex.b_alu_control != ext__b__types::B_ALU_CTRL__NONE) begin
         alu_result = zbb_result;
@@ -82,12 +81,14 @@ module execute_stage
         zero_flag  = zero_flag_base;
     end
   end
-  `else
-  assign alu_result = alu_result_base;
-  assign zero_flag  = zero_flag_base;
-  `endif
+`else
+assign alu_result = alu_result_base;
+assign zero_flag  = zero_flag_base;
+`endif
 
-  `ifdef UTOSS_RISCV_ENABLE_B_EXT
+
+
+`ifdef UTOSS_RISCV_ENABLE_B_EXT
   zbb u_zbb
     ( .a              ( alu_input_a            )
     , .b              ( alu_input_b            )
@@ -95,11 +96,11 @@ module execute_stage
     , .out            ( zbb_result             )
     , .zeroE          ( zbb_zero_flag          )
     );
-  `endif
-   
-  
+`endif
 
-  
+
+
+
   //instantiate ZBB here, put in a single ALU
   // branching logic
 
