@@ -18,7 +18,6 @@ module ext__b__decoder
   localparam bit [6:0] FUNCT7_ZBA = 7'b0010000;
   localparam bit [6:0] FUNCT7_ZBB__LOGICAL = 7'b0100000;
   localparam bit [6:0] FUNCT7_ZBB__MINMAX = 7'b0000101;
-  localparam bit [6:0] FUNCT7_ZBB__SEXT = 7'b0110000;
   localparam bit [6:0] FUNCT7_ZBB__ZEXT = 7'b0000100;
   localparam bit [6:0] FUNCT7_ZBB__ROTATE = 7'b0110000;
   localparam bit [6:0] FUNCT7_ZBB__ORCB  = 7'b0010100;
